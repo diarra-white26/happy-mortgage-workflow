@@ -1,0 +1,870 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Valon: Escrow Waiver Workflow</title>
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;0,700;1,400;1,700&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:#F5F2EE;--surface:#FFFFFF;--card:#FFFFFF;--border:#E4DED6;
+  --text:#1C1A18;--subtle:#2A2520;--muted:#4A4540;
+  --mono:'DM Mono',monospace;--display:'Lora',serif;--body:'DM Sans',sans-serif;
+  --green:#2A7A52;--blue:#2B5FAD;--orange:#C8601A;--red:#B83030;--amber:#C8960A;--purple:#5C4ECC;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{font-family:var(--body);background:var(--bg);color:var(--text);overflow-x:hidden;}
+
+.nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(245,242,238,0.96);
+  backdrop-filter:blur(12px);border-bottom:1px solid var(--border);
+  display:flex;align-items:center;padding:0 48px;height:52px;gap:24px;}
+.nav-logo{font-family:var(--display);font-size:14px;font-weight:600;color:var(--text);margin-right:8px;white-space:nowrap;flex-shrink:0;}
+.nav-logo span{color:var(--amber);}
+.nav-links{display:flex;gap:2px;flex:1;overflow-x:auto;}
+.nav-link{font-family:var(--mono);font-size:9px;letter-spacing:0.1em;text-transform:uppercase;
+  color:var(--subtle);text-decoration:none;padding:4px 10px;border-radius:4px;white-space:nowrap;transition:all 0.15s;cursor:pointer;}
+.nav-link:hover{color:var(--text);background:var(--card);}
+.nav-link.active{color:var(--amber);}
+.nav-link.appendix{border:1px solid var(--border);margin-left:auto;}
+
+section{position:relative;z-index:1;min-height:100vh;padding:100px 80px 80px;
+  border-bottom:1px solid var(--border);display:flex;flex-direction:column;justify-content:center;}
+.section-eyebrow{font-family:var(--mono);font-size:9px;letter-spacing:0.2em;text-transform:uppercase;
+  color:var(--subtle);margin-bottom:16px;display:flex;align-items:center;gap:10px;}
+.section-eyebrow:after{content:'';flex:1;height:1px;background:var(--border);max-width:80px;}
+.section-h2{font-family:var(--display);font-size:clamp(26px,3vw,40px);font-weight:700;line-height:1.2;color:var(--text);margin-bottom:8px;}
+.section-h2 em{font-style:italic;color:var(--amber);}
+.section-sub{font-size:14px;font-weight:300;color:var(--subtle);line-height:1.6;max-width:620px;margin-bottom:32px;}
+
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px);}to{opacity:1;transform:translateY(0);}}
+.reveal{opacity:0;transform:translateY(20px);transition:opacity 0.5s ease,transform 0.5s ease;}
+.reveal.visible{opacity:1;transform:translateY(0);}
+
+/* HERO */
+#hero{min-height:100vh;justify-content:center;padding-top:120px;}
+.hero-kicker{font-family:var(--mono);font-size:10px;letter-spacing:0.2em;text-transform:uppercase;
+  color:var(--green);margin-bottom:20px;opacity:0;animation:fadeUp 0.6s ease 0.2s forwards;}
+.hero-h1{font-family:var(--display);font-size:clamp(32px,4.5vw,56px);font-weight:700;
+  line-height:1.15;color:var(--text);max-width:860px;margin-bottom:36px;
+  opacity:0;animation:fadeUp 0.6s ease 0.35s forwards;}
+.hero-h1 em{font-style:italic;color:var(--amber);}
+
+/* VALUE */
+#value{padding-top:100px;}
+.value-grid{display:grid;grid-template-columns:1fr 1fr;gap:48px;margin-top:32px;}
+.value-left h2{font-family:var(--display);font-size:clamp(22px,2.5vw,34px);font-weight:700;line-height:1.2;color:var(--text);margin-bottom:14px;}
+.value-left h2 em{font-style:italic;color:var(--amber);}
+.value-left p{font-size:13px;font-weight:300;color:var(--subtle);line-height:1.75;margin-bottom:12px;}
+.kpi-stack{display:flex;flex-direction:column;gap:12px;}
+.kpi-card{background:var(--card);border:1px solid var(--border);border-radius:10px;
+  padding:14px 16px;display:flex;gap:12px;align-items:flex-start;transition:border-color 0.2s;}
+.kpi-card:hover{border-color:var(--muted);}
+.kpi-icon{font-size:18px;flex-shrink:0;margin-top:2px;}
+.kpi-title{font-size:13px;font-weight:600;color:var(--text);margin-bottom:3px;line-height:1.3;}
+.kpi-desc{font-size:12px;font-weight:300;color:var(--subtle);line-height:1.5;}
+
+/* FUTURE */
+#future{padding-top:100px;}
+.path-overview{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:20px 0;}
+.path-card{border-radius:10px;padding:18px 20px;border:1.5px solid;}
+.path-card.a{border-color:var(--green);background:rgba(42,122,82,0.04);}
+.path-card.b{border-color:var(--orange);background:rgba(200,96,26,0.04);}
+.path-card.c{border-color:var(--red);background:rgba(184,48,48,0.04);}
+.path-letter{font-family:var(--display);font-size:26px;font-weight:700;margin-bottom:5px;}
+.a .path-letter{color:var(--green);}
+.b .path-letter{color:var(--orange);}
+.c .path-letter{color:var(--red);}
+.path-name{font-size:13px;font-weight:700;color:var(--text);margin-bottom:5px;line-height:1.3;}
+.path-desc{font-size:12px;font-weight:300;color:var(--subtle);line-height:1.5;}
+.viz-placeholder{background:var(--surface);border:2px dashed var(--border);border-radius:12px;padding:40px;text-align:center;margin:20px 0;}
+.viz-placeholder-icon{font-size:28px;margin-bottom:10px;opacity:0.4;}
+.viz-placeholder-title{font-family:var(--display);font-size:15px;font-weight:600;color:var(--subtle);margin-bottom:6px;}
+.viz-placeholder-link{font-family:var(--mono);font-size:10px;letter-spacing:0.1em;color:var(--text);text-decoration:underline;cursor:pointer;}
+.convergence-bar{background:rgba(42,122,82,0.05);border:1px solid rgba(42,122,82,0.2);border-radius:10px;padding:14px 20px;display:flex;align-items:center;gap:14px;}
+.conv-title{font-size:12px;font-weight:700;color:var(--green);margin-bottom:3px;}
+.conv-desc{font-size:11px;font-weight:300;color:var(--subtle);line-height:1.6;}
+.path-chips{display:flex;gap:6px;margin-top:6px;flex-wrap:wrap;}
+.chip{font-size:9px;font-weight:600;padding:2px 8px;border-radius:10px;font-family:var(--mono);}
+.chip.a{background:rgba(42,122,82,0.1);color:var(--green);}
+.chip.b{background:rgba(200,96,26,0.1);color:var(--orange);}
+.chip.c{background:rgba(184,48,48,0.1);color:var(--red);}
+
+/* COMMS */
+#comms{padding-top:100px;}
+.comms-intro{display:grid;grid-template-columns:1fr 1fr;gap:40px;margin-bottom:28px;}
+.comms-intro-left p{font-size:13px;font-weight:300;color:var(--subtle);line-height:1.7;margin-bottom:12px;}
+.pain-map{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:16px;}
+.pain-map-label{font-family:var(--mono);font-size:9px;letter-spacing:0.1em;text-transform:uppercase;color:var(--subtle);margin-bottom:10px;}
+.pain-row{display:flex;gap:10px;align-items:flex-start;padding:7px 0;border-bottom:1px solid var(--border);font-size:11px;}
+.pain-row:last-child{border-bottom:none;}
+.pain-icon{font-size:11px;flex-shrink:0;margin-top:1px;}
+.pain-text{color:var(--text);line-height:1.4;flex:1;}
+.pain-text strong{font-weight:600;}
+.pain-arrow{color:var(--text);font-family:var(--mono);font-size:10px;flex-shrink:0;}
+.pain-trigger{color:var(--text);font-weight:700;}
+.example-trigger{background:var(--card);border:1.5px solid var(--amber);border-radius:10px;padding:18px;margin-bottom:20px;}
+.ex-label{font-family:var(--mono);font-size:9px;letter-spacing:0.12em;text-transform:uppercase;color:var(--text);margin-bottom:10px;}
+.ex-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;}
+.ex-field{display:flex;flex-direction:column;gap:3px;}
+.ex-field-label{font-family:var(--mono);font-size:8px;color:var(--subtle);letter-spacing:0.06em;text-transform:uppercase;}
+.ex-field-val{font-size:13px;font-weight:500;color:var(--text);line-height:1.4;}
+.trigger-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;}
+.trigger-card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:14px 16px;border-top:3px solid;}
+.trigger-card.all{border-top-color:var(--purple);}
+.trigger-card.path-b{border-top-color:var(--orange);}
+.trigger-card.approval{border-top-color:var(--green);}
+.trigger-card.denial{border-top-color:var(--red);}
+.trigger-card.monitor{border-top-color:var(--blue);}
+.trigger-tag{font-family:var(--mono);font-size:8px;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:5px;}
+.all .trigger-tag{color:var(--purple);}
+.path-b .trigger-tag{color:var(--orange);}
+.approval .trigger-tag{color:var(--green);}
+.denial .trigger-tag{color:var(--red);}
+.monitor .trigger-tag{color:var(--blue);}
+.trigger-title{font-size:13px;font-weight:700;color:var(--text);margin-bottom:5px;line-height:1.3;}
+.trigger-body{font-size:12px;font-weight:300;color:var(--subtle);line-height:1.5;}
+.trigger-condition{font-family:var(--mono);font-size:9px;color:var(--muted);margin-top:6px;line-height:1.4;}
+.appendix-link-row{text-align:center;margin-top:16px;}
+.appendix-link-btn{display:inline-block;font-family:var(--mono);font-size:10px;letter-spacing:0.1em;
+  text-transform:uppercase;color:var(--amber);border:1px solid var(--amber);
+  border-radius:6px;padding:8px 20px;cursor:pointer;text-decoration:none;transition:all 0.15s;}
+.appendix-link-btn:hover{background:var(--amber);color:white;}
+
+/* SCORECARD */
+#scorecard{padding-top:100px;}
+.scorecard-intro{display:grid;grid-template-columns:1fr 1fr;gap:28px;margin:24px 0;}
+.tier-card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:18px;}
+.tier-num{font-family:var(--display);font-size:32px;font-weight:700;margin-bottom:4px;}
+.tier-card.t1 .tier-num{color:var(--green);}
+.tier-card.t2 .tier-num{color:var(--blue);}
+.tier-title{font-size:13px;font-weight:600;color:var(--text);margin-bottom:6px;}
+.tier-body{font-size:12px;font-weight:300;color:var(--subtle);line-height:1.6;margin-bottom:10px;}
+.tc-item{display:flex;gap:8px;font-size:12px;color:var(--text);line-height:1.4;margin-bottom:4px;}
+.tc-item:before{content:"→";color:var(--green);flex-shrink:0;font-family:var(--mono);}
+.tier-card.t2 .tc-item:before{color:var(--blue);}
+.sc-wrap{background:var(--card);border:1px solid var(--border);border-radius:10px;overflow:hidden;margin-bottom:14px;}
+.sc-table{width:100%;border-collapse:collapse;}
+.sc-table th{font-family:var(--mono);font-size:9px;letter-spacing:0.1em;text-transform:uppercase;
+  color:var(--subtle);text-align:left;padding:9px 14px;background:var(--bg);border-bottom:1px solid var(--border);}
+.sc-table td{padding:9px 14px;border-bottom:1px solid var(--border);font-size:12px;color:var(--text);vertical-align:top;}
+.sc-table tr:last-child td{border-bottom:none;font-weight:700;color:var(--blue);}
+.sc-pts{font-family:var(--mono);font-weight:500;color:var(--blue);}
+.sc-thresh{font-family:var(--mono);font-size:9px;color:var(--subtle);}
+.sc-just{font-size:12px;color:var(--subtle);line-height:1.5;font-weight:300;}
+.threshold-banner{background:rgba(43,95,173,0.05);border:1.5px solid rgba(43,95,173,0.2);
+  border-radius:10px;padding:14px 18px;display:flex;align-items:flex-start;gap:14px;margin-bottom:14px;}
+.thresh-num{font-family:var(--display);font-size:40px;font-weight:700;color:var(--blue);line-height:1;flex-shrink:0;}
+.thresh-title{font-size:13px;font-weight:600;color:var(--text);margin-bottom:3px;}
+.thresh-desc{font-size:12px;font-weight:300;color:var(--subtle);line-height:1.6;}
+.thresh-note{font-size:11px;color:var(--muted);margin-top:5px;font-style:italic;}
+.fair-note{background:rgba(42,122,82,0.04);border:1px solid rgba(42,122,82,0.2);
+  border-radius:8px;padding:12px 16px;font-size:12px;font-weight:300;color:var(--subtle);line-height:1.6;}
+.fair-note strong{color:var(--green);font-weight:600;}
+
+/* DATA MODEL */
+#datamodel{padding-top:100px;}
+.dm-design-bullets{margin:0 0 24px;padding:0;list-style:none;}
+.dm-design-bullets li{display:grid;grid-template-columns:16px 1fr;gap:12px;font-size:13px;font-weight:300;color:var(--text);
+  line-height:1.5;margin-bottom:10px;padding-bottom:10px;border-bottom:1px solid var(--border);align-items:start;}
+.dm-design-bullets li:last-child{border-bottom:none;margin-bottom:0;}
+.dm-design-bullets li:before{content:"→";color:var(--text);font-family:var(--mono);font-weight:600;}
+.dm-design-bullets strong{font-weight:600;}
+.tables-overview{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin:20px 0;position:relative;}
+.nonexhaustive-badge{display:inline-block;font-family:var(--mono);font-size:8px;letter-spacing:0.1em;
+  text-transform:uppercase;background:var(--bg);border:1px solid var(--border);
+  color:var(--muted);padding:2px 7px;border-radius:3px;margin-top:6px;}
+.table-card{background:var(--card);border:1px solid var(--border);border-radius:10px;
+  padding:12px 12px;transition:border-color 0.2s,transform 0.2s;}
+.table-card:hover{border-color:var(--purple);transform:translateY(-2px);}
+.table-name{font-family:var(--mono);font-size:9px;font-weight:500;color:var(--purple);
+  letter-spacing:0.1em;text-transform:uppercase;margin-bottom:7px;}
+.tf{font-family:var(--mono);font-size:10px;color:var(--subtle);padding:2px 0;
+  border-bottom:1px solid var(--border);line-height:1.3;}
+.tf:last-child{border-bottom:none;}
+.tf.key{color:var(--text);}
+.tf.hard-stop{color:var(--red);}
+.tf.calc{color:var(--amber);}
+.tf.fair{color:var(--green);}
+.tf.flag-field{color:var(--orange);}
+.tf.new{color:var(--purple);font-weight:500;}
+.table-more{font-family:var(--mono);font-size:9px;color:var(--muted);margin-top:5px;}
+.dm-links{display:flex;gap:20px;justify-content:center;margin-top:20px;padding-top:16px;border-top:1px solid var(--border);}
+.dm-link{font-family:var(--mono);font-size:10px;letter-spacing:0.1em;
+  color:var(--text);text-decoration:underline;cursor:pointer;}
+
+/* NEXT STEPS */
+#nextsteps{padding-top:100px;min-height:auto;padding-bottom:80px;}
+.next-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:24px;}
+.next-card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:18px;transition:border-color 0.2s,transform 0.2s;}
+.next-card:hover{transform:translateY(-2px);border-color:var(--muted);}
+.next-phase{font-family:var(--mono);font-size:9px;letter-spacing:0.12em;text-transform:uppercase;color:var(--subtle);margin-bottom:3px;}
+.next-num{font-family:var(--display);font-size:36px;font-weight:700;color:var(--border);line-height:1;margin-bottom:10px;}
+.next-title{font-size:13px;font-weight:600;color:var(--text);margin-bottom:7px;}
+.next-item{display:flex;gap:7px;font-size:12px;font-weight:300;color:var(--subtle);line-height:1.4;margin-bottom:4px;}
+.next-item:before{content:"→";color:var(--green);flex-shrink:0;font-family:var(--mono);font-size:9px;margin-top:1px;}
+.closing-bar{margin-top:40px;padding:24px 28px;background:var(--surface);border:1px solid var(--border);
+  border-radius:12px;display:flex;justify-content:space-between;align-items:center;gap:28px;}
+.closing-quote{font-family:var(--display);font-size:clamp(15px,1.8vw,20px);font-style:italic;color:var(--text);line-height:1.4;max-width:580px;}
+.closing-quote em{color:var(--green);font-style:normal;font-weight:600;}
+.closing-meta{text-align:right;flex-shrink:0;}
+.closing-name{font-size:12px;font-weight:600;color:var(--text);}
+.closing-title{font-size:11px;font-weight:300;color:var(--subtle);margin-top:2px;}
+
+/* APPENDIX */
+#appendix{background:var(--surface);padding-top:100px;min-height:auto;padding-bottom:100px;border-top:3px solid var(--text);}
+.appendix-label{font-family:var(--mono);font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--subtle);margin-bottom:12px;}
+.appendix-section{margin-bottom:52px;}
+.appendix-section-title{font-family:var(--display);font-size:20px;font-weight:700;color:var(--text);margin-bottom:6px;padding-bottom:10px;border-bottom:1px solid var(--border);}
+.appendix-section-sub{font-size:13px;font-weight:300;color:var(--subtle);margin-bottom:20px;line-height:1.6;}
+.pain-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;}
+.pain-card{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:14px 16px;border-top:3px solid;}
+.pain-card.critical{border-top-color:var(--red);}
+.pain-card.compliance{border-top-color:var(--orange);}
+.pain-card.systemic{border-top-color:var(--blue);}
+.pain-card-tag{font-family:var(--mono);font-size:8px;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:5px;}
+.critical .pain-card-tag{color:var(--red);}
+.compliance .pain-card-tag{color:var(--orange);}
+.systemic .pain-card-tag{color:var(--blue);}
+.pain-card h4{font-size:12px;font-weight:700;color:var(--text);margin-bottom:5px;}
+.pain-card p{font-size:12px;font-weight:300;color:var(--subtle);line-height:1.5;margin-bottom:6px;}
+.pain-card .workflow-fix{font-size:10px;font-family:var(--mono);color:var(--green);letter-spacing:0.04em;}
+.full-trigger{background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:16px 18px;margin-bottom:10px;}
+.ft-header{display:flex;align-items:center;gap:10px;margin-bottom:10px;}
+.ft-num{font-family:var(--display);font-size:20px;font-weight:700;color:var(--text);line-height:1;flex-shrink:0;}
+.ft-channel{font-family:var(--mono);font-size:8px;text-transform:uppercase;letter-spacing:0.08em;padding:2px 6px;border-radius:3px;flex-shrink:0;}
+.ft-channel.email{background:rgba(43,95,173,0.1);color:var(--blue);}
+.ft-channel.slack{background:rgba(42,122,82,0.1);color:var(--green);}
+.ft-label{font-size:13px;font-weight:700;color:var(--text);}
+.ft-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.ft-field{display:flex;flex-direction:column;gap:3px;}
+.ft-field-label{font-family:var(--mono);font-size:8px;color:var(--subtle);letter-spacing:0.06em;text-transform:uppercase;}
+.ft-field-val{font-size:12px;color:var(--text);line-height:1.5;font-weight:300;}
+.ft-condition{font-family:var(--mono);font-size:9px;color:var(--purple);background:rgba(92,78,204,0.05);border:1px solid rgba(92,78,204,0.15);border-radius:4px;padding:4px 8px;margin-top:6px;line-height:1.5;}
+.ft-message{font-size:12px;color:var(--subtle);font-style:italic;line-height:1.6;border-left:2px solid var(--border);padding-left:10px;margin-top:8px;}
+.dm-appendix-placeholder{background:var(--bg);border:2px dashed var(--border);border-radius:10px;padding:32px;text-align:center;}
+.dm-appendix-placeholder p{font-family:var(--mono);font-size:10px;letter-spacing:0.08em;color:var(--subtle);margin-bottom:10px;}
+.dm-appendix-placeholder a{font-family:var(--mono);font-size:10px;letter-spacing:0.1em;color:var(--text);text-decoration:underline;}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-logo" style="display:flex;align-items:center;gap:10px;"><span style="font-family:var(--display);font-weight:700;color:var(--text);">Valon</span><span style="color:var(--amber);font-size:16px;">✦</span><span style="width:1px;height:18px;background:var(--border);display:inline-block;"></span><span style="font-family:var(--mono);font-size:10px;letter-spacing:0.12em;text-transform:uppercase;color:var(--subtle);">Happy Mortgage</span></div>
+  <div class="nav-links">
+    <a class="nav-link" href="#hero">Overview</a>
+    <a class="nav-link" href="#value">Business Value</a>
+    <a class="nav-link" href="#future">Workflow</a>
+    <a class="nav-link" href="#comms">Triggers</a>
+    <a class="nav-link" href="#scorecard">Scorecard</a>
+    <a class="nav-link" href="#datamodel">Data Model</a>
+    <a class="nav-link" href="#nextsteps">Next Steps</a>
+    <a class="nav-link appendix" href="#appendix">Appendix</a>
+  </div>
+</nav>
+
+<!-- ══ SECTION 1: HERO ══ -->
+<section id="hero">
+  <div style="font-family:var(--display);font-size:clamp(18px,2.5vw,28px);font-weight:600;color:var(--text);margin-bottom:20px;opacity:0;animation:fadeUp 0.6s ease 0.2s forwards;">Happy Mortgage: Escrow Waiver Workflow Proposal</div>
+  <h1 class="hero-h1">The future of escrow management is <em>a continuous risk platform.</em></h1>
+
+  <div style="max-width:760px;margin-bottom:36px;padding:20px 24px;background:rgba(200,150,10,0.06);border-left:3px solid var(--amber);border-radius:0 8px 8px 0;opacity:0;animation:fadeUp 0.6s ease 0.4s forwards;">
+    <div style="font-family:var(--display);font-size:14px;font-weight:600;color:var(--text);margin-bottom:12px;">A future state that creates value for core stakeholders:</div>
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px;">
+      <div>
+        <div style="font-family:var(--mono);font-size:8px;letter-spacing:0.1em;text-transform:uppercase;color:var(--text);margin-bottom:6px;">Homeowner</div>
+        <div style="font-size:12px;font-weight:300;color:var(--text);line-height:1.5;">Knows eligibility before investing effort. Fast decision. Clear reasoning if denied. Confidence taxes and insurance are handled.</div>
+      </div>
+      <div>
+        <div style="font-family:var(--mono);font-size:8px;letter-spacing:0.1em;text-transform:uppercase;color:var(--blue);margin-bottom:6px;">Investor</div>
+        <div style="font-size:12px;font-weight:300;color:var(--text);line-height:1.5;">Only eligible borrowers reach decisioning. Rules applied consistently. Audit trail exists. No increase in delinquency or defaults.</div>
+      </div>
+      <div>
+        <div style="font-family:var(--mono);font-size:8px;letter-spacing:0.1em;text-transform:uppercase;color:var(--green);margin-bottom:6px;">Servicing Ops</div>
+        <div style="font-size:12px;font-weight:300;color:var(--text);line-height:1.5;">Auto-adjudicated where rules are clear. Only edge cases reviewed manually. No chasing documents. No spreadsheet tracking.</div>
+      </div>
+      <div>
+        <div style="font-family:var(--mono);font-size:8px;letter-spacing:0.1em;text-transform:uppercase;color:var(--purple);margin-bottom:6px;">Compliance</div>
+        <div style="font-size:12px;font-weight:300;color:var(--text);line-height:1.5;">Every decision explainable and reproducible. No policy exceptions without approval. Audit preserved forever.</div>
+      </div>
+    </div>
+  </div>
+
+  <div style="opacity:0;animation:fadeUp 0.6s ease 0.55s forwards;">
+    <div style="font-family:var(--mono);font-size:9px;letter-spacing:0.14em;text-transform:uppercase;color:var(--subtle);margin-bottom:14px;">Four levels of maturity: most servicers stop at Level 1</div>
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:0;border:1px solid var(--border);border-radius:10px;overflow:hidden;">
+      <div style="padding:16px;border-right:1px solid var(--border);background:var(--surface);">
+        <div style="font-family:var(--mono);font-size:9px;letter-spacing:0.08em;color:var(--subtle);margin-bottom:5px;">LEVEL 1</div>
+        <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:5px;line-height:1.3;">Intake Workflow</div>
+        <div style="font-size:12px;font-weight:300;color:var(--text);line-height:1.4;">Email-driven. Human-driven. Slow. Most organizations stop here.</div>
+        <div style="margin-top:10px;font-family:var(--mono);font-size:8px;color:var(--muted);">WHERE WE ARE TODAY</div>
+      </div>
+      <div style="padding:16px;border-right:1px solid var(--border);background:var(--surface);">
+        <div style="font-family:var(--mono);font-size:9px;letter-spacing:0.08em;color:var(--blue);margin-bottom:5px;">LEVEL 2</div>
+        <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:5px;line-height:1.3;">Rules-Based Eligibility</div>
+        <div style="font-size:12px;font-weight:300;color:var(--text);line-height:1.4;">System checks investor rules, LTV, payment history, loan seasoning. Immediate feedback. Usually the highest-ROI phase.</div>
+      </div>
+      <div style="padding:16px;border-right:1px solid var(--border);background:rgba(42,122,82,0.03);">
+        <div style="font-family:var(--mono);font-size:9px;letter-spacing:0.08em;color:var(--green);margin-bottom:5px;">LEVEL 3</div>
+        <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:5px;line-height:1.3;">Automated Decisioning</div>
+        <div style="font-size:12px;font-weight:300;color:var(--text);line-height:1.4;">System recommends auto-approve, auto-deny, or human review. Servicing cost drops significantly. Judgment reserved for edge cases.</div>
+        <div style="margin-top:10px;font-family:var(--mono);font-size:8px;color:var(--green);letter-spacing:0.06em;font-weight:600;">THIS PROPOSAL</div>
+      </div>
+      <div style="padding:16px;background:rgba(200,150,10,0.04);">
+        <div style="font-family:var(--mono);font-size:9px;letter-spacing:0.08em;color:var(--amber);margin-bottom:5px;">LEVEL 4</div>
+        <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:5px;line-height:1.3;">Continuous Risk Platform</div>
+        <div style="font-size:12px;font-weight:300;color:var(--text);line-height:1.4;">System continuously evaluates the portfolio. Borrowers become potentially eligible before they ask. We proactively generate the conversation.</div>
+        <div style="margin-top:10px;font-family:var(--mono);font-size:8px;color:var(--amber);letter-spacing:0.06em;font-weight:600;">THE NORTH STAR</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ SECTION 2: VALUE ══ -->
+<section id="value">
+  <div class="section-eyebrow">02: Business Value</div>
+  <div class="value-grid reveal">
+    <div class="value-left">
+      <h2>Value-capturing levers to get us <em>to the future state.</em></h2>
+      <p>Getting waiver decisions right is both a risk management imperative and a commercial opportunity. Each of these levers is directly unlocked by the workflow design that follows.</p>
+    </div>
+    <div class="kpi-stack">
+      <div class="kpi-card"><div class="kpi-icon">💰</div><div class="kpi-body"><div class="kpi-title">Waiver fees are direct revenue</div><div class="kpi-desc">A systematic workflow that processes eligible borrowers quickly and accurately expands revenue capture without adding headcount.</div></div></div>
+      <div class="kpi-card"><div class="kpi-icon">⚙️</div><div class="kpi-body"><div class="kpi-title">Administrative cost reduction</div><div class="kpi-desc">Approved waivers eliminate yearly escrow analysis, manual tax and insurance disbursements, and reconciliation overhead.</div></div></div>
+      <div class="kpi-card"><div class="kpi-icon">🛡️</div><div class="kpi-body"><div class="kpi-title">Liability reduction and capital efficiency</div><div class="kpi-desc">Every correctly approved waiver removes escrow liability from our portfolio: eliminating reconciliation exposure and removing our obligation to advance funds against sudden tax or insurance premium increases.</div></div></div>
+      <div class="kpi-card"><div class="kpi-icon">🔒</div><div class="kpi-body"><div class="kpi-title">Every decision documented: audit-ready at any time</div><div class="kpi-desc">No industry benchmark exists for escrow waiver processing time, denial rates, or post-waiver monitoring outcomes. Servicers that build this capability are setting the standard, not meeting one.</div></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ SECTION 3: FUTURE STATE ══ -->
+<section id="future">
+  <div class="section-eyebrow">03: The New Workflow</div>
+  <h2 class="section-h2 reveal">Three paths. One principle.</h2>
+  <div class="reveal" style="margin-bottom:20px;">
+    <div style="font-family:var(--mono);font-size:9px;letter-spacing:0.14em;text-transform:uppercase;color:var(--text);margin-bottom:6px;">Human-in-the-Loop Operating System</div>
+    <div style="background:rgba(200,150,10,0.06);border:1px solid rgba(200,150,10,0.25);border-radius:8px;padding:12px 18px;font-size:13px;font-weight:400;font-style:italic;color:var(--text);font-family:var(--display);">The system recommends, documents, and routes. Every recommendation requires human approval before any notification reaches the borrower or a final waiver decision is made.</div>
+  </div>
+  <div class="path-overview reveal">
+    <div class="path-card a"><div class="path-letter">A</div><div class="path-name">Standard Approval</div><div class="path-desc">All GSE and state criteria met. System recommends, analyst confirms, financial capacity verified.</div></div>
+    <div class="path-card b"><div class="path-letter">B</div><div class="path-name">Flagged: Extended Review</div><div class="path-desc">System identifies a condition requiring extended expert deliberation: ambiguous GSE rule application or contested data. Routes a structured question packet to analyst and Risk.</div></div>
+    <div class="path-card c"><div class="path-letter">C</div><div class="path-name">Denied</div><div class="path-desc">Hard GSE or state disqualifier confirmed. Analyst signs off, borrower receives clear denial with reason and re-application path, re-evaluation watch activates automatically.</div></div>
+  </div>
+
+  <div class="reveal" style="margin-top:28px;padding-top:28px;border-top:1px solid var(--border);">
+    <p style="font-family:var(--display);font-size:15px;font-weight:400;font-style:italic;color:var(--text);line-height:1.6;margin-bottom:20px;">The primary workflow and the paths through it are powered by:</p>
+    <div style="display:flex;gap:14px;margin-bottom:28px;">
+      <a href="#comms" style="text-decoration:none;flex:1;">
+        <div style="background:var(--card);border:1px solid var(--border);border-radius:10px;padding:14px 16px;transition:border-color 0.2s,transform 0.2s;display:flex;align-items:flex-start;gap:14px;" onmouseover="this.style.borderColor='var(--amber)';this.style.transform='translateY(-2px)'" onmouseout="this.style.borderColor='var(--border)';this.style.transform='none'">
+          <div style="font-family:var(--display);font-size:24px;font-weight:700;color:var(--amber);line-height:1;flex-shrink:0;margin-top:2px;color:var(--text);">01</div>
+          <div>
+            <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:4px;line-height:1.3;">16 Workflow Triggers</div>
+            <div style="font-size:12px;font-weight:300;color:var(--subtle);line-height:1.5;">Structured touchpoints that keep every stakeholder informed and every borrower relationship active at every stage, including denials.</div>
+          </div>
+        </div>
+      </a>
+      <a href="#scorecard" style="text-decoration:none;flex:1;">
+        <div style="background:var(--card);border:1px solid var(--border);border-radius:10px;padding:14px 16px;transition:border-color 0.2s,transform 0.2s;display:flex;align-items:flex-start;gap:14px;" onmouseover="this.style.borderColor='var(--amber)';this.style.transform='translateY(-2px)'" onmouseout="this.style.borderColor='var(--border)';this.style.transform='none'">
+          <div style="font-family:var(--display);font-size:24px;font-weight:700;color:var(--amber);line-height:1;flex-shrink:0;margin-top:2px;color:var(--text);">02</div>
+          <div>
+            <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:4px;line-height:1.3;">Financial Capacity Scorecard</div>
+            <div style="font-size:12px;font-weight:300;color:var(--subtle);line-height:1.5;">A documented, defensible methodology for the one question GSEs require servicers to answer but don't define how to assess.</div>
+          </div>
+        </div>
+      </a>
+      <a href="#datamodel" style="text-decoration:none;flex:1;">
+        <div style="background:var(--card);border:1px solid var(--border);border-radius:10px;padding:14px 16px;transition:border-color 0.2s,transform 0.2s;display:flex;align-items:flex-start;gap:14px;" onmouseover="this.style.borderColor='var(--amber)';this.style.transform='translateY(-2px)'" onmouseout="this.style.borderColor='var(--border)';this.style.transform='none'">
+          <div style="font-family:var(--display);font-size:24px;font-weight:700;color:var(--amber);line-height:1;flex-shrink:0;margin-top:2px;color:var(--text);">03</div>
+          <div>
+            <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:4px;line-height:1.3;">Five-Table Data Model</div>
+            <div style="font-size:12px;font-weight:300;color:var(--subtle);line-height:1.5;">Every field traces to a GSE rule, a state requirement, or a deliberate design decision. Nothing arbitrary.</div>
+          </div>
+        </div>
+      </a>
+    </div>
+  </div>
+
+  <div class="viz-placeholder reveal">
+    <div class="viz-placeholder-icon">⬡</div>
+    <div class="viz-placeholder-title">Interactive Workflow Visualization</div>
+    <p style="font-size:12px;color:var(--muted);margin-bottom:10px;">End-to-end process flow: all three paths, decision nodes, data triggers, and flag registry</p>
+    <a class="viz-placeholder-link" href="https://drive.google.com/drive/folders/1Gow0diUjDRWL-sjtClga2coMj_Z1MpZR" target="_blank">View interactive flowchart →</a>
+  </div>
+
+</section>
+
+<!-- ══ SECTION 4: TRIGGERS ══ -->
+<section id="comms">
+  <div class="section-eyebrow">04: Workflow Triggers</div>
+  <h2 class="section-h2 reveal"><span style="font-family:var(--mono);font-size:18px;color:var(--text);margin-right:12px;">01</span>The system keeps every stakeholder informed.<br><em>Every trigger traces to a pain point.</em></h2>
+  <div style="margin-bottom:28px;" class="reveal">
+    <div style="display:flex;flex-direction:column;gap:10px;">
+      <div style="display:flex;align-items:flex-start;gap:12px;font-size:13px;color:var(--text);line-height:1.5;"><span style="color:var(--text);font-family:var(--mono);font-weight:700;flex-shrink:0;">→</span><span>Borrower hears nothing after submitting: no acknowledgment, no timeline, no sense of what happens next</span></div>
+      <div style="display:flex;align-items:flex-start;gap:12px;font-size:13px;color:var(--text);line-height:1.5;"><span style="color:var(--text);font-family:var(--mono);font-weight:700;flex-shrink:0;">→</span><span>Analyst discovers new requests manually: no systematic queue, no prioritization, no visibility</span></div>
+      <div style="display:flex;align-items:flex-start;gap:12px;font-size:13px;color:var(--text);line-height:1.5;"><span style="color:var(--text);font-family:var(--mono);font-weight:700;flex-shrink:0;">→</span><span>Flagged cases stall waiting for borrower documentation: no structured follow-up, no tracking of whether a response ever arrived</span></div>
+      <div style="display:flex;align-items:flex-start;gap:12px;font-size:13px;color:var(--text);line-height:1.5;"><span style="color:var(--text);font-family:var(--mono);font-weight:700;flex-shrink:0;">→</span><span>Denials leave borrowers without a path forward: no explanation, no guidance, no re-engagement opportunity</span></div>
+      <div style="display:flex;align-items:flex-start;gap:12px;font-size:13px;color:var(--text);line-height:1.5;"><span style="color:var(--text);font-family:var(--mono);font-weight:700;flex-shrink:0;">→</span><span>Delinquency discovered retroactively: the team does not receive this as an insight to inform future reviews or portfolio risk assessment</span></div>
+    </div>
+  </div>
+
+  <div style="background:rgba(200,150,10,0.06);border-left:3px solid var(--amber);border-radius:0 8px 8px 0;padding:14px 20px;margin-bottom:28px;max-width:680px;" class="reveal">
+    <p style="font-size:14px;font-weight:400;color:var(--text);line-height:1.7;font-family:var(--display);font-style:italic;">These triggers are structured opportunities to build trust with borrowers and enable our analysts at every stage of the process, even denials.</p>
+  </div>
+
+  <div class="reveal" style="margin-top:8px;">
+    <div style="font-family:var(--mono);font-size:9px;letter-spacing:0.14em;text-transform:uppercase;color:var(--subtle);margin-bottom:12px;">Trigger examples — click to expand</div>
+    <div style="display:flex;flex-direction:column;gap:8px;">
+
+      <!-- COLLAPSIBLE 1: WAIVER RECEIPT -->
+      <div style="border:1px solid var(--border);border-radius:10px;overflow:hidden;">
+        <button onclick="this.nextElementSibling.style.display=this.nextElementSibling.style.display==='none'?'block':'none';this.querySelector('.toggle-arrow').textContent=this.nextElementSibling.style.display==='none'?'▸':'▾';" style="width:100%;display:flex;justify-content:space-between;align-items:center;padding:14px 18px;background:var(--card);border:none;cursor:pointer;text-align:left;font-family:var(--body);">
+          <div>
+            <div style="font-family:var(--mono);font-size:9px;letter-spacing:0.1em;text-transform:uppercase;color:var(--purple);margin-bottom:3px;">Triggers #1 + #2</div>
+            <div style="font-size:13px;font-weight:600;color:var(--text);">Waiver Receipt Notification</div>
+          </div>
+          <span class="toggle-arrow" style="font-size:16px;color:var(--amber);">▸</span>
+        </button>
+        <div style="display:none;padding:0 18px 18px;">
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:16px;">
+            <div>
+              <div style="font-family:var(--mono);font-size:8px;letter-spacing:0.08em;text-transform:uppercase;color:var(--subtle);margin-bottom:6px;">Condition</div>
+              <div style="font-family:var(--mono);font-size:11px;color:var(--purple);background:rgba(92,78,204,0.05);border:1px solid rgba(92,78,204,0.15);border-radius:6px;padding:10px 12px;line-height:1.8;">request_status = RECEIVED<br>AND notification_sent_borrower = FALSE</div>
+            </div>
+            <div>
+              <div style="font-family:var(--mono);font-size:8px;letter-spacing:0.08em;text-transform:uppercase;color:var(--subtle);margin-bottom:6px;">What Fires</div>
+              <div style="font-size:12px;color:var(--text);line-height:1.6;">Email to borrower confirming receipt with programmed SLA and link to self-management resources. Simultaneously: Slack to assigned analyst with borrower name, loan ID, and queue alert.</div>
+            </div>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;">
+            <div>
+              <div style="font-family:var(--mono);font-size:9px;letter-spacing:0.1em;text-transform:uppercase;color:var(--blue);margin-bottom:8px;">Borrower — Email</div>
+              <div style="background:var(--surface);border:1px solid var(--border);border-radius:10px;overflow:hidden;box-shadow:0 2px 12px rgba(0,0,0,0.05);">
+                <div style="background:var(--text);padding:8px 14px;display:flex;align-items:center;gap:7px;">
+                  <div style="width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,0.2);"></div>
+                  <div style="width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,0.2);"></div>
+                  <div style="width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,0.2);"></div>
+                  <span style="font-family:var(--mono);font-size:8px;color:rgba(255,255,255,0.4);margin-left:6px;">EMAIL</span>
+                </div>
+                <div style="padding:14px 16px;">
+                  <div style="font-family:var(--mono);font-size:8px;color:var(--muted);margin-bottom:2px;">FROM: Happy Mortgage &lt;servicing@happymortgage.com&gt;</div>
+                  <div style="font-family:var(--mono);font-size:8px;color:var(--muted);margin-bottom:10px;">TO: borrower@email.com</div>
+                  <div style="font-size:12px;font-weight:700;color:var(--text);font-family:var(--display);margin-bottom:10px;padding-bottom:8px;border-bottom:1px solid var(--border);">We received your escrow waiver request</div>
+                  <div style="font-size:11px;color:var(--text);line-height:1.7;margin-bottom:8px;">Hi [Borrower Name], your request has been received and is under review. You can expect a decision within <strong>5 business days</strong>.</div>
+                  <div style="background:rgba(42,122,82,0.06);border:1px solid rgba(42,122,82,0.2);border-radius:6px;padding:8px 12px;margin-bottom:8px;">
+                    <div style="font-size:10px;font-weight:600;color:var(--green);margin-bottom:2px;">Your self-management guide</div>
+                    <div style="font-size:10px;color:var(--subtle);">What changes, what to expect, and how to plan ahead.</div>
+                    <div style="font-family:var(--mono);font-size:9px;color:var(--text);margin-top:4px;">View resources →</div>
+                  </div>
+                  <div style="font-size:10px;color:var(--muted);padding-top:8px;border-top:1px solid var(--border);">Happy Mortgage Servicing Team</div>
+                </div>
+              </div>
+            </div>
+            <div>
+              <div style="font-family:var(--mono);font-size:9px;letter-spacing:0.1em;text-transform:uppercase;color:var(--green);margin-bottom:8px;">Analyst — Slack</div>
+              <div style="background:#1A1D21;border-radius:10px;overflow:hidden;box-shadow:0 2px 12px rgba(0,0,0,0.15);">
+                <div style="background:#19171D;padding:8px 14px;display:flex;align-items:center;gap:8px;border-bottom:1px solid rgba(255,255,255,0.08);">
+                  <div style="width:16px;height:16px;border-radius:4px;background:#4A154B;display:flex;align-items:center;justify-content:center;font-size:9px;">⚡</div>
+                  <span style="font-size:11px;font-weight:600;color:rgba(255,255,255,0.9);font-family:var(--body);">Slack</span>
+                  <span style="font-family:var(--mono);font-size:8px;color:rgba(255,255,255,0.3);">#escrow-queue</span>
+                </div>
+                <div style="padding:12px 14px;">
+                  <div style="display:flex;gap:8px;margin-bottom:10px;">
+                    <div style="width:28px;height:28px;border-radius:5px;background:linear-gradient(135deg,#C8960A,#2A7A52);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:white;">HM</div>
+                    <div style="flex:1;">
+                      <div style="display:flex;align-items:baseline;gap:6px;margin-bottom:3px;">
+                        <span style="font-size:11px;font-weight:700;color:rgba(255,255,255,0.9);font-family:var(--body);">Valon Workflow</span>
+                        <span style="font-family:var(--mono);font-size:8px;color:rgba(255,255,255,0.3);">9:04 AM</span>
+                      </div>
+                      <div style="background:#222529;border-radius:6px;padding:10px 12px;border-left:3px solid #C8960A;font-size:11px;color:rgba(255,255,255,0.9);line-height:1.6;font-family:var(--body);">
+                        <span style="color:#C8960A;font-weight:600;">New waiver request</span><br>
+                        <span style="color:rgba(255,255,255,0.5);">Borrower:</span> Jordan Rivera<br>
+                        <span style="color:rgba(255,255,255,0.5);">Loan:</span> #LN-2024-08841<br>
+                        <div style="font-size:10px;color:rgba(255,255,255,0.4);margin-top:6px;padding-top:6px;border-top:1px solid rgba(255,255,255,0.08);">File in queue. No borrower contact needed.</div>
+                      </div>
+                    </div>
+                  </div>
+                  <div style="display:flex;gap:8px;">
+                    <div style="width:28px;height:28px;border-radius:50%;background:#2B5FAD;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:white;">AK</div>
+                    <div style="font-size:11px;color:rgba(255,255,255,0.7);font-family:var(--body);padding-top:6px;">On it 👍 pulling the file now</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- COLLAPSIBLE 2: APPROVAL -->
+      <div style="border:1px solid var(--border);border-radius:10px;overflow:hidden;">
+        <button onclick="this.nextElementSibling.style.display=this.nextElementSibling.style.display==='none'?'block':'none';this.querySelector('.toggle-arrow').textContent=this.nextElementSibling.style.display==='none'?'▸':'▾';" style="width:100%;display:flex;justify-content:space-between;align-items:center;padding:14px 18px;background:var(--card);border:none;cursor:pointer;text-align:left;font-family:var(--body);">
+          <div>
+            <div style="font-family:var(--mono);font-size:9px;letter-spacing:0.1em;text-transform:uppercase;color:var(--green);margin-bottom:3px;">Triggers #6 + #7</div>
+            <div style="font-size:13px;font-weight:600;color:var(--text);">Approval Notification</div>
+          </div>
+          <span class="toggle-arrow" style="font-size:16px;color:var(--amber);">▸</span>
+        </button>
+        <div style="display:none;padding:0 18px 18px;">
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:16px;">
+            <div>
+              <div style="font-family:var(--mono);font-size:8px;letter-spacing:0.08em;text-transform:uppercase;color:var(--subtle);margin-bottom:6px;">Condition</div>
+              <div style="font-family:var(--mono);font-size:11px;color:var(--purple);background:rgba(92,78,204,0.05);border:1px solid rgba(92,78,204,0.15);border-radius:6px;padding:10px 12px;line-height:1.8;">request_status = APPROVED<br>AND notification_sent_borrower = FALSE<br>AND state_notice_deadline &gt;= TODAY()<br>AND denial_notice_template_id IS NOT NULL</div>
+            </div>
+            <div>
+              <div style="font-family:var(--mono);font-size:8px;letter-spacing:0.08em;text-transform:uppercase;color:var(--subtle);margin-bottom:6px;">What Fires</div>
+              <div style="font-size:12px;color:var(--text);line-height:1.6;">Approval email using state-compliant template — notice language and timing pulled from STATE_RULES at send time. Simultaneously: Slack to assigned analyst with path taken (A1 or A2) and recommended action to call borrower.</div>
+            </div>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;">
+            <div>
+              <div style="font-family:var(--mono);font-size:9px;letter-spacing:0.1em;text-transform:uppercase;color:var(--blue);margin-bottom:8px;">Borrower — Email</div>
+              <div style="background:var(--surface);border:1px solid var(--border);border-radius:10px;overflow:hidden;box-shadow:0 2px 12px rgba(0,0,0,0.05);">
+                <div style="background:var(--text);padding:8px 14px;display:flex;align-items:center;gap:7px;">
+                  <div style="width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,0.2);"></div>
+                  <div style="width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,0.2);"></div>
+                  <div style="width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,0.2);"></div>
+                  <span style="font-family:var(--mono);font-size:8px;color:rgba(255,255,255,0.4);margin-left:6px;">EMAIL</span>
+                </div>
+                <div style="padding:14px 16px;">
+                  <div style="font-family:var(--mono);font-size:8px;color:var(--muted);margin-bottom:2px;">FROM: Happy Mortgage &lt;servicing@happymortgage.com&gt;</div>
+                  <div style="font-family:var(--mono);font-size:8px;color:var(--muted);margin-bottom:10px;">TO: borrower@email.com</div>
+                  <div style="font-size:12px;font-weight:700;color:var(--text);font-family:var(--display);margin-bottom:10px;padding-bottom:8px;border-bottom:1px solid var(--border);">Great news — your escrow waiver is approved</div>
+                  <div style="font-size:11px;color:var(--text);line-height:1.7;margin-bottom:8px;">Hi [Borrower Name], your escrow waiver has been approved effective [date].</div>
+                  <div style="background:rgba(42,122,82,0.06);border:1px solid rgba(42,122,82,0.2);border-radius:6px;padding:8px 12px;margin-bottom:8px;">
+                    <div style="font-size:10px;font-weight:600;color:var(--green);margin-bottom:2px;">Your next steps guide</div>
+                    <div style="font-size:10px;color:var(--subtle);">What changes, your new responsibilities, and how to manage payments going forward.</div>
+                    <div style="font-family:var(--mono);font-size:9px;color:var(--text);margin-top:4px;">View guide →</div>
+                  </div>
+                  <div style="font-size:11px;color:var(--text);line-height:1.7;">Your specialist will be in touch to walk you through everything.</div>
+                  <div style="font-size:10px;color:var(--muted);padding-top:8px;margin-top:8px;border-top:1px solid var(--border);">Happy Mortgage Servicing Team</div>
+                </div>
+              </div>
+            </div>
+            <div>
+              <div style="font-family:var(--mono);font-size:9px;letter-spacing:0.1em;text-transform:uppercase;color:var(--green);margin-bottom:8px;">Analyst — Slack</div>
+              <div style="background:#1A1D21;border-radius:10px;overflow:hidden;box-shadow:0 2px 12px rgba(0,0,0,0.15);">
+                <div style="background:#19171D;padding:8px 14px;display:flex;align-items:center;gap:8px;border-bottom:1px solid rgba(255,255,255,0.08);">
+                  <div style="width:16px;height:16px;border-radius:4px;background:#4A154B;display:flex;align-items:center;justify-content:center;font-size:9px;">⚡</div>
+                  <span style="font-size:11px;font-weight:600;color:rgba(255,255,255,0.9);font-family:var(--body);">Slack</span>
+                  <span style="font-family:var(--mono);font-size:8px;color:rgba(255,255,255,0.3);">#escrow-queue</span>
+                </div>
+                <div style="padding:12px 14px;">
+                  <div style="display:flex;gap:8px;">
+                    <div style="width:28px;height:28px;border-radius:5px;background:linear-gradient(135deg,#C8960A,#2A7A52);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:white;">HM</div>
+                    <div style="flex:1;">
+                      <div style="display:flex;align-items:baseline;gap:6px;margin-bottom:3px;">
+                        <span style="font-size:11px;font-weight:700;color:rgba(255,255,255,0.9);font-family:var(--body);">Valon Workflow</span>
+                        <span style="font-family:var(--mono);font-size:8px;color:rgba(255,255,255,0.3);">2:18 PM</span>
+                      </div>
+                      <div style="background:#222529;border-radius:6px;padding:10px 12px;border-left:3px solid #2A7A52;font-size:11px;color:rgba(255,255,255,0.9);line-height:1.6;font-family:var(--body);">
+                        <span style="color:#2ECC8E;font-weight:600;">Waiver approved ✓</span><br>
+                        <span style="color:rgba(255,255,255,0.5);">Borrower:</span> Jordan Rivera<br>
+                        <span style="color:rgba(255,255,255,0.5);">Loan:</span> #LN-2024-08841<br>
+                        <span style="color:rgba(255,255,255,0.5);">Path:</span> A1 — Standard Confirmation<br>
+                        <div style="font-size:10px;color:rgba(255,255,255,0.4);margin-top:6px;padding-top:6px;border-top:1px solid rgba(255,255,255,0.08);">Recommended action: Call Jordan to walk through what changes and confirm they feel prepared.</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+  <div style="background:rgba(200,150,10,0.08);border:1px solid rgba(200,150,10,0.25);border-radius:6px;padding:8px 16px;font-family:var(--mono);font-size:10px;letter-spacing:0.06em;color:var(--amber);margin-bottom:16px;">Note: triggers are also informed by state notice timing rules (STATE_RULES.required_response_days) and GSE disclosure language requirements — both reflected in Triggers #8 and #15a–#15b</div>
+  <div class="appendix-link-row"><a class="appendix-link-btn" href="#appendix">See full trigger detail in appendix →</a></div>
+</section>
+
+<!-- ══ SECTION 5: SCORECARD ══ -->
+<section id="scorecard">
+  <div class="section-eyebrow">05: Financial Capacity Scorecard</div>
+  <h2 class="section-h2 reveal"><span style="font-family:var(--mono);font-size:18px;color:var(--text);margin-right:12px;">02</span>Both GSEs require financial capacity assessment.<br>Neither <em>defines how to do it.</em></h2>
+  <p class="section-sub reveal">We've built a documented, defensible methodology that reduces our compliance exposure, protects against fair lending risk, and produces a structured decision: not a gut call.</p>
+  <div class="scorecard-intro reveal">
+    <div class="tier-card t1">
+      <div class="tier-num">A1</div>
+      <div class="tier-title">Standard Confirmation</div>
+      <div class="tier-body">All capacity signals present, clean, and unambiguous. Direct recommendation: no scoring required.</div>
+      <div class="tc-item">Payment history clean across GSE-specific lookback window</div>
+      <div class="tc-item">No prior waiver violation</div>
+      <div class="tc-item">Escrow surplus history: CONSISTENT_SURPLUS</div>
+      <div class="tc-item">No contested data inputs</div>
+    </div>
+    <div class="tier-card t2">
+      <div class="tier-num">A2</div>
+      <div class="tier-title">Compensating Factor Scorecard</div>
+      <div class="tier-body">One or more signals are thin, borderline, or missing. Scorecard runs on available data and produces a documented conclusion. Risk co-sign required on all A2 approvals.</div>
+      <div class="tc-item">Triggers when signals present but not definitive: not a second gate</div>
+      <div class="tc-item">Weighted across five behavioral and financial factors</div>
+      <div class="tc-item">Pass threshold: 60 / 100 points</div>
+      <div class="tc-item">prior_waiver_violation = TRUE is a hard disqualifier regardless of score</div>
+    </div>
+  </div>
+  <div class="sc-wrap reveal">
+    <table class="sc-table">
+      <thead><tr><th>Factor</th><th>Max</th><th>Thresholds</th><th>Justification</th></tr></thead>
+      <tbody>
+        <tr><td><strong>payment_shock_ratio</strong></td><td><span class="sc-pts">35</span></td><td><span class="sc-thresh">35 if ≤10% · 20 if 11–15% · 0 if &gt;15%</span></td><td><span class="sc-just">Most direct answer to the GSE's question. CFPB research: obligations below 10% of income correlate with near-zero delinquency.</span></td></tr>
+        <tr><td><strong>escrow_surplus_history</strong></td><td><span class="sc-pts">25</span></td><td><span class="sc-thresh">25 CONSISTENT · 10 NEUTRAL · 0 DEFICIT</span></td><td><span class="sc-just">Direct behavioral evidence from the loan itself. Observed behavior, not a proxy.</span></td></tr>
+        <tr><td><strong>debt_to_income_ratio</strong></td><td><span class="sc-pts">20</span></td><td><span class="sc-thresh">20 if ≤36% · 10 if 37–43% · 0 if &gt;43%</span></td><td><span class="sc-just">36% DTI is the established underwriting ceiling for financial flexibility. Less biased than credit score.</span></td></tr>
+        <tr><td><strong>income_volatility_12mo</strong></td><td><span class="sc-pts">15</span></td><td><span class="sc-thresh">15 CoV ≤0.2 · 8 CoV 0.21–0.35 · 0 &gt;0.35</span></td><td><span class="sc-just">Measures predictability regardless of income source. Protects non-traditional earners from disparate impact.</span></td></tr>
+        <tr><td><strong>income_trend</strong></td><td><span class="sc-pts">5</span></td><td><span class="sc-thresh">5 if GROWING or STABLE · 0 if DECLINING</span></td><td><span class="sc-just">Directional tiebreaker only.</span></td></tr>
+        <tr><td colspan="2"><strong>Maximum</strong></td><td><span class="sc-pts">100</span></td><td></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="threshold-banner reveal">
+    <div class="thresh-num">60</div>
+    <div>
+      <div class="thresh-title">Pass Threshold: Equivalent Risk Substitution</div>
+      <div class="thresh-desc">60 points represents the minimum compensating factor score at which default risk on tax and insurance obligations is comparable to an A1 borrower. Anchored to Urban Institute HFPC and FHFA research on alternative credit assessment.</div>
+      <div class="thresh-note">Citation available on request. Weights to be validated against Happy Mortgage loan performance data over time.</div>
+    </div>
+  </div>
+  <div class="fair-note reveal"><strong>Fair lending note:</strong> income_type is collected for disparate impact monitoring only: never used in scoring. The scorecard measures what borrowers do, not how they earn. Protects non-traditional earners including freelancers, creators, and contract workers.</div>
+</section>
+
+<!-- ══ SECTION 6: DATA MODEL ══ -->
+<section id="datamodel">
+  <div class="section-eyebrow">06: Data Model</div>
+  <h2 class="section-h2 reveal"><span style="font-family:var(--mono);font-size:18px;color:var(--text);margin-right:12px;">03</span>Five tables. Every field traces to a rule,<br>a requirement, or a <em>design decision.</em></h2>
+  <p class="section-sub reveal"><span style="color:var(--red)">Red = hard stop</span> · <span style="color:var(--amber)">Amber = calculated</span> · <span style="color:var(--green)">Green = fair lending monitor only</span> · <span style="color:var(--orange)">Orange = flag trigger</span> · <span style="color:var(--purple)">Purple = net new</span></p>
+
+  <div class="reveal" style="margin-bottom:24px;">
+    <table style="width:100%;border-collapse:collapse;background:var(--card);border:1px solid var(--border);border-radius:10px;overflow:hidden;">
+      <thead>
+        <tr>
+          <th style="font-family:var(--mono);font-size:9px;letter-spacing:0.1em;text-transform:uppercase;color:var(--subtle);text-align:left;padding:10px 16px;background:var(--bg);border-bottom:1px solid var(--border);width:30%;">Design Principle</th>
+          <th style="font-family:var(--mono);font-size:9px;letter-spacing:0.1em;text-transform:uppercase;color:var(--subtle);text-align:left;padding:10px 16px;background:var(--bg);border-bottom:1px solid var(--border);">Description</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td style="padding:12px 16px;border-bottom:1px solid var(--border);font-size:12px;font-weight:700;color:var(--text);vertical-align:top;">Investor-aware branching at every step</td>
+          <td style="padding:12px 16px;border-bottom:1px solid var(--border);font-size:12px;font-weight:300;color:var(--subtle);line-height:1.6;vertical-align:top;">Fannie and Freddie diverge on seasoning, payment lookback, and ineligible loan types. investor_type is evaluated first — correct GSE rules applied automatically at every downstream step.</td>
+        </tr>
+        <tr style="background:var(--bg);">
+          <td style="padding:12px 16px;border-bottom:1px solid var(--border);font-size:12px;font-weight:700;color:var(--text);vertical-align:top;">State rules as a configurable table</td>
+          <td style="padding:12px 16px;border-bottom:1px solid var(--border);font-size:12px;font-weight:300;color:var(--subtle);line-height:1.6;vertical-align:top;">State-specific LTV thresholds, notice timing, and denial language pre-loaded in STATE_RULES. State law changes update the table, not the workflow. Servicer-specific overlays can be added without redesign.</td>
+        </tr>
+        <tr>
+          <td style="padding:12px 16px;font-size:12px;font-weight:700;color:var(--text);vertical-align:top;">income_type: collected but never scored</td>
+          <td style="padding:12px 16px;font-size:12px;font-weight:300;color:var(--subtle);line-height:1.6;vertical-align:top;">Captured for fair lending monitoring and disparate impact auditing only — never used as a decision input. Protects against bias toward traditional employment structures and non-traditional earners.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="tables-overview reveal">
+    <div class="table-card">
+      <div class="table-name">LOAN</div>
+      <div class="tf key">loan_id</div>
+      <div class="tf key">investor_type</div>
+      <div class="tf key">current_ltv</div>
+      <div class="tf hard-stop">has_active_mi</div>
+      <div class="tf hard-stop">loan_type</div>
+      <div class="tf hard-stop">is_modified</div>
+      <div class="tf flag-field">fema_ia_declaration_active</div>
+      <div class="tf flag-field">valuation_disputed</div>
+      <div class="tf">is_flood_zone</div>
+      <div class="tf">state</div>
+      <div class="nonexhaustive-badge">Non-exhaustive</div>
+    </div>
+    <div class="table-card">
+      <div class="table-name">BORROWER</div>
+      <div class="tf key">borrower_id</div>
+      <div class="tf hard-stop">prior_waiver_violation</div>
+      <div class="tf flag-field">violation_contested</div>
+      <div class="tf">payment_history_30d_12mo</div>
+      <div class="tf calc">payment_shock_ratio</div>
+      <div class="tf calc">tier2_total_score</div>
+      <div class="tf calc">tier2_passes</div>
+      <div class="tf fair">income_type*</div>
+      <div class="tf">debt_to_income_ratio</div>
+      <div class="nonexhaustive-badge">Non-exhaustive</div>
+    </div>
+    <div class="table-card">
+      <div class="table-name">WAIVER_REQUEST</div>
+      <div class="tf key">request_id</div>
+      <div class="tf key">request_status</div>
+      <div class="tf">assigned_analyst_id</div>
+      <div class="tf">borrower_input_required</div>
+      <div class="tf new">borrower_input_required_reason</div>
+      <div class="tf new">borrower_input_received</div>
+      <div class="tf calc new">analyst_notified_of_input</div>
+      <div class="tf calc">state_notice_deadline</div>
+      <div class="tf">eligibility_check_log</div>
+      <div class="nonexhaustive-badge">Non-exhaustive</div>
+    </div>
+    <div class="table-card">
+      <div class="table-name">STATE_RULES</div>
+      <div class="tf key">state_code</div>
+      <div class="tf">max_ltv_for_waiver</div>
+      <div class="tf">required_response_days</div>
+      <div class="tf">denial_notice_template_id</div>
+      <div class="tf fair">fair_lending_doc_required</div>
+      <div class="tf fair">alt_capacity_permitted</div>
+      <div class="tf">escrow_interest_required</div>
+      <div class="tf">additional_restrictions</div>
+      <div class="nonexhaustive-badge">Non-exhaustive</div>
+    </div>
+    <div class="table-card">
+      <div class="table-name">POST_WAIVER_MONITORING</div>
+      <div class="tf key">monitoring_id</div>
+      <div class="tf">tax_payment_due_date</div>
+      <div class="tf">tax_payment_confirmed</div>
+      <div class="tf">insurance_renewal_date</div>
+      <div class="tf">insurance_confirmed_current</div>
+      <div class="tf new">opt_out_reminders</div>
+      <div class="tf">flag_for_review</div>
+      <div class="tf">reinstatement_triggered</div>
+      <div class="tf">reinstatement_reason</div>
+      <div class="nonexhaustive-badge">Non-exhaustive</div>
+    </div>
+  </div>
+
+  <div class="dm-links reveal">
+    <a class="dm-link" href="https://drive.google.com/drive/folders/1Gow0diUjDRWL-sjtClga2coMj_Z1MpZR" target="_blank">View full data model and field rationale →</a>
+  </div>
+</section>
+
+<!-- ══ SECTION 7: NEXT STEPS ══ -->
+<section id="nextsteps">
+  <div class="section-eyebrow">07: Next Steps</div>
+  <h2 class="section-h2 reveal">Built to deploy. <em>Designed to compound.</em></h2>
+  <p class="section-sub reveal">Three phases take this from design to production to the platform vision.</p>
+  <div class="next-grid reveal">
+    <div class="next-card">
+      <div class="next-phase">Phase 1</div>
+      <div class="next-num">01</div>
+      <div class="next-title">Foundation: Levels 2 + 3</div>
+      <div class="next-item">Configure Valon workflow tool with hard stop triggers and eligibility query logic</div>
+      <div class="next-item">Populate STATE_RULES table for our full portfolio</div>
+      <div class="next-item">Configure borrower and analyst notification templates per state</div>
+      <div class="next-item">Deploy post-waiver tax monitoring: LERETA/CoreLogic integration</div>
+      <div class="next-item">Verify state-specific LTV overrides against current GSE guides</div>
+    </div>
+    <div class="next-card">
+      <div class="next-phase">Phase 2</div>
+      <div class="next-num">02</div>
+      <div class="next-title">Refinement: Strengthen Level 3</div>
+      <div class="next-item">Validate scorecard weights against our actual loan performance data</div>
+      <div class="next-item">Run disparate impact analysis on first 90 days of decisions</div>
+      <div class="next-item">Add Ginnie Mae flag logic as our portfolio expands</div>
+      <div class="next-item">Extend flag registry with portfolio-specific conditions</div>
+    </div>
+    <div class="next-card">
+      <div class="next-phase">Phase 3</div>
+      <div class="next-num">03</div>
+      <div class="next-title">Platform Vision: Level 4</div>
+      <div class="next-item">Build portfolio dashboard: waiver volume, denial reasons, post-waiver performance, re-evaluation capture rate</div>
+      <div class="next-item">Establish the baseline benchmark that doesn't currently exist in our industry</div>
+      <div class="next-item">Shift from processing requests to continuously evaluating the portfolio</div>
+      <div class="next-item">Borrowers become potentially eligible before they ask: we proactively generate the conversation</div>
+    </div>
+  </div>
+  <div class="closing-bar reveal">
+    <div class="closing-quote">Deploy the judgment our team has built where it matters most. Build a system that handles everything else: <em>consistently, defensibly, at scale.</em></div>
+    <div class="closing-meta">
+      <div class="closing-name">Diarra White</div>
+      <div class="closing-title">BizOps Take-Home · Valon · June 2026</div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ APPENDIX ══ -->
+<section id="appendix" style="background:var(--surface);min-height:auto;padding-bottom:100px;border-top:3px solid var(--text);">
+  <div style="margin-bottom:48px;">
+    <div class="appendix-label">Appendix</div>
+    <div style="font-family:var(--display);font-size:clamp(24px,3vw,36px);font-weight:700;color:var(--text);">Supporting Detail</div>
+  </div>
+
+  <div class="appendix-section">
+    <div class="appendix-section-title">A: Current State Pain Points That Informed This Design</div>
+    <div class="appendix-section-sub">Every design decision in the new workflow traces back to a specific failure in the current process.</div>
+    <div class="pain-grid">
+      <div class="pain-card critical"><div class="pain-card-tag">Critical Gap</div><h4>No structured intake</h4><p>Free-form requests result in incomplete data capture. Every downstream step is slower and more error-prone as a result.</p><div class="workflow-fix">→ Fixed by: structured intake form, required fields enforced at submission</div></div>
+      <div class="pain-card critical"><div class="pain-card-tag">Critical Gap</div><h4>Manual eligibility = inconsistency at scale</h4><p>Error rate tied directly to individual analyst quality. A new hire and a 10-year veteran apply different standards.</p><div class="workflow-fix">→ Fixed by: automated hard stop and eligibility engine: same rules applied to every case</div></div>
+      <div class="pain-card critical"><div class="pain-card-tag">Critical Gap</div><h4>GSE rules live in analysts' heads</h4><p>Fannie and Freddie diverge on seasoning, payment lookback, and ineligible loan types. Guide updates don't propagate instantly.</p><div class="workflow-fix">→ Fixed by: investor-aware branching in eligibility engine; STATE_RULES table for state-specific overrides</div></div>
+      <div class="pain-card compliance"><div class="pain-card-tag">Compliance Risk</div><h4>No audit trail</h4><p>Decision reasoning rarely captured in a structured way. Improper approvals indefensible in an investor audit.</p><div class="workflow-fix">→ Fixed by: eligibility_check_log JSON on every case; dual sign-off on A2 and Path B</div></div>
+      <div class="pain-card compliance"><div class="pain-card-tag">Compliance Risk</div><h4>State rules not systematically enforced</h4><p>Notice timing, denial language, and LTV thresholds vary by state. Compliance depends entirely on analyst awareness.</p><div class="workflow-fix">→ Fixed by: STATE_RULES table; state_notice_deadline calculated field; denial template auto-selected</div></div>
+      <div class="pain-card systemic"><div class="pain-card-tag">Systemic Gap</div><h4>Zero post-waiver monitoring</h4><p>Tax delinquency and insurance lapse discovered reactively: after investor collateral is already exposed.</p><div class="workflow-fix">→ Fixed by: POST_WAIVER_MONITORING table; Triggers #10–#13; re-evaluation watch (#14)</div></div>
+    </div>
+  </div>
+
+  <div class="appendix-section">
+    <div class="appendix-section-title">B: Full Trigger Detail (All 16)</div>
+    <div class="appendix-section-sub">Every trigger mapped to its source table, condition, channel, recipient, message content, and purpose.</div>
+
+    <div class="full-trigger"><div class="ft-header"><div class="ft-num">1</div><div class="ft-channel email">Email</div><div class="ft-label">Borrower Confirmation</div></div><div class="ft-grid"><div class="ft-field"><div class="ft-field-label">Target</div><div class="ft-field-val">Borrower</div></div><div class="ft-field"><div class="ft-field-label">Timing</div><div class="ft-field-val">Fires immediately on submission</div></div><div class="ft-field"><div class="ft-field-label">Purpose</div><div class="ft-field-val">Eliminates borrower dead zone: sets clear timeline expectation from day one</div></div><div class="ft-field"><div class="ft-field-label">Action Required</div><div class="ft-field-val">None: fully automated</div></div></div><div class="ft-condition">request_status = RECEIVED AND notification_sent_borrower = FALSE</div><div class="ft-message">"Your request has been received and is under review. You can expect a decision within [programmed SLA]. In the meantime, here are a few resources to help you think through what self-managing your property tax and insurance payments could look like. [Link]"</div></div>
+
+    <div class="full-trigger"><div class="ft-header"><div class="ft-num">2</div><div class="ft-channel slack">Slack</div><div class="ft-label">Analyst Queue Alert: New Request</div></div><div class="ft-grid"><div class="ft-field"><div class="ft-field-label">Target</div><div class="ft-field-val">Assigned analyst (assigned_analyst_id)</div></div><div class="ft-field"><div class="ft-field-label">Timing</div><div class="ft-field-val">Fires simultaneously with Trigger #1</div></div><div class="ft-field"><div class="ft-field-label">Purpose</div><div class="ft-field-val">Request enters analyst queue immediately: no manual discovery</div></div><div class="ft-field"><div class="ft-field-label">Action Required</div><div class="ft-field-val">Analyst reviews file. No borrower contact at this stage.</div></div></div><div class="ft-condition">request_status = RECEIVED AND notification_sent_internal = FALSE</div><div class="ft-message">"New escrow waiver request: [Borrower Name] | Loan #[ID] | Submitted [date]. File is in your queue for review."</div></div>
+
+    <div class="full-trigger"><div class="ft-header"><div class="ft-num">3</div><div class="ft-channel email">Email</div><div class="ft-label">Status Update: SLA Breach</div></div><div class="ft-grid"><div class="ft-field"><div class="ft-field-label">Target</div><div class="ft-field-val">Borrower</div></div><div class="ft-field"><div class="ft-field-label">Timing</div><div class="ft-field-val">Fires only if programmed SLA window exceeded without a decision</div></div><div class="ft-field"><div class="ft-field-label">Purpose</div><div class="ft-field-val">Keeps borrower informed without exposing internal stages</div></div><div class="ft-field"><div class="ft-field-label">Action Required</div><div class="ft-field-val">None: automated</div></div></div><div class="ft-condition">days since request_date > programmed SLA AND request_status NOT IN (APPROVED, DENIED)</div><div class="ft-message">"We're still reviewing your request and want to make sure you're not left waiting. We expect to have a decision for you by [revised date]. No action needed from you at this time."</div></div>
+
+    <div class="full-trigger"><div class="ft-header"><div class="ft-num">4</div><div class="ft-channel email">Email</div><div class="ft-label">Borrower Input Request (Path B only)</div></div><div class="ft-grid"><div class="ft-field"><div class="ft-field-label">Target</div><div class="ft-field-val">Borrower</div></div><div class="ft-field"><div class="ft-field-label">Timing</div><div class="ft-field-val">Path B only: when analyst confirms borrower input needed. Two scenarios: VALUATION_DISPUTE or VIOLATION_CONTEST.</div></div><div class="ft-field"><div class="ft-field-label">Purpose</div><div class="ft-field-val">Targeted ask: borrower knows exactly what's needed and why</div></div><div class="ft-field"><div class="ft-field-label">Action Required</div><div class="ft-field-val">Analyst sets input_requested_date. Monitors borrower_input_received.</div></div></div><div class="ft-condition">borrower_input_required = TRUE AND notification_sent_borrower = FALSE</div><div class="ft-message">"To continue reviewing your request, we need the following from you: [VALUATION_DISPUTE: reconsideration of value or new appraisal / VIOLATION_CONTEST: documentation supporting your dispute]. Please respond within [X] business days."</div></div>
+
+    <div class="full-trigger"><div class="ft-header"><div class="ft-num" style="color:var(--orange);">4b</div><div class="ft-channel slack">Slack</div><div class="ft-label">Analyst Alert: Borrower Input Received</div></div><div class="ft-grid"><div class="ft-field"><div class="ft-field-label">Target</div><div class="ft-field-val">Assigned analyst</div></div><div class="ft-field"><div class="ft-field-label">Timing</div><div class="ft-field-val">Net new: fires the moment borrower_input_received flips to TRUE</div></div><div class="ft-field"><div class="ft-field-label">Purpose</div><div class="ft-field-val">Case moves forward immediately: no manual checking</div></div><div class="ft-field"><div class="ft-field-label">Action Required</div><div class="ft-field-val">Analyst reviews submitted documentation and continues deliberation</div></div></div><div class="ft-condition">borrower_input_received = TRUE AND analyst_notified_of_input = FALSE</div><div class="ft-message">"Borrower response received: [Borrower Name] | Loan #[ID] | Documentation submitted [date]. Review and continue deliberation."</div></div>
+
+    <div class="full-trigger"><div class="ft-header"><div class="ft-num">5</div><div class="ft-channel slack">Slack</div><div class="ft-label">Analyst Follow-Up: No Borrower Response</div></div><div class="ft-grid"><div class="ft-field"><div class="ft-field-label">Target</div><div class="ft-field-val">Assigned analyst</div></div><div class="ft-field"><div class="ft-field-label">Timing</div><div class="ft-field-val">X days after Trigger #4 if borrower_input_received remains FALSE</div></div><div class="ft-field"><div class="ft-field-label">Purpose</div><div class="ft-field-val">Closes the follow-up loop without manual tracking</div></div><div class="ft-field"><div class="ft-field-label">Action Required</div><div class="ft-field-val">Recommended action: Call [Borrower Name] to follow up on outstanding documentation.</div></div></div><div class="ft-condition">borrower_input_required = TRUE AND borrower_input_received = FALSE AND days since input_requested_date > X</div><div class="ft-message">"No response: [Borrower] | Loan #[ID] | Input requested [X] days ago. Recommended action: Call [Borrower Name]: [specific document] still outstanding."</div></div>
+
+    <div class="full-trigger"><div class="ft-header"><div class="ft-num">6</div><div class="ft-channel email">Email</div><div class="ft-label">Approval Notification</div></div><div class="ft-grid"><div class="ft-field"><div class="ft-field-label">Target</div><div class="ft-field-val">Borrower</div></div><div class="ft-field"><div class="ft-field-label">Timing</div><div class="ft-field-val">Immediately after analyst sign-off</div></div><div class="ft-field"><div class="ft-field-label">Purpose</div><div class="ft-field-val">Supportive communication with a resource link sets the borrower up for success.</div></div><div class="ft-field"><div class="ft-field-label">Action Required</div><div class="ft-field-val">Trigger #7 fires simultaneously. Post-waiver monitoring activates.</div></div></div><div class="ft-condition">request_status = APPROVED AND notification_sent_borrower = FALSE</div><div class="ft-message">"Your escrow waiver has been approved effective [date]. We've put together everything you need to feel confident managing your property taxes and insurance going forward. [Link: Your guide to self-managing escrow] Your specialist will be in touch to walk you through next steps."</div></div>
+
+    <div class="full-trigger"><div class="ft-header"><div class="ft-num">7</div><div class="ft-channel slack">Slack</div><div class="ft-label">Analyst Alert: Approval</div></div><div class="ft-grid"><div class="ft-field"><div class="ft-field-label">Target</div><div class="ft-field-val">Assigned analyst</div></div><div class="ft-field"><div class="ft-field-label">Timing</div><div class="ft-field-val">Simultaneously with Trigger #6</div></div><div class="ft-field"><div class="ft-field-label">Purpose</div><div class="ft-field-val">Prompts proactive call before borrower feels uncertain about what changed</div></div><div class="ft-field"><div class="ft-field-label">Action Required</div><div class="ft-field-val">Recommended action: Call [Borrower Name]: walk through what changes and confirm they feel prepared.</div></div></div><div class="ft-condition">request_status = APPROVED AND notification_sent_internal = FALSE</div><div class="ft-message">"Waiver approved: [Borrower] | Loan #[ID] | Path [A/B]. Recommended action: Call [Borrower Name]: walk through what changes and confirm they feel prepared."</div></div>
+
+    <div class="full-trigger"><div class="ft-header"><div class="ft-num">8</div><div class="ft-channel email">Email</div><div class="ft-label">Denial Notification</div></div><div class="ft-grid"><div class="ft-field"><div class="ft-field-label">Target</div><div class="ft-field-val">Borrower</div></div><div class="ft-field"><div class="ft-field-label">Timing</div><div class="ft-field-val">Immediately after analyst confirms denial. State-compliant template auto-selected from STATE_RULES.denial_notice_template_id.</div></div><div class="ft-field"><div class="ft-field-label">Purpose</div><div class="ft-field-val">Clear denial reason, specific re-eligibility path, and interim escrow resources.</div></div><div class="ft-field"><div class="ft-field-label">Action Required</div><div class="ft-field-val">Trigger #9 fires simultaneously. Re-evaluation watch activates for hard condition denials.</div></div></div><div class="ft-condition">request_status = DENIED AND notification_sent_borrower = FALSE</div><div class="ft-message">"After careful review, we're unable to approve an escrow waiver at this time. Reason: [plain-language reason]. [Specific path to re-eligibility.] In the meantime: [link to escrow optimization resources]."</div></div>
+
+    <div class="full-trigger"><div class="ft-header"><div class="ft-num">9</div><div class="ft-channel slack">Slack</div><div class="ft-label">Analyst Alert: Denial</div></div><div class="ft-grid"><div class="ft-field"><div class="ft-field-label">Target</div><div class="ft-field-val">Assigned analyst</div></div><div class="ft-field"><div class="ft-field-label">Timing</div><div class="ft-field-val">Simultaneously with Trigger #8</div></div><div class="ft-field"><div class="ft-field-label">Purpose</div><div class="ft-field-val">Denial is a relationship moment: analyst surfaces unmet needs</div></div><div class="ft-field"><div class="ft-field-label">Action Required</div><div class="ft-field-val">Recommended action: Call [Borrower Name]: understand underlying need and discuss options.</div></div></div><div class="ft-condition">request_status = DENIED AND notification_sent_internal = FALSE</div><div class="ft-message">"Waiver denied: [Borrower] | Loan #[ID] | Reason: [code]. Recommended action: Call [Borrower Name]: understand why they needed the waiver and discuss available options."</div></div>
+
+    <div class="full-trigger"><div class="ft-header"><div class="ft-num">10</div><div class="ft-channel email">Email</div><div class="ft-label">Borrower Reminder: Tax Due</div></div><div class="ft-grid"><div class="ft-field"><div class="ft-field-label">Target</div><div class="ft-field-val">Borrower</div></div><div class="ft-field"><div class="ft-field-label">Timing</div><div class="ft-field-val">Proactive: fires X days BEFORE tax due date. Guaranteed for first 3 payment cycles. Tax status via LERETA/CoreLogic integration.</div></div><div class="ft-field"><div class="ft-field-label">Purpose</div><div class="ft-field-val">Prevents delinquency before it happens. 3-cycle guarantee covers highest-risk transition period.</div></div><div class="ft-field"><div class="ft-field-label">Action Required</div><div class="ft-field-val">System monitors tax_payment_confirmed via vendor integration. No analyst action unless Trigger #11 fires.</div></div></div><div class="ft-condition">tax_payment_due_date - TODAY() ≤ X days AND tax_payment_confirmed = FALSE AND opt_out_reminders = FALSE</div><div class="ft-message">"Friendly reminder: property tax payment due [date]. [County payment link.] If you've already taken care of this, you're all set."</div></div>
+
+    <div class="full-trigger"><div class="ft-header"><div class="ft-num">11</div><div class="ft-channel slack">Slack</div><div class="ft-label">Analyst Alert: Tax Unconfirmed</div></div><div class="ft-grid"><div class="ft-field"><div class="ft-field-label">Target</div><div class="ft-field-val">Assigned analyst</div></div><div class="ft-field"><div class="ft-field-label">Timing</div><div class="ft-field-val">Reactive: fires AFTER due date if tax_payment_confirmed remains FALSE</div></div><div class="ft-field"><div class="ft-field-label">Purpose</div><div class="ft-field-val">Tax delinquency on a waived loan is direct investor collateral risk. Early intervention prevents escalation.</div></div><div class="ft-field"><div class="ft-field-label">Action Required</div><div class="ft-field-val">Recommended action: Call [Borrower Name] immediately. If delinquent, assess escrow reinstatement.</div></div></div><div class="ft-condition">tax_payment_due_date &lt; TODAY() AND tax_payment_confirmed = FALSE</div><div class="ft-message">"Tax payment unconfirmed: [Borrower] | Loan #[ID] | Due [date]. Recommended action: Call [Borrower Name] before this becomes a delinquency. Investor collateral at risk if unresolved."</div></div>
+
+    <div class="full-trigger"><div class="ft-header"><div class="ft-num">12–13</div><div class="ft-channel email">Email</div><div class="ft-channel slack" style="margin-left:0">Slack</div><div class="ft-label">Insurance Monitoring: Phase 2</div></div><div class="ft-grid"><div class="ft-field"><div class="ft-field-label">Target</div><div class="ft-field-val">Borrower (#12) / Assigned analyst (#13)</div></div><div class="ft-field"><div class="ft-field-label">Timing</div><div class="ft-field-val">Phase 2: requires insurance tracking vendor integration. Strong risk justification: insurance lapse triggers force-placed insurance liability.</div></div><div class="ft-field"><div class="ft-field-label">Purpose</div><div class="ft-field-val">Insurance lapse on a waived loan directly impacts investor collateral. Identical design pattern to Triggers #10–#11.</div></div><div class="ft-field"><div class="ft-field-label">Action Required</div><div class="ft-field-val">Confirm vendor availability before committing to Phase 1 scope.</div></div></div><div class="ft-condition">insurance_renewal_date approaching / insurance_confirmed_current = FALSE after renewal</div></div>
+
+    <div class="full-trigger"><div class="ft-header"><div class="ft-num">14</div><div class="ft-channel email">Email</div><div class="ft-label">Re-Evaluation Watch: Borrower Notification</div></div><div class="ft-grid"><div class="ft-field"><div class="ft-field-label">Target</div><div class="ft-field-val">Borrower</div></div><div class="ft-field"><div class="ft-field-label">Timing</div><div class="ft-field-val">Fires when hard disqualifying condition clears within 180 days of denial. 6-month window: original assessment has a reasonable shelf life. Hard condition clearances only: not capacity-related denials.</div></div><div class="ft-field"><div class="ft-field-label">Purpose</div><div class="ft-field-val">Turns denied borrowers into future pipeline without solicitation pressure. Informational framing only: protects against GSE audit exposure.</div></div><div class="ft-field"><div class="ft-field-label">Action Required</div><div class="ft-field-val">No analyst call required. Borrower self-selects whether to re-apply. Full workflow re-runs from Step 1.</div></div></div><div class="ft-condition">request_status = DENIED AND denial_date > TODAY() - 180 days AND hard disqualifying condition clears (e.g. has_active_mi → FALSE at LTV 78%)</div><div class="ft-message">"Good news: you may now be eligible to re-apply. When we reviewed your request, we were unable to approve because [original reason]. That has since changed: [specific condition that cleared]. If you're still interested, you're welcome to re-apply. [Link] No pressure: just wanted to make sure you had the information."</div></div>
+
+    <div class="full-trigger"><div class="ft-header"><div class="ft-num" style="color:var(--blue);">15a</div><div class="ft-channel slack">Slack</div><div class="ft-label">Notice Deadline Warning — 5 Days Out</div></div><div class="ft-grid"><div class="ft-field"><div class="ft-field-label">Target</div><div class="ft-field-val">Assigned analyst (assigned_analyst_id)</div></div><div class="ft-field"><div class="ft-field-label">Timing</div><div class="ft-field-val">Proactive — fires 5 days before state_notice_deadline if request is still open. Advance warning to give analyst time to act before the compliance window closes. State deadline calculated from STATE_RULES.required_response_days at intake.</div></div><div class="ft-field"><div class="ft-field-label">Purpose</div><div class="ft-field-val">Prevents state notice timing violations before they happen. Gives the analyst runway to make a decision or escalate without being caught at the deadline.</div></div><div class="ft-field"><div class="ft-field-label">Action Required</div><div class="ft-field-val">Analyst reviews case status and prioritizes for decision. Escalates to Risk if case is unresolved and deadline is at risk.</div></div></div><div class="ft-condition">state_notice_deadline - TODAY() = 5 AND request_status NOT IN (APPROVED, DENIED)</div><div class="ft-message">"Notice deadline approaching: [Borrower Name] | Loan #[ID] | Decision required by [state_notice_deadline] per [state] state regulations. 5 days remaining. Review and prioritize."</div></div>
+
+    <div class="full-trigger"><div class="ft-header"><div class="ft-num" style="color:var(--red);">15b</div><div class="ft-channel slack">Slack</div><div class="ft-label">Notice Deadline Alert — 2 Days Out</div></div><div class="ft-grid"><div class="ft-field"><div class="ft-field-label">Target</div><div class="ft-field-val">Assigned analyst (assigned_analyst_id)</div></div><div class="ft-field"><div class="ft-field-label">Timing</div><div class="ft-field-val">Hard alert — fires 2 days before state_notice_deadline if request is still open. Paired with Trigger #15a as a two-stage warning system: advance notice at 5 days, urgent alert at 2 days.</div></div><div class="ft-field"><div class="ft-field-label">Purpose</div><div class="ft-field-val">Last-resort compliance protection. A missed state notice deadline creates regulatory exposure regardless of the underlying decision. This trigger ensures it never happens silently.</div></div><div class="ft-field"><div class="ft-field-label">Action Required</div><div class="ft-field-val">Analyst must make a decision or escalate immediately. If case cannot be resolved in time, compliance team should be notified.</div></div></div><div class="ft-condition">state_notice_deadline - TODAY() = 2 AND request_status NOT IN (APPROVED, DENIED)</div><div class="ft-message">"URGENT: Notice deadline in 2 days: [Borrower Name] | Loan #[ID] | Decision required by [state_notice_deadline] per [state] state regulations. Decision or escalation required today."</div></div>
+  </div>
+
+  <div class="appendix-section">
+    <div class="appendix-section-title">C: Full Data Model</div>
+    <div class="appendix-section-sub">Complete field-by-field definitions, types, and rationale for all five tables.</div>
+    <div class="dm-appendix-placeholder">
+      <p>Full data model: field definitions, types, and rationale</p>
+      <a href="https://drive.google.com/drive/folders/1Gow0diUjDRWL-sjtClga2coMj_Z1MpZR" target="_blank">View data model →</a>
+      <p style="margin-top:8px;font-size:11px;color:var(--muted);">Excel version with complete schema will be linked here once finalized.</p>
+    </div>
+  </div>
+
+</section>
+
+<script>
+const reveals = document.querySelectorAll('.reveal');
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach((entry, i) => {
+    if (entry.isIntersecting) {
+      setTimeout(() => entry.target.classList.add('visible'), i * 60);
+      observer.unobserve(entry.target);
+    }
+  });
+}, { threshold: 0.08 });
+reveals.forEach(el => observer.observe(el));
+const sections = document.querySelectorAll('section');
+const navLinks = document.querySelectorAll('.nav-link');
+const scrollObs = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      const id = entry.target.id;
+      navLinks.forEach(l => l.classList.toggle('active', l.getAttribute('href') === '#' + id));
+    }
+  });
+}, { threshold: 0.3 });
+sections.forEach(s => scrollObs.observe(s));
+</script>
+</body>
+</html>
