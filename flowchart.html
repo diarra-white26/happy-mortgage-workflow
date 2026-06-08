@@ -1,0 +1,1409 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Valon — Escrow Waiver Workflow Flowchart</title>
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;0,700;1,400;1,700&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:      #F5F2EE;
+  --surface: #FFFFFF;
+  --card:    #FFFFFF;
+  --border:  #E4DED6;
+  --muted:   #C0B9B0;
+  --text:    #1C1A18;
+  --subtle:  #6A635C;
+  --mono:    'DM Mono', monospace;
+  --display: 'Lora', serif;
+  --body:    'DM Sans', sans-serif;
+  --path-a:  #2A7A52;
+  --path-b:  #C8601A;
+  --path-c:  #B83030;
+  --system:  #5C4ECC;
+  --human:   #C8960A;
+  --amber:   #C8960A;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: var(--body);
+  background: var(--bg);
+  color: var(--text);
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* ── TOP NAV ── */
+.topnav {
+  display: flex;
+  align-items: center;
+  padding: 0 24px;
+  height: 52px;
+  background: rgba(245,242,238,0.97);
+  border-bottom: 1px solid var(--border);
+  gap: 8px;
+  flex-shrink: 0;
+  z-index: 100;
+  backdrop-filter: blur(8px);
+}
+.nav-logo {
+  font-family: var(--display);
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text);
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+}
+.nav-logo span { color: var(--amber); }
+.nav-divider { width:1px; height:18px; background:var(--border); flex-shrink:0; }
+.nav-subtitle { font-family:var(--mono); font-size:12px; color:var(--subtle); white-space:nowrap; }
+.path-tabs { display:flex; gap:5px; margin-left:16px; }
+.path-tab {
+  padding: 5px 14px;
+  border-radius: 5px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s;
+  border: 1px solid var(--border);
+  color: var(--subtle);
+  background: transparent;
+  white-space: nowrap;
+  font-family: var(--body);
+}
+.path-tab:hover { background:var(--bg); color:var(--text); border-color:var(--muted); }
+.path-tab.active-a { background:rgba(42,122,82,0.07); border-color:var(--path-a); color:var(--path-a); }
+.path-tab.active-b { background:rgba(200,96,26,0.07); border-color:var(--path-b); color:var(--path-b); }
+.path-tab.active-c { background:rgba(184,48,48,0.07); border-color:var(--path-c); color:var(--path-c); }
+.spacer { flex:1; }
+
+/* ── ACTOR KEY ── */
+.actor-key { display:flex; align-items:center; gap:8px; padding:0 10px; border-left:1px solid var(--border); margin-left:8px; flex-wrap:wrap; }
+.actor-key-item { display:inline-flex; align-items:center; gap:5px; font-family:var(--mono); font-size:12px; letter-spacing:0.04em; padding:3px 9px; border-radius:4px; border:1px solid var(--border); background:var(--bg); color:var(--subtle); white-space:nowrap; }
+.actor-key-item.sys   { color:#5C4ECC; border-color:rgba(92,78,204,0.35); background:rgba(92,78,204,0.06); }
+.actor-key-item.human { color:#C8960A; border-color:rgba(200,150,10,0.35); background:rgba(200,150,10,0.06); }
+.actor-key-item.both  { color:#2A7A52; border-color:rgba(42,122,82,0.35);  background:rgba(42,122,82,0.06); }
+.actor-key-divider { width:1px; height:14px; background:var(--border); flex-shrink:0; }
+.actor-key-trigger { display:inline-flex; align-items:center; gap:6px; font-size:13px; color:var(--subtle); padding:0 4px; }
+
+/* ── BOARD ── */
+.board-wrap {
+  flex: 1;
+  overflow: auto;
+  position: relative;
+  cursor: grab;
+  background: var(--bg);
+}
+.board-wrap:active { cursor: grabbing; }
+.board {
+  position: relative;
+  width: 1500px;
+  height: 2760px;
+  transform-origin: 0 0;
+}
+.connector-layer {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* ── NODES ── */
+.node {
+  position: absolute;
+  width: 215px;
+  background: var(--card);
+  border: 1.5px solid var(--muted);
+  border-radius: 10px;
+  z-index: 10;
+  cursor: pointer;
+  transition: border-color 0.2s, box-shadow 0.2s, opacity 0.2s;
+  box-shadow: 0 1px 4px rgba(28,26,24,0.06);
+}
+.node-bar { height: 3px; border-radius: 9px 9px 0 0; background: var(--muted); transition: background 0.2s; }
+.node-body { padding: 12px 13px 15px; }
+.node-num {
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--subtle);
+  letter-spacing: 0.12em;
+  margin-bottom: 4px;
+  opacity: 0.7;
+}
+.node-title {
+  font-size: 19px;
+  font-weight: 600;
+  color: var(--subtle);
+  line-height: 1.2;
+  margin-bottom: 7px;
+  transition: color 0.2s;
+  font-family: var(--body);
+}
+.node-desc {
+  font-size: 15px;
+  color: var(--subtle);
+  line-height: 1.5;
+  margin-bottom: 9px;
+  opacity: 0.75;
+  font-family: var(--body);
+  font-weight: 300;
+}
+.node-actor {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-family: var(--mono);
+  font-size: 15px;
+  letter-spacing: 0.05em;
+  padding: 4px 10px;
+  border-radius: 4px;
+  border: 1px solid var(--border);
+  background: var(--bg);
+  color: var(--subtle);
+  transition: all 0.2s;
+}
+.node-triggers { display:flex; flex-wrap:wrap; gap:6px; margin-top:9px; }
+.tbadge {
+  font-size: 20px;
+  line-height: 1;
+  padding: 5px 11px;
+  border-radius: 4px;
+  border: 1px solid var(--border);
+  background: var(--bg);
+  color: var(--subtle);
+  cursor: default;
+  transition: all 0.2s;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+.tbadge .tlabel { font-size: 13px; font-family: var(--mono); }
+.subroute {
+  display: inline-block;
+  font-family: var(--mono);
+  font-size: 11px;
+  padding: 2px 6px;
+  border-radius: 3px;
+  margin-top: 5px;
+  margin-right: 4px;
+}
+.sr-a1 { background:rgba(42,122,82,0.08); color:var(--path-a); border:1px solid rgba(42,122,82,0.25); }
+.sr-a2 { background:rgba(200,150,10,0.08); color:var(--human); border:1px solid rgba(200,150,10,0.25); }
+.converge-tag {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  color: var(--subtle);
+  margin-top: 6px;
+  opacity: 0.7;
+}
+
+/* ── DECISION DIAMOND ── */
+.decision-diamond {
+  width: 66px !important;
+  height: 66px !important;
+  border-radius: 0 !important;
+  transform: rotate(45deg);
+  background: var(--card);
+  border: 1.5px solid var(--muted) !important;
+  padding: 0 !important;
+  box-shadow: 0 1px 4px rgba(28,26,24,0.06) !important;
+}
+.decision-diamond .diamond-inner {
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  transform: rotate(-45deg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px;
+}
+.diamond-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--subtle);
+  text-align: center;
+  line-height: 1.25;
+  transition: color 0.2s;
+  pointer-events: none;
+  font-family: var(--body);
+}
+.node.decision-diamond.active-a {
+  border-color: var(--path-a) !important;
+  box-shadow: 0 0 0 1px rgba(42,122,82,0.12), 0 3px 16px rgba(42,122,82,0.1) !important;
+}
+.node.decision-diamond.active-a .diamond-label { color: var(--path-a); }
+.node.decision-diamond.dimmed { opacity: 0.25; }
+
+/* ── ACTIVE STATES ── */
+.node.active-a { border-color:var(--path-a); box-shadow:0 0 0 1px rgba(42,122,82,0.1),0 3px 16px rgba(42,122,82,0.08); }
+.node.active-b { border-color:var(--path-b); box-shadow:0 0 0 1px rgba(200,96,26,0.1),0 3px 16px rgba(200,96,26,0.08); }
+.node.active-c { border-color:var(--path-c); box-shadow:0 0 0 1px rgba(184,48,48,0.1),0 3px 16px rgba(184,48,48,0.08); }
+.node.active-a .node-bar { background:var(--path-a); }
+.node.active-b .node-bar { background:var(--path-b); }
+.node.active-c .node-bar { background:var(--path-c); }
+.node.active-a .node-title,
+.node.active-b .node-title,
+.node.active-c .node-title { color:var(--text); }
+.node.active-a .node-desc,
+.node.active-b .node-desc,
+.node.active-c .node-desc { opacity:1; color:var(--subtle); }
+.node.active-a .node-actor { background:rgba(42,122,82,0.07); border-color:rgba(42,122,82,0.3); color:var(--path-a); }
+.node.active-b .node-actor { background:rgba(200,96,26,0.07); border-color:rgba(200,96,26,0.3); color:var(--path-b); }
+.node.active-c .node-actor { background:rgba(184,48,48,0.07); border-color:rgba(184,48,48,0.3); color:var(--path-c); }
+.node.active-a .tbadge { border-color:rgba(42,122,82,0.3); color:var(--path-a); }
+.node.active-b .tbadge { border-color:rgba(200,96,26,0.3); color:var(--path-b); }
+.node.active-c .tbadge { border-color:rgba(184,48,48,0.3); color:var(--path-c); }
+.node.dimmed { opacity: 0.25; }
+.node.convergence { border-style:dashed; border-color:var(--muted); }
+.node.active-a.convergence,
+.node.active-b.convergence,
+.node.active-c.convergence { border-style:solid; }
+.node.panel-hover { box-shadow:0 0 0 2px rgba(28,26,24,0.12),0 4px 18px rgba(28,26,24,0.1); }
+.node.pinned { box-shadow:0 0 0 2px rgba(42,122,82,0.35),0 4px 18px rgba(42,122,82,0.1); }
+
+/* ── INTAKE FORM ── */
+.intake-card {
+  position: absolute;
+  width: 215px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 16px;
+  z-index: 10;
+  transition: opacity 0.2s;
+  box-shadow: 0 1px 4px rgba(28,26,24,0.06);
+}
+.intake-title { font-family:var(--mono); font-size:12px; letter-spacing:0.1em; text-transform:uppercase; color:var(--subtle); margin-bottom:12px; }
+.ff { margin-bottom:10px; }
+.ff label { display:block; font-size:12px; color:var(--subtle); margin-bottom:3px; line-height:1.4; }
+.ff .fi { width:100%; background:var(--bg); border:1px solid var(--border); border-radius:4px; padding:5px 8px; font-size:12px; color:var(--text); font-family:var(--body); outline:none; }
+.ff .fhint { font-family:var(--mono); font-size:10px; color:var(--subtle); margin-top:2px; }
+.fg { display:flex; gap:8px; }
+.fro { display:flex; align-items:center; gap:4px; font-size:12px; color:var(--subtle); }
+.fro input { accent-color:var(--path-a); }
+.fyn { display:flex; gap:6px; }
+.fynb { flex:1; padding:4px; background:var(--bg); border:1px solid var(--border); border-radius:3px; font-size:12px; color:var(--subtle); text-align:center; cursor:pointer; }
+.fynb:hover { border-color:var(--muted); color:var(--text); }
+.fchk { display:flex; align-items:flex-start; gap:5px; font-size:12px; color:var(--subtle); line-height:1.4; }
+.fchk input { accent-color:var(--path-a); margin-top:2px; flex-shrink:0; }
+
+/* ── SCORECARD HOVER CARD ── */
+.scorecard-hover {
+  position: absolute;
+  width: 185px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 9px;
+  padding: 13px 14px;
+  z-index: 50;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.15s;
+  box-shadow: 0 4px 16px rgba(28,26,24,0.12);
+}
+.scorecard-hover.visible { opacity: 1; }
+.sc-title { font-family:var(--mono); font-size:11px; letter-spacing:0.08em; text-transform:uppercase; color:var(--subtle); margin-bottom:10px; }
+.sc-row { display:flex; align-items:center; gap:6px; margin-bottom:6px; }
+.sc-lbl { font-size:12px; color:var(--subtle); width:82px; flex-shrink:0; }
+.sc-track { flex:1; height:4px; background:var(--border); border-radius:2px; overflow:hidden; }
+.sc-fill { height:100%; background:var(--muted); border-radius:2px; }
+.sc-pts { font-family:var(--mono); font-size:12px; color:var(--subtle); width:20px; text-align:right; }
+
+/* ── SECTION MARKERS ── */
+/* Phase / column wayfinder labels — amber accent makes them clearly intentional */
+.smark {
+  position: absolute;
+  font-family: var(--mono);
+  font-size: 14px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  font-weight: 500;
+  color: var(--amber);
+  background: rgba(200,150,10,0.07);
+  border-left: 3px solid rgba(200,150,10,0.55);
+  border-top: 1px solid rgba(200,150,10,0.18);
+  border-right: 1px solid rgba(200,150,10,0.18);
+  border-bottom: 1px solid rgba(200,150,10,0.18);
+  border-radius: 0 4px 4px 0;
+  padding: 5px 12px 5px 9px;
+  z-index: 5;
+  pointer-events: none;
+  white-space: nowrap;
+}
+
+/* ── ROW DIVIDER ── */
+.row-divider {
+  position: absolute;
+  left: 0;
+  height: 1px;
+  background: var(--border);
+  z-index: 2;
+  pointer-events: none;
+}
+
+/* ── SIDE PANEL ── */
+.side-panel {
+  position: fixed;
+  top: 52px;
+  right: 0;
+  width: 330px;
+  height: calc(100vh - 52px);
+  background: var(--surface);
+  border-left: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  z-index: 300;
+  transform: translateX(100%);
+  transition: transform 0.2s ease;
+  overflow: hidden;
+  box-shadow: -4px 0 20px rgba(28,26,24,0.08);
+}
+.side-panel.open { transform: translateX(0); }
+.sp-header { padding:18px 20px 13px; border-bottom:1px solid var(--border); flex-shrink:0; background:var(--bg); }
+.sp-header-top { display:flex; align-items:center; justify-content:space-between; margin-bottom:5px; }
+.sp-step { font-family:var(--mono); font-size:12px; letter-spacing:0.1em; text-transform:uppercase; color:var(--subtle); }
+.sp-close { background:none; border:1px solid var(--border); border-radius:3px; color:var(--subtle); cursor:pointer; font-size:13px; padding:2px 9px; transition:all 0.15s; font-family:var(--mono); }
+.sp-close:hover { border-color:var(--muted); color:var(--text); background:var(--bg); }
+.sp-pinned-badge { display:none; font-family:var(--mono); font-size:11px; color:var(--path-a); padding:1px 6px; border:1px solid rgba(42,122,82,0.3); border-radius:2px; margin-left:6px; }
+.sp-pinned-badge.visible { display:inline; }
+.sp-title { font-size:22px; font-weight:700; color:var(--text); line-height:1.2; margin-bottom:8px; font-family:var(--display); }
+.sp-actor { display:inline-flex; align-items:center; gap:5px; font-family:var(--mono); font-size:12px; letter-spacing:0.05em; padding:3px 10px; border-radius:4px; border:1px solid var(--border); }
+.sp-actor.sys   { color:var(--system); background:rgba(92,78,204,0.06); border-color:rgba(92,78,204,0.2); }
+.sp-actor.human { color:var(--human); background:rgba(200,150,10,0.06); border-color:rgba(200,150,10,0.2); }
+.sp-actor.both  { color:var(--path-a); background:rgba(42,122,82,0.06); border-color:rgba(42,122,82,0.2); }
+.sp-hint { font-family:var(--mono); font-size:11px; color:var(--muted); margin-top:8px; }
+.sp-body { flex:1; overflow-y:auto; padding:18px 20px; display:flex; flex-direction:column; gap:18px; background:var(--surface); }
+.sp-body::-webkit-scrollbar { width:4px; }
+.sp-body::-webkit-scrollbar-track { background:transparent; }
+.sp-body::-webkit-scrollbar-thumb { background:var(--border); border-radius:2px; }
+.sp-section-label { font-family:var(--mono); font-size:12px; letter-spacing:0.1em; text-transform:uppercase; color:var(--subtle); margin-bottom:8px; }
+.sp-fields { font-family:var(--mono); font-size:13px; color:var(--path-a); line-height:1.8; background:rgba(42,122,82,0.04); border:1px solid rgba(42,122,82,0.15); border-radius:6px; padding:10px 12px; white-space:pre-wrap; }
+.sp-fields.orange { color:var(--path-b); background:rgba(200,96,26,0.04); border-color:rgba(200,96,26,0.15); }
+.sp-fields.red    { color:var(--path-c); background:rgba(184,48,48,0.04); border-color:rgba(184,48,48,0.15); }
+.sp-trigger { display:flex; gap:10px; padding:12px 13px; background:var(--bg); border:1px solid var(--border); border-radius:7px; margin-bottom:8px; }
+.sp-trigger:last-child { margin-bottom:0; }
+.sp-trigger-icon { font-size:20px; flex-shrink:0; padding-top:1px; }
+.sp-trigger-content { flex:1; min-width:0; }
+.sp-trigger-name { font-size:15px; font-weight:600; color:var(--text); margin-bottom:5px; line-height:1.3; font-family:var(--body); }
+.sp-trigger-target { font-family:var(--mono); font-size:12px; color:var(--subtle); margin-bottom:6px; }
+.sp-trigger-target span { display:inline-block; padding:1px 6px; border-radius:2px; border:1px solid var(--border); font-size:11px; text-transform:uppercase; letter-spacing:0.06em; background:var(--surface); }
+.sp-route-note { font-size:13px; color:var(--subtle); line-height:1.65; padding:10px 12px; background:var(--bg); border-radius:7px; border:1px solid var(--border); font-family:var(--body); font-weight:300; }
+.sp-flag-item { padding:11px 12px; background:var(--bg); border:1px solid var(--border); border-radius:7px; margin-bottom:7px; }
+.sp-flag-item:last-child { margin-bottom:0; }
+.sp-flag-item.borrower { border-color:rgba(200,96,26,0.3); }
+.sp-flag-name { font-size:14px; font-weight:600; color:var(--text); margin-bottom:4px; line-height:1.3; font-family:var(--body); }
+.sp-flag-cond { font-family:var(--mono); font-size:12px; color:var(--subtle); line-height:1.55; margin-bottom:6px; }
+.sp-flag-q { font-size:13px; font-style:italic; color:var(--subtle); line-height:1.4; font-family:var(--body); }
+.sp-flag-badge { display:inline-flex; align-items:center; gap:3px; font-family:var(--mono); font-size:11px; padding:2px 7px; border-radius:2px; background:rgba(200,96,26,0.08); border:1px solid rgba(200,96,26,0.25); color:var(--path-b); margin-top:6px; }
+
+/* ── ZOOM + LEGEND ── */
+.bottom-bar { position:fixed; bottom:20px; left:20px; display:flex; gap:8px; align-items:center; z-index:200; }
+.zoom-btn { width:32px; height:32px; background:var(--surface); border:1px solid var(--border); border-radius:5px; color:var(--text); font-size:18px; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:background 0.1s; box-shadow:0 1px 4px rgba(28,26,24,0.08); }
+.zoom-btn:hover { background:var(--bg); }
+.zoom-fit { width:46px; font-size:13px; font-family:var(--mono); }
+.legend { position:fixed; bottom:20px; right:20px; background:var(--surface); border:1px solid var(--border); border-radius:8px; padding:10px 16px; z-index:200; display:flex; gap:16px; align-items:center; font-size:13px; color:var(--subtle); font-family:var(--body); box-shadow:0 1px 4px rgba(28,26,24,0.08); }
+.leg-dot { width:9px; height:9px; border-radius:50%; display:inline-block; margin-right:5px; }
+
+/* scrollbar */
+.board-wrap::-webkit-scrollbar { width:6px; height:6px; }
+.board-wrap::-webkit-scrollbar-track { background:var(--bg); }
+.board-wrap::-webkit-scrollbar-thumb { background:var(--muted); border-radius:3px; }
+</style>
+</head>
+<body>
+
+<!-- TOP NAV -->
+<nav class="topnav">
+  <div class="nav-logo">valon<span>.</span>workflow</div>
+  <div class="nav-divider"></div>
+  <div class="nav-subtitle">Escrow Waiver Flowchart — Happy Mortgage</div>
+  <div class="path-tabs">
+    <button class="path-tab" id="btn-a" onclick="setPath('a')">Path A: Approved</button>
+    <button class="path-tab" id="btn-b" onclick="setPath('b')">Path B: Flagged</button>
+    <button class="path-tab" id="btn-c" onclick="setPath('c')">Path C: Denied</button>
+    <button class="path-tab" onclick="resetPath()">Reset</button>
+  </div>
+  <div class="spacer"></div>
+  <div class="actor-key">
+    <span class="actor-key-item sys">⚙ System</span>
+    <span class="actor-key-item human">👤 Human</span>
+    <span class="actor-key-item both">👤+⚙ Both</span>
+    <span class="actor-key-divider"></span>
+    <span class="actor-key-trigger">✉ Email &nbsp; 💬 Slack</span>
+  </div>
+</nav>
+
+<!-- BOARD -->
+<div class="board-wrap" id="boardWrap">
+<div class="board" id="board">
+
+<svg class="connector-layer" id="connSvg"></svg>
+
+<!-- ROW LABELS -->
+<div class="smark" style="left:260px;top:162px;">Intake</div>
+<div class="smark" style="left:495px;top:162px;">Eligibility</div>
+<div class="smark" style="left:960px;top:162px;">Capacity</div>
+<div class="smark" style="left:1245px;top:162px;">Recommendation</div>
+<div class="smark" style="left:320px;top:952px;">Human Review</div>
+<div class="smark" style="left:320px;top:1793px;">Decision</div>
+<div class="smark" style="left:1200px;top:1793px;">Post-Decision</div>
+
+<!-- Row dividers -->
+<div class="row-divider" style="top:940px; width:1500px;"></div>
+<div class="row-divider" style="top:1780px; width:1500px;"></div>
+
+<!-- ═══ INTAKE FORM ═══ -->
+<div class="intake-card" id="intakeForm" style="left:20px;top:80px;width:225px;">
+  <div class="intake-title">Borrower Intake Form</div>
+  <div class="ff">
+    <label>Loan Number</label>
+    <input type="text" class="fi" placeholder="e.g. 2024-00451">
+    <div class="fhint">We pull your file automatically</div>
+  </div>
+  <div class="ff">
+    <label>Reason for request</label>
+    <select class="fi">
+      <option>Managing my own cash flow</option>
+      <option>Rising escrow costs</option>
+      <option>Planning to pay directly</option>
+      <option>Other</option>
+    </select>
+  </div>
+  <div class="ff">
+    <label>Preferred contact</label>
+    <div class="fg">
+      <label class="fro"><input type="radio" name="c"> Phone</label>
+      <label class="fro"><input type="radio" name="c" checked> Email</label>
+    </div>
+  </div>
+  <div class="ff">
+    <label>Best time to reach you</label>
+    <select class="fi"><option>Morning</option><option>Afternoon</option><option>Evening</option></select>
+  </div>
+  <div class="ff">
+    <label>Property value changed recently?</label>
+    <div class="fyn"><div class="fynb">Yes</div><div class="fynb">No</div></div>
+    <div class="fhint">Yes flags valuation review</div>
+  </div>
+  <div class="ff">
+    <label class="fchk"><input type="checkbox"> I understand I am responsible for taxes and insurance if approved</label>
+  </div>
+</div>
+
+<!-- ═══ ROW 1: AUTOMATED ELIGIBILITY ═══ -->
+
+<div class="node" id="n1" style="left:260px;top:215px;" data-paths="a,b,c" data-nid="n1">
+  <div class="node-bar"></div>
+  <div class="node-body">
+    <div class="node-num">01</div>
+    <div class="node-title">Log Intake Request</div>
+    <div class="node-desc">Validates the submitted form, assigns the case to the analyst queue, and sets request_status = RECEIVED.</div>
+    <div class="node-actor sys">⚙ System</div>
+    <div class="node-triggers">
+      <span class="tbadge">✉<span class="tlabel">#1</span></span>
+      <span class="tbadge">💬<span class="tlabel">#2</span></span>
+    </div>
+  </div>
+</div>
+
+<div class="node" id="n2" style="left:500px;top:215px;" data-paths="a,b,c" data-nid="n2">
+  <div class="node-bar"></div>
+  <div class="node-body">
+    <div class="node-num">02</div>
+    <div class="node-title">Check Hard Stops</div>
+    <div class="node-desc">Checks absolute disqualifiers: active MI, loan type restrictions, and cash-out refi rules. Path C exits directly here.</div>
+    <div class="node-actor sys">⚙ System</div>
+  </div>
+</div>
+
+<div class="node" id="n3" style="left:740px;top:215px;" data-paths="a,b" data-nid="n3">
+  <div class="node-bar"></div>
+  <div class="node-body">
+    <div class="node-num">03</div>
+    <div class="node-title">Check GSE Eligibility</div>
+    <div class="node-desc">Validates investor seasoning rules, LTV thresholds, forbearance status, and FEMA declarations. Path B diverges if a flag is detected.</div>
+    <div class="node-actor sys">⚙ System</div>
+  </div>
+</div>
+
+<div class="node" id="n4" style="left:980px;top:215px;" data-paths="a" data-nid="n4">
+  <div class="node-bar"></div>
+  <div class="node-body">
+    <div class="node-num">04</div>
+    <div class="node-title">Assess Financial Capacity</div>
+    <div class="node-desc">Scores 36-month payment history, prior violations, escrow surplus, payment shock ratio, DTI, and income volatility over trailing 12 months.</div>
+    <div class="node-actor sys">⚙ System</div>
+  </div>
+</div>
+
+<!--
+  Diamond: CSS left=1054 top=500, size=66×66
+  CSS box center: (1087, 533)
+  Tips: top=(1087,486)  bot=(1087,580)  right=(1134,533)  left=(1040,533)
+  n4 left=980 cx=1087 — diamond is centered under n4.
+  n4 bottom ≈ 215+240 = 455. Gap to top tip (486) = 31px.
+-->
+<div class="node decision-diamond" id="dmd-a" style="left:1054px;top:500px;" data-paths="a" data-nid="dmd-a">
+  <div class="diamond-inner">
+    <div class="diamond-label">Signals<br>sufficient?</div>
+  </div>
+</div>
+
+<div class="node" id="n4a" style="left:980px;top:630px;" data-paths="a" data-nid="n4a"
+     onmouseenter="showScorecard()" onmouseleave="hideScorecard()">
+  <div class="node-bar"></div>
+  <div class="node-body">
+    <div class="node-num">04a</div>
+    <div class="node-title">Score Compensating Factors</div>
+    <div class="node-desc">Runs weighted scoring when signals are thin or borderline. Pass threshold is 60 points. Requires Analyst and Risk co-sign.</div>
+    <div class="node-actor sys">⚙ System</div>
+    <div class="subroute sr-a2">A2 sub-route</div>
+  </div>
+</div>
+
+<div class="scorecard-hover" id="scorecardCard" style="left:1215px;top:630px;">
+  <div class="sc-title">A2 Scorecard Weights</div>
+  <div class="sc-row"><span class="sc-lbl">Payment shock</span><div class="sc-track"><div class="sc-fill" style="width:70%"></div></div><span class="sc-pts">35</span></div>
+  <div class="sc-row"><span class="sc-lbl">Escrow surplus</span><div class="sc-track"><div class="sc-fill" style="width:50%"></div></div><span class="sc-pts">25</span></div>
+  <div class="sc-row"><span class="sc-lbl">DTI</span><div class="sc-track"><div class="sc-fill" style="width:40%"></div></div><span class="sc-pts">20</span></div>
+  <div class="sc-row"><span class="sc-lbl">Income volatility</span><div class="sc-track"><div class="sc-fill" style="width:30%"></div></div><span class="sc-pts">15</span></div>
+  <div class="sc-row"><span class="sc-lbl">Income trend</span><div class="sc-track"><div class="sc-fill" style="width:10%"></div></div><span class="sc-pts">5</span></div>
+</div>
+
+<div class="node" id="n5" style="left:1265px;top:215px;" data-paths="a,b" data-nid="n5">
+  <div class="node-bar"></div>
+  <div class="node-body">
+    <div class="node-num">05</div>
+    <div class="node-title">Generate Recommendation</div>
+    <div class="node-desc">Routes to the correct review path, A or B. Status update email fires.</div>
+    <div class="node-actor sys">⚙ System</div>
+    <div class="node-triggers">
+      <span class="tbadge">✉<span class="tlabel">#3</span></span>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ ROW 2: HUMAN REVIEW ═══ -->
+
+<div class="node" id="n6c" style="left:20px;top:970px;" data-paths="c" data-nid="n6c">
+  <div class="node-bar"></div>
+  <div class="node-body">
+    <div class="node-num">06C</div>
+    <div class="node-title">Confirm Denial</div>
+    <div class="node-desc">Analyst reviews the hard-stop denial. State-compliant denial notice template is auto-selected from STATE_RULES.</div>
+    <div class="node-actor human">👤 Human</div>
+  </div>
+</div>
+
+<div class="node" id="n6b" style="left:760px;top:970px;" data-paths="b" data-nid="n6b">
+  <div class="node-bar"></div>
+  <div class="node-body">
+    <div class="node-num">06B</div>
+    <div class="node-title">Send Analyst Review Packet</div>
+    <div class="node-desc">System packages a structured packet with available borrower data and the specific questions that declared their request "flagged." Borrower is contacted for additional information as needed.</div>
+    <div class="node-actor sys">⚙ System</div>
+    <div class="node-triggers">
+      <span class="tbadge">✉<span class="tlabel">#3</span></span>
+      <span class="tbadge">✉<span class="tlabel">#4*</span></span>
+    </div>
+  </div>
+</div>
+
+<!-- n6b2 stacked directly below n6b (same left=760) -->
+<div class="node" id="n6b2" style="left:760px;top:1460px;" data-paths="b" data-nid="n6b2">
+  <div class="node-bar"></div>
+  <div class="node-body">
+    <div class="node-num">06B2</div>
+    <div class="node-title">Deliberate on Flag</div>
+    <div class="node-desc">Analyst and Risk review the structured question packet and deliberate. Borrower documentation may be formally requested if needed.</div>
+    <div class="node-actor human">👤 Human</div>
+    <div class="node-triggers">
+      <span class="tbadge">✉<span class="tlabel">#4</span></span>
+      <span class="tbadge">💬<span class="tlabel">#5</span></span>
+    </div>
+  </div>
+</div>
+
+<div class="node" id="n6a" style="left:1265px;top:970px;" data-paths="a" data-nid="n6a">
+  <div class="node-bar"></div>
+  <div class="node-body">
+    <div class="node-num">06A</div>
+    <div class="node-title">Confirm Approval</div>
+    <div class="node-desc">Decision packet is pre-populated. A1: analyst confirms alone. A2: analyst and Risk co-sign on the scorecard outcome.</div>
+    <div class="node-actor human">👤 Human</div>
+    <div>
+      <span class="subroute sr-a1">A1: analyst alone</span>
+      <span class="subroute sr-a2">A2: + Risk co-sign</span>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ ROW 3: DECISION + POST-DECISION ═══ -->
+
+<div class="node convergence" id="n7" style="left:20px;top:1820px;" data-paths="a,b,c" data-nid="n7">
+  <div class="node-bar"></div>
+  <div class="node-body">
+    <div class="node-num">07</div>
+    <div class="node-title">Log Decision</div>
+    <div class="node-desc">All three paths converge here. Analyst sign-off is timestamped and the eligibility check log is permanently sealed.</div>
+    <div class="node-actor both">👤+⚙ Both</div>
+    <div class="converge-tag">ALL PATHS CONVERGE</div>
+  </div>
+</div>
+
+<div class="node" id="n8" style="left:855px;top:1820px;" data-paths="a,b,c" data-nid="n8">
+  <div class="node-bar"></div>
+  <div class="node-body">
+    <div class="node-num">08</div>
+    <div class="node-title">Send Notifications</div>
+    <div class="node-desc">System fires the correct borrower email and analyst Slack based on Approve or Deny outcome. State-compliant templates auto-selected.</div>
+    <div class="node-actor sys">⚙ System</div>
+    <div class="node-triggers">
+      <span class="tbadge">✉<span class="tlabel">#6</span></span>
+      <span class="tbadge">💬<span class="tlabel">#7</span></span>
+      <span class="tbadge">✉<span class="tlabel">#8</span></span>
+      <span class="tbadge">💬<span class="tlabel">#9</span></span>
+    </div>
+  </div>
+</div>
+
+<div class="node" id="n9a" style="left:1200px;top:1820px;" data-paths="a" data-nid="n9a">
+  <div class="node-bar"></div>
+  <div class="node-body">
+    <div class="node-num">09A</div>
+    <div class="node-title">Monitor Ongoing Compliance</div>
+    <div class="node-desc">Automated reminders keep the borrower accountable for tax and insurance payments. Analyst is alerted if confirmations go missing.</div>
+    <div class="node-actor sys">⚙ System</div>
+    <div class="node-triggers">
+      <span class="tbadge">✉<span class="tlabel">#10</span></span>
+      <span class="tbadge">💬<span class="tlabel">#11</span></span>
+      <span class="tbadge">✉<span class="tlabel">#12</span></span>
+      <span class="tbadge">💬<span class="tlabel">#13</span></span>
+    </div>
+  </div>
+</div>
+
+<div class="node" id="n9b" style="left:1200px;top:2380px;" data-paths="c" data-nid="n9b">
+  <div class="node-bar"></div>
+  <div class="node-body">
+    <div class="node-num">09B</div>
+    <div class="node-title">Watch for Re-Eligibility</div>
+    <div class="node-desc">System monitors for disqualifying conditions to clear (e.g. MI cancellation at 78% LTV). Borrower is notified when eligible to re-apply.</div>
+    <div class="node-actor sys">⚙ System</div>
+    <div class="node-triggers">
+      <span class="tbadge">✉<span class="tlabel">#14</span></span>
+    </div>
+  </div>
+</div>
+
+</div><!-- /board -->
+</div><!-- /board-wrap -->
+
+<!-- SIDE PANEL -->
+<div class="side-panel" id="sidePanel">
+  <div class="sp-header">
+    <div class="sp-header-top">
+      <div style="display:flex;align-items:center;">
+        <div class="sp-step" id="sp-step"></div>
+        <span class="sp-pinned-badge" id="sp-pinned-badge">● PINNED</span>
+      </div>
+      <button class="sp-close" onclick="closePanel()">✕ close</button>
+    </div>
+    <div class="sp-title" id="sp-title"></div>
+    <div class="sp-actor" id="sp-actor"></div>
+    <div class="sp-hint" id="sp-hint">Click to pin · Esc to close</div>
+  </div>
+  <div class="sp-body" id="sp-body"></div>
+</div>
+
+<!-- ZOOM + LEGEND -->
+<div class="bottom-bar">
+  <button class="zoom-btn" onclick="zoomBy(1.15)">+</button>
+  <button class="zoom-btn" onclick="zoomBy(0.87)">−</button>
+  <button class="zoom-btn zoom-fit" onclick="zoomFit()">Fit</button>
+</div>
+
+<script>
+// ═══════════════════════════════════════════
+// DATA
+// ═══════════════════════════════════════════
+
+const TRIGGERS = {
+  1: {
+    id:1, channel:'email', label:'Borrower Confirmation Email',
+    condition:'request_status = RECEIVED AND notification_sent_borrower = FALSE',
+    target:'Borrower', timing:'Fires immediately on submission',
+    message:'Subject: We received your escrow waiver request, Loan #[ID].\n\nYour request has been received and is under review. You can expect a decision within [programmed SLA].\n\nIn the meantime, we\'ve put together a few resources to help you think through what self-managing your property tax and insurance payments could look like. [Link to resources]\n\nWe\'ll keep you updated as your request moves forward.',
+    purpose:'Eliminates the borrower dead zone that defines the current state. Borrower knows their request landed, has a clear timeline expectation, and receives helpful resources without any pressure.',
+    action_required:'None: fully automated. No analyst involvement at this stage.'
+  },
+  2: {
+    id:2, channel:'slack', label:'Analyst Slack: New Request',
+    condition:'request_status = RECEIVED AND notification_sent_internal = FALSE',
+    target:'Assigned Analyst (assigned_analyst_id)', timing:'Fires simultaneously with Trigger #1',
+    message:'New escrow waiver request: [Borrower Name] | Loan #[ID] | Submitted [date]. File is in your queue for review.',
+    purpose:'Surfaces the new request to the assigned analyst immediately so it enters their review queue without delay.',
+    action_required:'Analyst reviews the file. No borrower contact at this stage.'
+  },
+  3: {
+    id:3, channel:'email', label:'Status Update Email',
+    condition:'request_status changes AND notification_sent_borrower = FALSE for new status',
+    target:'Borrower', timing:'Fires on status transitions. Also fires if SLA window is exceeded without a decision.',
+    message:'Subject: Update on your escrow waiver request, Loan #[ID].\n\nWe wanted to let you know your request is still in progress. We appreciate your patience and will have an update for you shortly.',
+    purpose:'Keeps borrower informed without exposing internal workflow stages.',
+    action_required:'None: automated.'
+  },
+  4: {
+    id:4, channel:'email', label:'Borrower Input Request',
+    condition:'Path B only. Fires when analyst or Risk determines that flag resolution requires borrower-provided documentation.',
+    target:'Borrower', timing:'Path B only: fires when analyst or Risk confirms borrower input is needed',
+    message:'Subject: We need a little more information, Loan #[ID].\n\nTo continue reviewing your escrow waiver request, we need the following from you:\n\n[VALUATION_DISPUTE]: A reconsideration of value request or agreement to a new property appraisal.\n\n[VIOLATION_CONTEST]: Documentation supporting your dispute of the prior escrow waiver record on file.\n\nPlease respond within [X] business days.',
+    purpose:'Targeted and specific: borrower knows exactly what is being asked and why.',
+    action_required:'Analyst monitors for borrower_input_received = TRUE.'
+  },
+  '4b': {
+    id:'4b', channel:'slack', label:'Analyst Alert: Borrower Input Received',
+    condition:'borrower_input_received = TRUE AND analyst_notified_of_input = FALSE',
+    target:'Assigned Analyst', timing:'NET NEW: fires when borrower submits requested documentation.',
+    message:'Borrower response received: [Borrower Name] | Loan #[ID] | Documentation submitted [date]. Review and continue deliberation.',
+    purpose:'Analyst knows the moment borrower input arrives without manual checking.',
+    action_required:'Analyst reviews submitted documentation and continues Path B deliberation.'
+  },
+  5: {
+    id:5, channel:'slack', label:'Analyst Follow-Up: No Borrower Response',
+    condition:'borrower_input_required = TRUE AND borrower_input_received = FALSE AND days since input_requested_date > X',
+    target:'Assigned Analyst', timing:'Path B only: fires X days after Trigger #4 if no response received',
+    message:'No response received: [Borrower Name] | Loan #[ID] | Input requested [date], [X] days ago. Recommended action: Call [Borrower Name] at [contact] to follow up.',
+    purpose:'Closes the follow-up loop without manual tracking.',
+    action_required:'Analyst calls borrower to follow up on outstanding documentation.'
+  },
+  6: {
+    id:6, channel:'email', label:'Approval Notification',
+    condition:'request_status = APPROVED AND notification_sent_borrower = FALSE',
+    target:'Borrower', timing:'Fires immediately after analyst sign-off at Step 6A',
+    message:'Subject: Great news, your escrow waiver has been approved, Loan #[ID].\n\nYour request has been approved effective [date].\n\nWe\'ve put together everything you need to feel confident managing your property taxes and insurance going forward. [Link: Your guide to self-managing escrow]\n\nYour specialist will be in touch to walk you through next steps.',
+    purpose:'Approval is a milestone. The communication should feel supportive and set the borrower up for success.',
+    action_required:'Trigger #7 fires simultaneously. Post-waiver monitoring activates.'
+  },
+  7: {
+    id:7, channel:'slack', label:'Analyst Alert: Approval',
+    condition:'request_status = APPROVED AND notification_sent_internal = FALSE',
+    target:'Assigned Analyst', timing:'Fires simultaneously with Trigger #6',
+    message:'Waiver approved: [Borrower Name] | Loan #[ID] | Path [A/B] | Post-waiver monitoring is now active.\n\nRecommended action: Call [Borrower Name] at [contact] to walk through what changes.',
+    purpose:'Prompts a proactive call before the borrower has a chance to feel uncertain.',
+    action_required:'Analyst calls borrower to confirm they received the approval notice and feel prepared.'
+  },
+  8: {
+    id:8, channel:'email', label:'Denial Notification',
+    condition:'request_status = DENIED AND notification_sent_borrower = FALSE',
+    target:'Borrower', timing:'Fires immediately after analyst confirms denial.',
+    message:'Subject: An update on your escrow waiver request, Loan #[ID].\n\nThank you for submitting your request. After a careful review, we\'re unable to approve an escrow waiver at this time.\n\nReason: [decision_reason_code in plain language]\n\n[Reason-specific path forward, e.g. "Based on your current loan balance, mortgage insurance is estimated to be removed in approximately [X] months."]\n\nWe\'ve put together some resources on making your escrow account work as efficiently as possible for you. [Link]',
+    purpose:'Denial is not a dead end. Borrower receives a clear reason, a specific path to re-eligibility, and resources for the interim.',
+    action_required:'Trigger #9 fires simultaneously. Re-evaluation watch activates for applicable denial reasons.'
+  },
+  9: {
+    id:9, channel:'slack', label:'Analyst Alert: Denial',
+    condition:'request_status = DENIED AND notification_sent_internal = FALSE',
+    target:'Assigned Analyst', timing:'Fires simultaneously with Trigger #8',
+    message:'Waiver denied: [Borrower Name] | Loan #[ID] | Reason: [decision_reason_code].\n\nRecommended action: Call [Borrower Name] at [contact] to understand the underlying need and discuss options.',
+    purpose:'Denial is a relationship moment. Analyst call surfaces unmet borrower needs.',
+    action_required:'Analyst calls borrower to understand why they needed the waiver and discuss available options.'
+  },
+  10: {
+    id:10, channel:'email', label:'Borrower Reminder: Tax Due',
+    condition:'tax_payment_due_date - TODAY() <= X days AND tax_payment_confirmed = FALSE',
+    target:'Borrower', timing:'Post-waiver monitoring: fires X days BEFORE tax due date. Guaranteed for first 3 cycles.',
+    message:'Subject: Friendly reminder, property tax payment due [date], Loan #[ID].\n\nJust a heads up: your property tax payment is due on [date]. [County payment link and instructions.]\n\nIf you\'ve already taken care of this, you\'re all set.',
+    purpose:'Proactive: catches potential lapses before they become delinquencies.',
+    action_required:'System monitors tax_payment_confirmed via vendor integration.'
+  },
+  11: {
+    id:11, channel:'slack', label:'Analyst Alert: Tax Unconfirmed',
+    condition:'tax_payment_due_date < TODAY() AND tax_payment_confirmed = FALSE',
+    target:'Assigned Analyst', timing:'Reactive: fires AFTER due date if tax_payment_confirmed remains FALSE.',
+    message:'Tax payment unconfirmed: [Borrower Name] | Loan #[ID] | Due [date], [X] days ago.\n\nRecommended action: Call [Borrower Name] at [contact] before this becomes a delinquency.',
+    purpose:'Tax delinquency on a waived loan is a direct investor collateral risk.',
+    action_required:'Analyst calls borrower to confirm payment status.'
+  },
+  12: {
+    id:12, channel:'email', label:'Borrower Reminder: Insurance Renewal',
+    condition:'insurance_renewal_date - TODAY() <= X days AND insurance_confirmed_current = FALSE',
+    target:'Borrower', timing:'PHASE 2 RECOMMENDATION: requires insurance tracking vendor integration.',
+    message:'Subject: Friendly reminder, homeowners insurance renewal due [date], Loan #[ID].\n\nYour homeowners insurance policy is due for renewal on [date]. Maintaining active coverage is a requirement of your escrow waiver agreement.',
+    purpose:'Proactive prevention of insurance lapse. Requires vendor infrastructure.',
+    action_required:'Phase 2 pending vendor confirmation.'
+  },
+  13: {
+    id:13, channel:'slack', label:'Analyst Alert: Insurance Unconfirmed',
+    condition:'insurance_renewal_date < TODAY() AND insurance_confirmed_current = FALSE',
+    target:'Assigned Analyst', timing:'PHASE 2 RECOMMENDATION: same infrastructure dependency as Trigger #12.',
+    message:'Insurance lapse risk: [Borrower Name] | Loan #[ID] | Renewal date: [date], [X] days ago. Coverage not confirmed current.\n\nRecommended action: Call [Borrower Name] at [contact] immediately.',
+    purpose:'Insurance lapse is a direct servicer liability.',
+    action_required:'Phase 2. If deployed: analyst calls borrower immediately.'
+  },
+  14: {
+    id:14, channel:'email', label:'Re-Evaluation Watch: Borrower Notification',
+    condition:'request_status = DENIED AND denial_date > TODAY() - 180 days AND disqualifying condition clears.',
+    target:'Borrower', timing:'POST-DENIAL: fires when a hard disqualifying condition clears within 6 months of denial.',
+    message:'Subject: Good news, you may now be eligible to re-apply, Loan #[ID].\n\nWhen we reviewed your escrow waiver request earlier this year, we were unable to approve it because [original denial reason].\n\nWe wanted to let you know that this has since changed: [specific condition that cleared].\n\nIf you\'re still interested, you\'re welcome to re-apply. [Link to re-application]\n\nNo pressure: just wanted to make sure you had the information.',
+    purpose:'Turns denied borrowers into future pipeline without solicitation pressure.',
+    action_required:'No analyst call required. Borrower self-selects whether to re-apply.',
+    pressure_test_note:'Conflict of interest check: Proactive re-evaluation outreach is defensible when scoped to hard disqualifier clearances (MI cancellation, disaster declaration lifted) because the eligibility change is factual and verifiable. It would NOT be defensible to proactively solicit re-application from borrowers denied for borderline financial capacity: that creates GSE audit exposure.'
+  }
+};
+
+const FLAGS = [
+  { name:'Modified Loan: Fannie Mae', cond:'is_modified = TRUE\nAND investor = FANNIE_MAE', q:'Does this modification program permit escrow waiver?', borrower:false },
+  { name:'Active FEMA Disaster Declaration', cond:'fema_ia_declaration_active = TRUE', q:'Is payment history reliable given active disaster declaration?', borrower:false },
+  { name:'Contested Prior Violation', cond:'prior_waiver_violation = TRUE\nAND violation_contested = TRUE', q:'Is the prior violation record accurate and does it stand?', borrower:true },
+  { name:'Flood Zone: Mandatory Purchase', cond:'is_flood_zone = TRUE\nAND flood_zone_designation IN (A, AE, V, VE)', q:'Is flood insurance escrow a standalone GSE requirement that survives a general waiver?', borrower:false },
+  { name:'Contested Property Valuation', cond:'current_ltv within 2% of threshold\nAND valuation_disputed = TRUE', q:'Is the current valuation accurate or does a new appraisal need to be ordered?', borrower:true },
+  { name:'State / GSE Rule Conflict', cond:'STATE_RULES threshold conflicts with\nGSE threshold (legal ambiguity)', q:'Which rule governs in this specific situation?', borrower:false }
+];
+
+const NODE_INFO = {
+  n1: {
+    step:'01: Intake', title:'Structured Intake', actor:'sys',
+    fields:'request_status = RECEIVED\nrequest_channel\nwaiver_type_requested = FULL',
+    routing:'All paths begin here. Intake form triggers borrower confirmation (#1) and analyst notification (#2).',
+    triggers:[1,2]
+  },
+  n2: {
+    step:'02: Eligibility', title:'Hard Stop Evaluation', actor:'sys',
+    fields:'has_active_mi\nloan_type\nproperty_type\nis_modified  (Freddie rule)\nis_cash_out_refi_with_financed_taxes  (Fannie rule)',
+    routing:'Hard stop hit: PATH C (direct to analyst denial, bypasses eligibility and capacity)\nAll clear: continue to GSE and State Eligibility',
+    triggers:[]
+  },
+  n3: {
+    step:'03: Eligibility', title:'GSE and State Eligibility', actor:'sys',
+    fields:'investor_type\n  Fannie: 12mo seasoning, 12mo payment lookback\n  Freddie: no seasoning, 6mo lookback\ncurrent_ltv <= 80%\nSTATE_RULES.max_ltv_for_waiver\nactive_forbearance = FALSE\nfema_ia_declaration_active',
+    routing:'Flag condition detected: PATH B (routes to Flag Identified)\nAll clear: Financial Capacity Assessment',
+    triggers:[]
+  },
+  n4: {
+    step:'04: Capacity', title:'Financial Capacity', actor:'sys',
+    fields:'payment_history_lookback_36mo\nprior_waiver_violation\nescrow_surplus_history\npayment_shock_ratio\ndebt_to_income_ratio\nincome_volatility_12mo',
+    routing:'A1 route: all signals clean, direct to recommendation\nA2 route: one or more signals thin or borderline; scorecard runs.',
+    triggers:[]
+  },
+  'dmd-a': {
+    step:'04: Capacity Split', title:'Standard Signals Sufficient?', actor:'sys',
+    fields:'YES (A1): all signals clean\n  payment_history: no lates in lookback window\n  escrow_surplus_history = POSITIVE\n  income_volatility CoV < 0.2\n  payment_shock_ratio < 10%\n\nNO (A2): any signal thin or borderline\n  income_volatility CoV 0.2 to 0.35\n  payment_shock_ratio 10 to 15%',
+    routing:'YES: A1 Standard confirmation. Analyst confirms alone.\nNO: A2 Compensating Factor Scorecard runs. Analyst and Risk co-sign required.',
+    triggers:[]
+  },
+  n4a: {
+    step:'04a: Capacity (A2)', title:'Compensating Factor Scorecard', actor:'sys',
+    fields:'Triggers when signals are borderline.\n\nWeights:\n  payment_shock      35 pts\n  escrow_surplus     25 pts\n  DTI                20 pts\n  income_volatility  15 pts\n  income_trend        5 pts\n\nPass threshold: >= 60 points\nAND prior_waiver_violation = FALSE',
+    routing:'A2 sub-route only. Analyst and Risk must co-sign. Hover the node to see scorecard weights.',
+    triggers:[]
+  },
+  n5: {
+    step:'05: Recommendation', title:'Recommendation Generated', actor:'sys',
+    fields:'eligibility_check_log sealed\nrecommendation: APPROVE\n                 or FLAG\n                 or DENY',
+    routing:'APPROVE: Analyst Confirms (Path A)\nFLAG: Flag Identified (Path B)\nTrigger #3 fires: status update email to borrower',
+    triggers:[3]
+  },
+  n6a: {
+    step:'06A: Human Review', title:'Analyst Confirms', actor:'human',
+    fields:'assigned_analyst_id\nA1: analyst confirms alone\n    (all standard signals clean)\nA2: analyst + Risk co-sign\n    (scorecard ran; tier2_score >= 60)\nPre-populated decision packet delivered',
+    routing:'A1: analyst confirms alone; standard signals confirmed capacity.\nA2: analyst and Risk co-sign; scorecard outcome requires a second set of eyes.',
+    triggers:[]
+  },
+  n6b: {
+    step:'06B: Human Review', title:'Flag Identified', actor:'sys',
+    fields:'Six possible flag conditions\n(see flags below)',
+    routing:'System packages structured question packet for analyst and Risk.\nTrigger #3 fires (status update). Trigger #4 fires conditionally if borrower input required.',
+    triggers:[3,4], showFlags:true
+  },
+  n6b2: {
+    step:'06B2: Human Review', title:'Analyst + Risk Deliberate', actor:'human',
+    fields:'assigned_analyst_id\nstructured question packet\ndecision options:\n  Approve / Deny / Escalate\nborrower_input_required (conditional)',
+    routing:'If borrower_input_required = TRUE: trigger #4 (borrower email) + #4b (analyst notified when input received) + #5 (analyst follow-up if no response).',
+    triggers:[4,'4b',5]
+  },
+  n6c: {
+    step:'06C: Human Review', title:'Analyst Confirms Denial', actor:'human',
+    fields:'decision_reason_code\ndenial_notice_template_id\n(auto-selected from STATE_RULES)',
+    routing:'Hard stop from Node 2 routes here directly, bypassing eligibility and capacity evaluation.',
+    triggers:[]
+  },
+  n7: {
+    step:'07: Decision', title:'Decision Logged', actor:'both',
+    fields:'request_status = APPROVED or DENIED\nanalyst sign-off timestamped\neligibility_check_log closed',
+    routing:'ALL THREE PATHS converge here. Every waiver request (approved, flagged, or denied) passes through this node before notification.',
+    triggers:[]
+  },
+  n8: {
+    step:'08: Notification', title:'Notifications Fire', actor:'sys',
+    fields:'Approval: #6 borrower email + #7 analyst Slack\nDenial:   #8 borrower email + #9 analyst Slack\nSTATE_RULES.denial_notice_template_id auto-selected',
+    routing:'Valon workflow tool selects correct template based on state rules and fires appropriate triggers.',
+    triggers:[6,7,8,9]
+  },
+  n9a: {
+    step:'09A: Post-Decision', title:'Monitoring Loop Active', actor:'sys',
+    fields:'tax_payment_due_date\ninsurance_renewal_date\ntax_payment_confirmed\ninsurance_confirmed_current',
+    routing:'Ongoing monitoring for approved waivers. Automated reminders keep borrower accountable; analyst alerted if confirmations go missing.',
+    triggers:[10,11,12,13]
+  },
+  n9b: {
+    step:'09B: Post-Decision', title:'Re-Evaluation Watch', actor:'sys',
+    fields:'denial_reason_code\nWatches for disqualifying condition to clear\nExample: has_active_mi to FALSE when LTV hits 78%',
+    routing:'For denied loans, system monitors until the disqualifying condition resolves. Analyst is notified when borrower becomes eligible to re-apply.',
+    triggers:[14]
+  }
+};
+
+// ═══════════════════════════════════════════
+// CONNECTOR GEOMETRY
+// ═══════════════════════════════════════════
+// Layout summary:
+//   Row 1 (top=215): n1(270) n2(490) n3(710) n4(940) n5(1230) — all width=185
+//   Diamond dmd-a(963,415): CSS box center=(996,448), tips: T(996,401) B(996,495) R(1043,448)
+//   n4a(940,535), scorecard(1145,535)
+//   Row 2 (top=860): n6c(20) n6b(760) n6a(1230) — n6b2(760,1090) stacked below n6b
+//   Row 3 (top=1450): n7(590) n8(840) n9a(1090,1360) n9b(1090,1650)
+//
+// THREE-PATH CONVERGENCE on n7 (no crossings):
+//   n6c  → n7: exit bottom n6c → descend at cx=110 → channel y=n7.cy → enter n7 LEFT
+//   n6b2 → n7: exit bottom n6b2 → descend → channel y=1390 → enter n7 TOP at cx
+//   n6a  → n7: exit bottom n6a → descend → channel y=1430 → enter n7 RIGHT at cy
+//   Routes use different y channels (1390 vs 1430 vs n7.cy) and x extents that don't overlap.
+
+function b(id) {
+  const el = document.getElementById(id);
+  if (!el) return null;
+  const l = parseInt(el.style.left);
+  const t = parseInt(el.style.top);
+  const w = el.offsetWidth  || 185;
+  const h = el.offsetHeight || 110;
+  return { l, t, r:l+w, b:t+h, cx:l+w/2, cy:t+h/2 };
+}
+
+function orthoPath(pts, r=10) {
+  if (pts.length < 2) return '';
+  let d = `M ${pts[0].x.toFixed(1)} ${pts[0].y.toFixed(1)}`;
+  for (let i=1; i<pts.length; i++) {
+    const prev=pts[i-1], curr=pts[i], next=pts[i+1];
+    if (!next) {
+      d += ` L ${curr.x.toFixed(1)} ${curr.y.toFixed(1)}`;
+    } else {
+      const dx1=curr.x-prev.x, dy1=curr.y-prev.y, len1=Math.sqrt(dx1*dx1+dy1*dy1);
+      const ux1=dx1/len1, uy1=dy1/len1;
+      const dx2=next.x-curr.x, dy2=next.y-curr.y, len2=Math.sqrt(dx2*dx2+dy2*dy2);
+      const ux2=dx2/len2, uy2=dy2/len2;
+      const rr=Math.min(r, len1*0.4, len2*0.4);
+      const bx=curr.x-ux1*rr, by=curr.y-uy1*rr;
+      const ax=curr.x+ux2*rr, ay=curr.y+uy2*rr;
+      d += ` L ${bx.toFixed(1)} ${by.toFixed(1)} Q ${curr.x.toFixed(1)} ${curr.y.toFixed(1)} ${ax.toFixed(1)} ${ay.toFixed(1)}`;
+    }
+  }
+  return d;
+}
+
+// ── Fixed y-values per row ensure perfectly level horizontal arrows ──
+// All row-1 nodes share top=215. ROW1_Y = 215+75 = 290 (inside every node).
+// All row-3 nodes share top=1630. ROW3_Y = 1630+75 = 1705 (inside every node).
+// Node positions (width=215):
+//   n1(260)→r=475  n2(500)→r=715  n3(740)→r=955  n4(980)→r=1195  n5(1265)→r=1480
+//   n6c(20)→cx=127  n6b(760)→cx=867  n6b2(760,1250)  n6a(1265)→cx=1372
+//   n7(600,1630)→cx=707,r=815   n8(855,1630)→cx=962,r=1070
+//   n9a(1110,1540)  n9b(1110,1850)
+// Diamond: CSS left=1054 top=500 → center(1087,533) → tips T(1087,486) B(1087,580) R(1134,533)
+//   Centered under n4 (cx=1087). Connections are straight verticals.
+// n4a: left=980 top=630 → cx=1087 (same column as diamond).
+//
+// THREE-PATH CONVERGENCE (no crossings):
+//   n6c→n7:  exit bottom → descend x=127 → y=ROW3_Y=1705 → enter n7 LEFT
+//   n6b2→n7: exit bottom → channel y=1575 → enter n7 TOP at cx=707
+//   n6a→n7:  exit bottom → channel y=1600 → enter n7 RIGHT at y=ROW3_Y=1705
+//   n6b2 vertical at x=867 ends at y=1575; n6a horizontal at y=1600 passes x=867 after
+//   n6b2 has turned — no crossing. All routes verified clean.
+
+const ROW1_Y = 290;   // fixed y for all row-1 horizontal arrows
+const ROW3_Y = 1895;  // fixed y for row-3 horizontal arrows (n7→n8)
+
+const CONNS = [
+  // ── intake → n1: horizontal at ROW1_Y ──
+  { from:'intakeForm', to:'n1', paths:['a','b','c'],
+    wp: () => { return [{x:245,y:ROW1_Y},{x:260,y:ROW1_Y}]; }},
+
+  // ── Row 1 horizontal chain — all perfectly level at ROW1_Y ──
+  { from:'n1', to:'n2', paths:['a','b','c'],
+    wp: () => { return [{x:475,y:ROW1_Y},{x:500,y:ROW1_Y}]; }},
+  { from:'n2', to:'n3', paths:['a','b'], label:'All clear',
+    wp: () => { return [{x:715,y:ROW1_Y},{x:740,y:ROW1_Y}]; }},
+  // ── n3 → n4: all active paths continue to capacity assessment ──
+  { from:'n3', to:'n4', paths:['a','b'], label:'All clear',
+    wp: () => { return [{x:955,y:ROW1_Y},{x:980,y:ROW1_Y}]; }},
+
+  // ── Path C hard stop: n2 bottom → channel y=935 → n6c top ──
+  { from:'n2', to:'n6c', paths:['c'], label:'Hard stop',
+    wp: () => {
+      const f=b('n2'),t=b('n6c');
+      return [{x:607,y:f.b},{x:607,y:935},{x:127,y:935},{x:127,y:t.t}];
+    }},
+
+  // ── n4 → diamond: straight vertical, both cx=1087 ──
+  { from:'n4', to:'dmd-a', paths:['a'],
+    wp: () => {
+      const f=b('n4');
+      return [{x:1087,y:f.b},{x:1087,y:486}];
+    }},
+
+  // ── Diamond right tip (1134,533) → n5 left at ROW1_Y-8=282: A1 ──
+  { from:'dmd-a', to:'n5', paths:['a'], label:'Yes', alwaysLabel:true,
+    wp: () => {
+      return [{x:1134,y:533},{x:1210,y:533},{x:1210,y:282},{x:1265,y:282}];
+    }},
+
+  // ── Diamond bottom tip (1087,580) → n4a top: straight vertical, both cx=1087 ──
+  { from:'dmd-a', to:'n4a', paths:['a'], label:'No', alwaysLabel:true, dashed:true,
+    wp: () => {
+      const t=b('n4a');
+      return [{x:1087,y:580},{x:1087,y:t.t}];
+    }},
+
+  // ── n4a right → n5 left at ROW1_Y+8=298: A2 rejoins ──
+  { from:'n4a', to:'n5', paths:['a'],
+    wp: () => {
+      const f=b('n4a');
+      return [{x:f.r,y:f.cy},{x:1230,y:f.cy},{x:1230,y:298},{x:1265,y:298}];
+    }},
+
+  // ── n5 → n6a: straight down Path A ──
+  { from:'n5', to:'n6a', paths:['a'], label:'Approve',
+    wp: () => { const f=b('n5'),t=b('n6a'); return [{x:1372,y:f.b},{x:1372,y:t.t}]; }},
+
+  // ── n5 → n6b: bottom → channel y=952 → n6b top; Path B ──
+  { from:'n5', to:'n6b', paths:['b'], label:'Flag',
+    wp: () => {
+      const t=b('n6b');
+      return [{x:1364,y:b('n5').b},{x:1364,y:952},{x:867,y:952},{x:867,y:t.t}];
+    }},
+
+  // ── n6b → n6b2: straight vertical (stacked same column) ──
+  { from:'n6b', to:'n6b2', paths:['b'],
+    wp: () => { const f=b('n6b'),t=b('n6b2'); return [{x:f.cx,y:f.b},{x:f.cx,y:t.t}]; }},
+
+  // ── n6c → n7: descend at n6c.cx=127, enter n7 LEFT at ROW3_Y (Path C) ──
+  { from:'n6c', to:'n7', paths:['c'],
+    wp: () => {
+      const f=b('n6c'),t=b('n7');
+      return [{x:f.cx,y:f.b},{x:f.cx,y:ROW3_Y},{x:t.l,y:ROW3_Y}];
+    }},
+
+  // ── n6b2 → n7: channel y=1770 → x=t.r=235, enter n7 RIGHT at ROW3_Y (Path B) ──
+  { from:'n6b2', to:'n7', paths:['b'],
+    wp: () => {
+      const f=b('n6b2'),t=b('n7');
+      return [{x:f.cx,y:f.b},{x:f.cx,y:1770},{x:t.r,y:1770},{x:t.r,y:ROW3_Y}];
+    }},
+
+  // ── n6a → n7: channel y=1780 → x=137 (10px right of n6c's x=127), enter n7 TOP (Path A) ──
+  // n6c descends at x=127; n6a horizontal stops at x=137 (10px gap). No crossing.
+  // n6b2 horizontal at y=1770 → x=235; n6a horizontal at y=1780 → x=137. Separated y-channels.
+  { from:'n6a', to:'n7', paths:['a'],
+    wp: () => {
+      const f=b('n6a'),t=b('n7');
+      return [{x:f.cx,y:f.b},{x:f.cx,y:1780},{x:137,y:1780},{x:137,y:t.t}];
+    }},
+
+  // ── n7 → n8: perfectly level at ROW3_Y (dynamic so n7 x-position can change) ──
+  { from:'n7', to:'n8', paths:['a','b','c'],
+    wp: () => { const f=b('n7'),t=b('n8'); return [{x:f.r,y:ROW3_Y},{x:t.l,y:ROW3_Y}]; }},
+
+  // ── n8 → n9a: clean horizontal at ROW3_Y (both same row level) ──
+  { from:'n8', to:'n9a', paths:['a'], label:'Approved',
+    wp: () => {
+      const f=b('n8'),t=b('n9a');
+      return [{x:f.r,y:ROW3_Y},{x:t.l,y:ROW3_Y}];
+    }},
+
+  // ── n8 → n9b: exit right, bend down to n9b ──
+  { from:'n8', to:'n9b', paths:['c'], label:'Denied',
+    wp: () => {
+      const f=b('n8'),t=b('n9b');
+      return [{x:f.r,y:ROW3_Y+8},{x:f.r+20,y:ROW3_Y+8},{x:f.r+20,y:t.cy},{x:t.l,y:t.cy}];
+    }}
+];
+
+// ═══════════════════════════════════════════
+// DRAW CONNECTORS
+// ═══════════════════════════════════════════
+let currentPath = null;
+
+function drawConnectors(activePath) {
+  const svg = document.getElementById('connSvg');
+  svg.innerHTML = '';
+
+  const defs = document.createElementNS('http://www.w3.org/2000/svg','defs');
+  [{id:'arr-gray',c:'#B0A9A0'},{id:'arr-a',c:'#2A7A52'},{id:'arr-b',c:'#C8601A'},{id:'arr-c',c:'#B83030'}]
+  .forEach(m => {
+    const mk = document.createElementNS('http://www.w3.org/2000/svg','marker');
+    mk.setAttribute('id',m.id); mk.setAttribute('viewBox','0 0 8 8');
+    mk.setAttribute('refX','7'); mk.setAttribute('refY','4');
+    mk.setAttribute('markerWidth','7'); mk.setAttribute('markerHeight','7');
+    mk.setAttribute('orient','auto');
+    const p = document.createElementNS('http://www.w3.org/2000/svg','path');
+    p.setAttribute('d','M0,1 L7,4 L0,7 Z'); p.setAttribute('fill',m.c);
+    mk.appendChild(p); defs.appendChild(mk);
+  });
+  svg.appendChild(defs);
+
+  CONNS.forEach(conn => {
+    const pts = conn.wp();
+    if (!pts) return;
+    const isActive = activePath && conn.paths.includes(activePath);
+    const isDimmed = activePath && !conn.paths.includes(activePath);
+
+    let color='#B0A9A0', markId='arr-gray', sw='1.5', opacity='1';
+    if (isActive) {
+      if (activePath==='a'){color='#2A7A52';markId='arr-a';sw='2.5';}
+      if (activePath==='b'){color='#C8601A';markId='arr-b';sw='2.5';}
+      if (activePath==='c'){color='#B83030';markId='arr-c';sw='2.5';}
+    } else if (isDimmed) { opacity='0.15'; }
+
+    const g = document.createElementNS('http://www.w3.org/2000/svg','g');
+    g.setAttribute('opacity',opacity);
+    const path = document.createElementNS('http://www.w3.org/2000/svg','path');
+    path.setAttribute('fill','none'); path.setAttribute('stroke',color);
+    path.setAttribute('stroke-width',sw); path.setAttribute('stroke-linejoin','round');
+    path.setAttribute('stroke-linecap','round');
+    if (conn.dashed) path.setAttribute('stroke-dasharray','6,3');
+    path.setAttribute('marker-end',`url(#${markId})`);
+    path.setAttribute('d', orthoPath(pts, 10));
+    g.appendChild(path);
+
+    if (conn.label && (isActive || conn.alwaysLabel)) {
+      const mid = pts[Math.floor(pts.length/2)];
+      const prev = pts[Math.floor(pts.length/2)-1] || pts[0];
+      const lx=(mid.x+prev.x)/2, ly=(mid.y+prev.y)/2-7;
+      const labelColor = conn.alwaysLabel && !isActive ? '#8A8078' : color;
+      const tw=conn.label.length*6.5+16;
+      const bg = document.createElementNS('http://www.w3.org/2000/svg','rect');
+      bg.setAttribute('x',lx-tw/2); bg.setAttribute('y',ly-14);
+      bg.setAttribute('width',tw); bg.setAttribute('height',17);
+      bg.setAttribute('rx','4'); bg.setAttribute('fill','#F5F2EE');
+      bg.setAttribute('stroke',labelColor); bg.setAttribute('stroke-width','0.8');
+      g.appendChild(bg);
+      const txt = document.createElementNS('http://www.w3.org/2000/svg','text');
+      txt.setAttribute('x',lx); txt.setAttribute('y',ly);
+      txt.setAttribute('fill',labelColor); txt.setAttribute('font-size','13');
+      txt.setAttribute('font-family','DM Mono, monospace');
+      txt.setAttribute('font-weight','500');
+      txt.setAttribute('text-anchor','middle');
+      txt.textContent = conn.label;
+      g.appendChild(txt);
+    }
+    svg.appendChild(g);
+  });
+}
+
+// ═══════════════════════════════════════════
+// PATH SELECTION
+// ═══════════════════════════════════════════
+function setPath(p) {
+  currentPath = p;
+  document.querySelectorAll('.path-tab').forEach(btn => btn.className='path-tab');
+  document.getElementById('btn-'+p).classList.add('active-'+p);
+  document.querySelectorAll('.node').forEach(node => {
+    const paths=(node.dataset.paths||'').split(',');
+    node.classList.remove('active-a','active-b','active-c','dimmed');
+    node.classList.add(paths.includes(p)?'active-'+p:'dimmed');
+  });
+  drawConnectors(p);
+}
+function resetPath() {
+  currentPath = null;
+  document.querySelectorAll('.path-tab').forEach(btn => btn.className='path-tab');
+  document.querySelectorAll('.node').forEach(node => {
+    node.classList.remove('active-a','active-b','active-c','dimmed');
+  });
+  drawConnectors(null);
+}
+
+// ═══════════════════════════════════════════
+// SIDE PANEL
+// ═══════════════════════════════════════════
+let panelTimer=null, panelPinned=false, pinnedNid=null;
+
+function showPanel(nid) {
+  clearTimeout(panelTimer);
+  const info = NODE_INFO[nid]; if (!info) return;
+  document.getElementById('sp-step').textContent = info.step;
+  document.getElementById('sp-title').textContent = info.title;
+  const aEl = document.getElementById('sp-actor');
+  aEl.className = 'sp-actor '+info.actor;
+  aEl.textContent = info.actor==='sys'?'⚙ System':info.actor==='human'?'👤 Human':'👤+⚙ Both';
+  document.getElementById('sp-hint').textContent =
+    (panelPinned&&pinnedNid===nid)?'Click node again to unpin · Esc to close':'Click to pin · Esc to close';
+
+  let html='';
+
+  html+=`<div>
+    <div class="sp-section-label">Data Fields &amp; Conditions</div>
+    <div class="sp-fields ${info.actor==='human'?'orange':''}">${esc(info.fields)}</div>
+  </div>`;
+
+  if (info.routing) html+=`<div>
+    <div class="sp-section-label">Routing Logic</div>
+    <div class="sp-route-note">${esc(info.routing)}</div>
+  </div>`;
+
+  if (info.triggers&&info.triggers.length>0) {
+    html+=`<div><div class="sp-section-label">Triggers Fired at This Step</div>`;
+    info.triggers.forEach(tid => {
+      const tr=TRIGGERS[tid]; if(!tr) return;
+      const icon=tr.channel==='email'?'✉️':'💬';
+      const chLabel=tr.channel==='email'?'Email':'Slack';
+      const isP2=tr.timing&&tr.timing.startsWith('PHASE 2');
+      const isNew=tr.timing&&tr.timing.startsWith('NET NEW');
+      html+=`<div class="sp-trigger" style="${isP2?'border-color:rgba(200,150,10,0.25);':isNew?'border-color:rgba(42,122,82,0.3);':''}">
+        <div class="sp-trigger-icon">${icon}</div>
+        <div class="sp-trigger-content">
+          <div class="sp-trigger-name">
+            #${tid}: ${esc(tr.label)}
+            ${isP2?`<span style="font-size:11px;font-family:var(--mono);padding:2px 5px;border-radius:2px;background:rgba(200,150,10,0.1);color:var(--human);border:1px solid rgba(200,150,10,0.25);margin-left:4px;">Phase 2</span>`:''}
+            ${isNew?`<span style="font-size:11px;font-family:var(--mono);padding:2px 5px;border-radius:2px;background:rgba(42,122,82,0.1);color:var(--path-a);border:1px solid rgba(42,122,82,0.25);margin-left:4px;">Net New</span>`:''}
+          </div>
+          <div class="sp-trigger-target"><span>${chLabel}</span> to <span>${esc(tr.target)}</span></div>
+          ${tr.timing?`<div style="font-family:var(--mono);font-size:12px;color:var(--subtle);line-height:1.55;margin:6px 0;"><strong style="font-weight:500;">Timing:</strong> ${esc(tr.timing)}</div>`:''}
+          <div style="font-family:var(--mono);font-size:12px;color:var(--subtle);line-height:1.55;margin:6px 0;"><strong style="font-weight:500;">Condition:</strong> ${esc(tr.condition)}</div>
+          ${tr.purpose?`<div style="font-size:13px;color:var(--subtle);line-height:1.65;margin:6px 0;font-style:italic;font-family:var(--body);font-weight:300;">${esc(tr.purpose)}</div>`:''}
+          ${tr.message?`<div style="margin:8px 0;">
+            <div style="font-family:var(--mono);font-size:12px;color:var(--subtle);letter-spacing:0.06em;text-transform:uppercase;margin-bottom:6px;">Message copy</div>
+            <div style="font-size:12px;color:var(--subtle);line-height:1.7;padding:10px 12px;background:var(--bg);border-radius:5px;border:1px solid var(--border);white-space:pre-wrap;font-family:var(--mono);">${esc(tr.message)}</div>
+          </div>`:''}
+          ${tr.action_required?`<div style="font-size:12px;font-family:var(--mono);color:var(--path-a);line-height:1.55;margin-top:6px;padding:7px 10px;background:rgba(42,122,82,0.05);border-radius:4px;border:1px solid rgba(42,122,82,0.15);"><strong style="font-weight:500;">Action:</strong> ${esc(tr.action_required)}</div>`:''}
+          ${tr.pressure_test_note?`<div style="font-size:12px;color:var(--path-b);line-height:1.55;margin-top:6px;padding:7px 10px;background:rgba(200,96,26,0.05);border-radius:4px;border:1px solid rgba(200,96,26,0.15);">${esc(tr.pressure_test_note)}</div>`:''}
+        </div>
+      </div>`;
+    });
+    html+=`</div>`;
+  }
+
+  if (info.showFlags) {
+    html+=`<div><div class="sp-section-label">Six Flag Conditions</div>`;
+    FLAGS.forEach(fl => {
+      html+=`<div class="sp-flag-item ${fl.borrower?'borrower':''}">
+        <div class="sp-flag-name">${esc(fl.name)}</div>
+        <div class="sp-flag-cond">${esc(fl.cond)}</div>
+        <div class="sp-flag-q">"${esc(fl.q)}"</div>
+        ${fl.borrower?'<div class="sp-flag-badge">✉ Borrower contact possible</div>':''}
+      </div>`;
+    });
+    html+=`</div>`;
+  }
+
+  document.getElementById('sp-body').innerHTML = html;
+  document.getElementById('sidePanel').classList.add('open');
+  document.getElementById('sp-pinned-badge').classList.toggle('visible', panelPinned&&pinnedNid===nid);
+  document.querySelectorAll('.node').forEach(n=>n.classList.remove('panel-hover','pinned'));
+  const el=document.getElementById(nid);
+  if (el) el.classList.add((panelPinned&&pinnedNid===nid)?'pinned':'panel-hover');
+}
+
+function hidePanel() {
+  if (panelPinned) return;
+  panelTimer=setTimeout(()=>{
+    document.getElementById('sidePanel').classList.remove('open');
+    document.querySelectorAll('.node').forEach(n=>n.classList.remove('panel-hover','pinned'));
+  },250);
+}
+
+function closePanel() {
+  panelPinned=false; pinnedNid=null;
+  clearTimeout(panelTimer);
+  document.getElementById('sidePanel').classList.remove('open');
+  document.querySelectorAll('.node').forEach(n=>n.classList.remove('panel-hover','pinned'));
+  document.getElementById('sp-pinned-badge').classList.remove('visible');
+}
+
+function esc(s) {
+  return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>');
+}
+
+document.querySelectorAll('.node[data-nid]').forEach(node => {
+  node.addEventListener('mouseenter', ()=>{ if(!panelPinned) showPanel(node.dataset.nid); });
+  node.addEventListener('mouseleave', ()=>{ if(!panelPinned) hidePanel(); });
+  node.addEventListener('click', e=>{
+    e.stopPropagation();
+    const nid=node.dataset.nid;
+    if (panelPinned&&pinnedNid===nid) {
+      panelPinned=false; pinnedNid=null;
+      document.getElementById('sp-pinned-badge').classList.remove('visible');
+      document.querySelectorAll('.node').forEach(n=>n.classList.remove('pinned'));
+      node.classList.add('panel-hover');
+      document.getElementById('sp-hint').textContent='Click to pin · Esc to close';
+    } else {
+      panelPinned=true; pinnedNid=nid;
+      showPanel(nid);
+    }
+  });
+});
+document.getElementById('sidePanel').addEventListener('mouseenter',()=>clearTimeout(panelTimer));
+document.getElementById('sidePanel').addEventListener('mouseleave',()=>{ if(!panelPinned) hidePanel(); });
+document.getElementById('boardWrap').addEventListener('click',e=>{
+  if (!e.target.closest('.node')&&!e.target.closest('.side-panel')&&!e.target.closest('.intake-card')) closePanel();
+});
+document.addEventListener('keydown',e=>{ if(e.key==='Escape') closePanel(); });
+
+// ═══════════════════════════════════════════
+// SCORECARD
+// ═══════════════════════════════════════════
+function showScorecard(){ document.getElementById('scorecardCard').classList.add('visible'); }
+function hideScorecard(){ document.getElementById('scorecardCard').classList.remove('visible'); }
+
+// ═══════════════════════════════════════════
+// ZOOM
+// ═══════════════════════════════════════════
+let scale=1;
+const boardEl=document.getElementById('board');
+
+function applyScale(s) {
+  scale=Math.max(0.2,Math.min(2.5,s));
+  boardEl.style.transform=`scale(${scale})`;
+  boardEl.style.transformOrigin='0 0';
+  const wrap=document.getElementById('boardWrap');
+  wrap.style.minWidth=Math.round(1500*scale)+'px';
+  wrap.style.minHeight=Math.round(2760*scale)+'px';
+}
+function zoomBy(f){ applyScale(scale*f); }
+function zoomFit(){
+  const wrap=document.getElementById('boardWrap');
+  const s=Math.min((wrap.clientWidth-24)/1500,(wrap.clientHeight-24)/2760);
+  applyScale(s);
+}
+
+// ═══════════════════════════════════════════
+// PAN
+// ═══════════════════════════════════════════
+(function(){
+  const wrap=document.getElementById('boardWrap');
+  let drag=false,ox,oy,sl,st;
+  wrap.addEventListener('mousedown',e=>{
+    if (e.target.closest('.node')||e.target.closest('.intake-card')||e.target.closest('.side-panel')) return;
+    drag=true; wrap.style.cursor='grabbing'; ox=e.clientX; oy=e.clientY; sl=wrap.scrollLeft; st=wrap.scrollTop;
+  });
+  window.addEventListener('mouseup',()=>{ drag=false; wrap.style.cursor='grab'; });
+  wrap.addEventListener('mousemove',e=>{ if(!drag) return; wrap.scrollLeft=sl-(e.clientX-ox); wrap.scrollTop=st-(e.clientY-oy); });
+})();
+
+// ═══════════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════════
+window.addEventListener('load',()=>{
+  setTimeout(()=>{
+    drawConnectors(null);
+    zoomFit();
+  },150);
+});
+window.addEventListener('resize',()=>{ drawConnectors(currentPath); });
+</script>
+</body>
+</html>
