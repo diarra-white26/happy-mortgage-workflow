@@ -1035,10 +1035,10 @@ const CONNS = [
   // ── Row 1 horizontal chain — all perfectly level at ROW1_Y ──
   { from:'n1', to:'n2', paths:['a','b','c'],
     wp: () => { return [{x:475,y:ROW1_Y},{x:500,y:ROW1_Y}]; }},
-  { from:'n2', to:'n3', paths:['a','b'], label:'All clear',
+  { from:'n2', to:'n3', paths:['a','b'],
     wp: () => { return [{x:715,y:ROW1_Y},{x:740,y:ROW1_Y}]; }},
   // ── n3 → n4: all active paths continue to capacity assessment ──
-  { from:'n3', to:'n4', paths:['a','b'], label:'All clear',
+  { from:'n3', to:'n4', paths:['a','b'],
     wp: () => { return [{x:955,y:ROW1_Y},{x:980,y:ROW1_Y}]; }},
 
   // ── Path C hard stop: n2 bottom → channel y=935 → n6c top ──
