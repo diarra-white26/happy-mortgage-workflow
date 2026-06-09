@@ -579,10 +579,11 @@ body {
   <div class="node-body">
     <div class="node-num">05</div>
     <div class="node-title">Generate Recommendation</div>
-    <div class="node-desc">Routes to the correct review path, A or B. Status update email fires.</div>
+    <div class="node-desc">Routes to the correct review path, A or B. Status update email fires. On Path B, analyst receives a Slack alert that the flag review packet is in their inbox.</div>
     <div class="node-actor sys">⚙ System</div>
     <div class="node-triggers">
       <span class="tbadge">✉<span class="tlabel">#3</span></span>
+      <span class="tbadge">💬<span class="tlabel">#3b</span></span>
     </div>
   </div>
 </div>
@@ -757,6 +758,14 @@ const TRIGGERS = {
     purpose:'Keeps borrower informed without exposing internal workflow stages.',
     action_required:'None: automated.'
   },
+  '3b': {
+    id:'3b', channel:'slack', label:'Analyst Alert: Flag Review Packet Ready',
+    condition:'recommendation = FLAG AND notification_sent_internal_flag = FALSE',
+    target:'Assigned Analyst (assigned_analyst_id)', timing:'Path B only: fires simultaneously with Trigger #3 when recommendation = FLAG',
+    message:'Flag review packet ready: [Borrower Name] | Loan #[ID] | Flag condition(s): [flag_condition_code] | Recommendation: FLAG.\n\nA structured review packet has been sent to your email with the sealed eligibility_check_log and the specific flag questions requiring your review. Open the packet and proceed to deliberation.',
+    purpose:'Analyst knows immediately — without checking a queue — that a flagged recommendation is sitting in their inbox and requires action. Closes the gap between system decision and human pickup.',
+    action_required:'Analyst opens review packet email. If all flag signals are within analyst authority, proceed alone (A1). If tier2_score threshold is met, loop in Risk co-sign (A2).'
+  },
   4: {
     id:4, channel:'email', label:'Borrower Input Request',
     condition:'Path B only. Fires when analyst or Risk determines that flag resolution requires borrower-provided documentation.',
@@ -905,8 +914,8 @@ const NODE_INFO = {
   n5: {
     step:'05: Recommendation', title:'Recommendation Generated', actor:'sys',
     fields:'eligibility_check_log sealed\nrecommendation: APPROVE\n                 or FLAG\n                 or DENY',
-    routing:'APPROVE: Analyst Confirms (Path A)\nFLAG: Flag Identified (Path B)\nTrigger #3 fires: status update email to borrower',
-    triggers:[3]
+    routing:'APPROVE: Analyst Confirms (Path A)\nFLAG: Send Analyst Review Packet (Path B)\nTrigger #3 fires: status update email to borrower\nTrigger #3b fires (Path B only): Slack to analyst — flag review packet in inbox',
+    triggers:[3,'3b']
   },
   n6a: {
     step:'06A: Human Review', title:'Analyst Confirms', actor:'human',
