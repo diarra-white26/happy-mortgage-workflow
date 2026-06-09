@@ -1,9 +1,10 @@
 <!DOCTYPE html>
-<html lang="en"><head>
+<html lang="en">
+<head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Valon: Escrow Waiver Workflow</title>
-<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;0,700;1,400;1,700&amp;family=DM+Sans:wght@300;400;500&amp;family=DM+Mono:wght@400;500&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;0,700;1,400;1,700&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 :root {
   --bg:#F5F2EE;--surface:#FFFFFF;--card:#FFFFFF;--border:#E4DED6;
@@ -257,8 +258,7 @@ section{position:relative;z-index:1;min-height:100vh;padding:100px 80px 80px;
     <a class="nav-link" href="#comms">Triggers</a>
     <a class="nav-link" href="#scorecard">Scorecard</a>
     <a class="nav-link" href="#datamodel">Data Model</a>
-    <a class="nav-link active" href="#nextsteps">Next Steps</a>
-    <a class="nav-link" href="#flowchart">Flowchart</a>
+    <a class="nav-link" href="#nextsteps">Next Steps</a>
     <a class="nav-link appendix" href="#appendix">Appendix</a>
   </div>
 </nav>
@@ -266,7 +266,7 @@ section{position:relative;z-index:1;min-height:100vh;padding:100px 80px 80px;
 <!-- ══ SECTION 1: HERO ══ -->
 <section id="hero">
   <div style="font-family:var(--display);font-size:clamp(18px,2.5vw,28px);font-weight:600;color:var(--text);margin-bottom:20px;opacity:0;animation:fadeUp 0.6s ease 0.2s forwards;">Happy Mortgage: Escrow Waiver Workflow Proposal</div>
-  <h1 class="hero-h1" contenteditable="false" style="min-height: 1em;">The future of escrow management is <em>a continuous risk platform.</em></h1>
+  <h1 class="hero-h1">The future of escrow management is <em>a continuous risk platform.</em></h1>
 
   <div style="opacity:0;animation:fadeUp 0.6s ease 0.4s forwards;margin-bottom:32px;">
     <div style="font-family:var(--mono);font-size:9px;letter-spacing:0.14em;text-transform:uppercase;color:var(--subtle);margin-bottom:14px;">Four levels of maturity — most servicers stop at Level 1</div>
@@ -279,13 +279,12 @@ section{position:relative;z-index:1;min-height:100vh;padding:100px 80px 80px;
         <div style="font-size:11px;font-weight:300;color:var(--text);line-height:1.5;">No consistency across cases</div>
         <div style="margin-top:10px;font-family:var(--mono);font-size:8px;color:var(--muted);font-weight:600;">WHERE WE ARE TODAY</div>
       </div>
-      <div style="padding:16px;border-right:1px solid var(--border);background:rgba(42,122,82,0.03);">
+      <div style="padding:16px;border-right:1px solid var(--border);background:var(--surface);">
         <div style="font-family:var(--mono);font-size:9px;letter-spacing:0.08em;color:var(--blue);margin-bottom:5px;">LEVEL 2</div>
         <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:8px;line-height:1.3;">Rules-Based Eligibility</div>
         <div style="font-size:11px;font-weight:300;color:var(--text);line-height:1.5;margin-bottom:3px;">Checks LTV, payment history, seasoning</div>
         <div style="font-size:11px;font-weight:300;color:var(--text);line-height:1.5;margin-bottom:3px;">Instant feedback to borrowers</div>
         <div style="font-size:11px;font-weight:300;color:var(--text);line-height:1.5;">Highest ROI of any phase</div>
-        <div style="margin-top:10px;font-family:var(--mono);font-size:8px;color:var(--green);letter-spacing:0.06em;font-weight:600;">THIS PROPOSAL</div>
       </div>
       <div style="padding:16px;border-right:1px solid var(--border);background:rgba(42,122,82,0.03);">
         <div style="font-family:var(--mono);font-size:9px;letter-spacing:0.08em;color:var(--green);margin-bottom:5px;">LEVEL 3</div>
@@ -293,8 +292,9 @@ section{position:relative;z-index:1;min-height:100vh;padding:100px 80px 80px;
         <div style="font-size:11px;font-weight:300;color:var(--text);line-height:1.5;margin-bottom:3px;">Auto-approve, deny, or escalate</div>
         <div style="font-size:11px;font-weight:300;color:var(--text);line-height:1.5;margin-bottom:3px;">Servicing costs drop significantly</div>
         <div style="font-size:11px;font-weight:300;color:var(--text);line-height:1.5;">Humans handle edge cases only</div>
+        <div style="margin-top:10px;font-family:var(--mono);font-size:8px;color:var(--green);letter-spacing:0.06em;font-weight:600;">THIS PROPOSAL</div>
       </div>
-      <div style="padding:16px;background:#ffffff;">
+      <div style="padding:16px;background:rgba(200,150,10,0.04);">
         <div style="font-family:var(--mono);font-size:9px;letter-spacing:0.08em;color:var(--text);margin-bottom:5px;">LEVEL 4</div>
         <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:8px;line-height:1.3;">Continuous Risk Platform</div>
         <div style="font-size:11px;font-weight:300;color:var(--text);line-height:1.5;margin-bottom:3px;">Portfolio evaluated in real time</div>
@@ -330,80 +330,96 @@ section{position:relative;z-index:1;min-height:100vh;padding:100px 80px 80px;
 
 <!-- ══ SECTION 2: VALUE ══ -->
 <section id="value">
-  <div class="section-eyebrow">Business Value</div>
-  <div class="value-grid reveal visible">
+  <div class="section-eyebrow">02: Business Value</div>
+  <div class="value-grid reveal">
     <div class="value-left">
-      <h2 contenteditable="false" style="min-height: 1em;">Value at stake</h2>
-      <p contenteditable="false" style="min-height: 1em;">Getting waiver decisions right is both a risk management imperative and a commercial opportunity. Each of these levers is directly unlocked by the workflow design that follows.</p>
+      <h2>Value-capturing levers to get us <em>to the future state.</em></h2>
+      <p>Getting waiver decisions right is both a risk management imperative and a commercial opportunity. Each of these levers is directly unlocked by the workflow design that follows.</p>
     </div>
     <div class="kpi-stack">
-      <div class="kpi-card"><div class="kpi-icon">💰</div><div class="kpi-body"><div class="kpi-title" contenteditable="false" style="min-height: 1em;"><div class="lever-title" style="margin: 0px 0px 3px; color: rgb(20, 20, 19); font-family: &quot;Anthropic Sans&quot;, sans-serif;">Fee revenue captured at scale</div></div><div class="kpi-desc" contenteditable="false" style="min-height: 1em;">A systematic workflow that processes eligible borrowers quickly and accurately expands revenue capture without adding headcount.</div></div></div>
-      <div class="kpi-card"><div class="kpi-icon">⚙️</div><div class="kpi-body"><div class="kpi-title" contenteditable="false" style="min-height: 1em;"><span style="color: rgb(20, 20, 19); font-family: &quot;Anthropic Sans&quot;, sans-serif;">Ops cost eliminated, not reduced</span></div><div class="kpi-desc" contenteditable="false" style="min-height: 1em;">Approved waiver permanently remove escrow analysis, tax disbursements, and reconciliation from workload</div></div></div>
-      <div class="kpi-card"><div class="kpi-icon">🛡️</div><div class="kpi-body"><div class="kpi-title" contenteditable="false" style="min-height: 1em;">Balance sheet liability off the books</div><div class="kpi-desc" contenteditable="false" style="min-height: 1em;">Correctly approved waivers removes escrow liability and our obligation to advance funds against tax and insurance spikes</div></div></div>
-
+      <div class="kpi-card"><div class="kpi-icon">💰</div><div class="kpi-body"><div class="kpi-title">Waiver fees are direct revenue</div><div class="kpi-desc">A systematic workflow that processes eligible borrowers quickly and accurately expands revenue capture without adding headcount.</div></div></div>
+      <div class="kpi-card"><div class="kpi-icon">⚙️</div><div class="kpi-body"><div class="kpi-title">Administrative cost reduction</div><div class="kpi-desc">Approved waivers eliminate yearly escrow analysis, manual tax and insurance disbursements, and reconciliation overhead.</div></div></div>
+      <div class="kpi-card"><div class="kpi-icon">🛡️</div><div class="kpi-body"><div class="kpi-title">Liability reduction and capital efficiency</div><div class="kpi-desc">Every correctly approved waiver removes escrow liability from our portfolio: eliminating reconciliation exposure and removing our obligation to advance funds against sudden tax or insurance premium increases.</div></div></div>
+      <div class="kpi-card"><div class="kpi-icon">🔒</div><div class="kpi-body"><div class="kpi-title">Every decision documented: audit-ready at any time</div><div class="kpi-desc">No industry benchmark exists for escrow waiver processing time, denial rates, or post-waiver monitoring outcomes. Servicers that build this capability are setting the standard, not meeting one.</div></div></div>
     </div>
   </div>
 </section>
 
 <!-- ══ SECTION 3: FUTURE STATE ══ -->
 <section id="future">
-  <div class="section-eyebrow">The New Workflow</div>
-  <h2 class="section-h2 reveal visible" contenteditable="false" style="min-height: 1em;">Three paths. One principle.</h2>
-  <div class="reveal visible" style="margin-bottom:20px;">
+  <div class="section-eyebrow">03: The New Workflow</div>
+  <h2 class="section-h2 reveal">Three paths. One principle.</h2>
+  <div class="reveal" style="margin-bottom:20px;">
     <div style="font-family:var(--mono);font-size:9px;letter-spacing:0.14em;text-transform:uppercase;color:var(--text);margin-bottom:6px;">Human-in-the-Loop Operating System</div>
-    <div style="background:rgba(200,150,10,0.06);border:1px solid rgba(200,150,10,0.25);border-radius:8px;padding:12px 18px;font-size:13px;font-weight:400;font-style:italic;color:var(--text);font-family:var(--display);">Every recommendation requires human approval before any notification to borrower or final waiver decision is made.</div>
+    <div style="background:rgba(200,150,10,0.06);border:1px solid rgba(200,150,10,0.25);border-radius:8px;padding:12px 18px;font-size:13px;font-weight:400;font-style:italic;color:var(--text);font-family:var(--display);">The system recommends, documents, and routes. Every recommendation requires human approval before any notification reaches the borrower or a final waiver decision is made.</div>
   </div>
-  <div class="path-overview reveal visible">
-    <div class="path-card a"><div class="path-letter">A</div><div class="path-name" contenteditable="false" style="min-height: 1em;">Standard Approval</div><div class="path-desc" contenteditable="false" style="min-height: 1em;">System recommends, analyst confirms, financial capacity verified.</div></div>
-    <div class="path-card b"><div class="path-letter">B</div><div class="path-name" contenteditable="false" style="min-height: 1em;">Flagged: Extended Review</div><div class="path-desc" contenteditable="false" style="min-height: 1em;">System identifies a condition requiring extended analyst and compliance deliberation.</div></div>
-    <div class="path-card c"><div class="path-letter">C</div><div class="path-name" contenteditable="false" style="min-height: 1em;">Denied</div><div class="path-desc" contenteditable="false" style="min-height: 1em;">Hard GSE or state disqualifier confirmed.</div></div>
+  <div class="path-overview reveal">
+    <div class="path-card a"><div class="path-letter">A</div><div class="path-name">Standard Approval</div><div class="path-desc">All GSE and state criteria met. System recommends, analyst confirms, financial capacity verified.</div></div>
+    <div class="path-card b"><div class="path-letter">B</div><div class="path-name">Flagged: Extended Review</div><div class="path-desc">System identifies a condition requiring extended expert deliberation: ambiguous GSE rule application or contested data. Routes a structured question packet to analyst and Risk.</div></div>
+    <div class="path-card c"><div class="path-letter">C</div><div class="path-name">Denied</div><div class="path-desc">Hard GSE or state disqualifier confirmed. Analyst signs off, borrower receives clear denial with reason and re-application path, re-evaluation watch activates automatically.</div></div>
   </div>
 
-  <div class="reveal visible" style="margin-top:28px;padding-top:28px;border-top:1px solid var(--border);">
-    <p style="font-family: var(--display); font-size: 15px; font-weight: 400; font-style: italic; color: var(--text); line-height: 1.6; margin-bottom: 20px; min-height: 1em;" contenteditable="false"><b>Powered by:</b></p>
-    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:28px;">
+  <div class="reveal" style="margin-top:28px;padding-top:28px;border-top:1px solid var(--border);">
+    <p style="font-family:var(--display);font-size:15px;font-weight:400;font-style:italic;color:var(--text);line-height:1.6;margin-bottom:20px;">The primary workflow and the paths through it are powered by:</p>
+    <div style="display:flex;gap:14px;margin-bottom:28px;">
       <a href="#comms" style="text-decoration:none;flex:1;">
-        <div style="background:var(--card);border:1px solid var(--border);border-radius:10px;padding:14px 16px;transition:border-color 0.2s,transform 0.2s;display:flex;align-items:center;gap:14px;" onmouseover="this.style.borderColor='var(--amber)';this.style.transform='translateY(-2px)'" onmouseout="this.style.borderColor='var(--border)';this.style.transform='none'">
-          <div style="font-family:var(--display);font-size:24px;font-weight:700;line-height:1;flex-shrink:0;color:var(--text);">01</div>
-          <div style="font-size:13px;font-weight:700;color:var(--text);line-height:1.3;">Workflow Triggers</div>
+        <div style="background:var(--card);border:1px solid var(--border);border-radius:10px;padding:14px 16px;transition:border-color 0.2s,transform 0.2s;display:flex;align-items:flex-start;gap:14px;" onmouseover="this.style.borderColor='var(--amber)';this.style.transform='translateY(-2px)'" onmouseout="this.style.borderColor='var(--border)';this.style.transform='none'">
+          <div style="font-family:var(--display);font-size:24px;font-weight:700;color:var(--amber);line-height:1;flex-shrink:0;margin-top:2px;color:var(--text);">01</div>
+          <div>
+            <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:4px;line-height:1.3;">16 Workflow Triggers</div>
+            <div style="font-size:12px;font-weight:300;color:var(--subtle);line-height:1.5;">Structured touchpoints that keep every stakeholder informed and every borrower relationship active at every stage, including denials.</div>
+          </div>
         </div>
       </a>
       <a href="#scorecard" style="text-decoration:none;flex:1;">
-        <div style="background:var(--card);border:1px solid var(--border);border-radius:10px;padding:14px 16px;transition:border-color 0.2s,transform 0.2s;display:flex;align-items:center;gap:14px;" onmouseover="this.style.borderColor='var(--amber)';this.style.transform='translateY(-2px)'" onmouseout="this.style.borderColor='var(--border)';this.style.transform='none'">
-          <div style="font-family:var(--display);font-size:24px;font-weight:700;line-height:1;flex-shrink:0;color:var(--text);">02</div>
-          <div style="font-size:13px;font-weight:700;color:var(--text);line-height:1.3;">Financial Capacity Scorecard</div>
+        <div style="background:var(--card);border:1px solid var(--border);border-radius:10px;padding:14px 16px;transition:border-color 0.2s,transform 0.2s;display:flex;align-items:flex-start;gap:14px;" onmouseover="this.style.borderColor='var(--amber)';this.style.transform='translateY(-2px)'" onmouseout="this.style.borderColor='var(--border)';this.style.transform='none'">
+          <div style="font-family:var(--display);font-size:24px;font-weight:700;color:var(--amber);line-height:1;flex-shrink:0;margin-top:2px;color:var(--text);">02</div>
+          <div>
+            <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:4px;line-height:1.3;">Financial Capacity Scorecard</div>
+            <div style="font-size:12px;font-weight:300;color:var(--subtle);line-height:1.5;">A documented, defensible methodology for the one question GSEs require servicers to answer but don't define how to assess.</div>
+          </div>
         </div>
       </a>
       <a href="#datamodel" style="text-decoration:none;flex:1;">
-        <div style="background:var(--card);border:1px solid var(--border);border-radius:10px;padding:14px 16px;transition:border-color 0.2s,transform 0.2s;display:flex;align-items:center;gap:14px;" onmouseover="this.style.borderColor='var(--amber)';this.style.transform='translateY(-2px)'" onmouseout="this.style.borderColor='var(--border)';this.style.transform='none'">
-          <div style="font-family:var(--display);font-size:24px;font-weight:700;line-height:1;flex-shrink:0;color:var(--text);">03</div>
-          <div style="font-size:13px;font-weight:700;color:var(--text);line-height:1.3;">Data Model</div>
+        <div style="background:var(--card);border:1px solid var(--border);border-radius:10px;padding:14px 16px;transition:border-color 0.2s,transform 0.2s;display:flex;align-items:flex-start;gap:14px;" onmouseover="this.style.borderColor='var(--amber)';this.style.transform='translateY(-2px)'" onmouseout="this.style.borderColor='var(--border)';this.style.transform='none'">
+          <div style="font-family:var(--display);font-size:24px;font-weight:700;color:var(--amber);line-height:1;flex-shrink:0;margin-top:2px;color:var(--text);">03</div>
+          <div>
+            <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:4px;line-height:1.3;">Five-Table Data Model</div>
+            <div style="font-size:12px;font-weight:300;color:var(--subtle);line-height:1.5;">Every field traces to a GSE rule, a state requirement, or a deliberate design decision. Nothing arbitrary.</div>
+          </div>
         </div>
       </a>
     </div>
+  </div>
+
+  <div class="viz-placeholder reveal">
+    <div class="viz-placeholder-icon">⬡</div>
+    <div class="viz-placeholder-title">Interactive Workflow Visualization</div>
+    <p style="font-size:12px;color:var(--muted);margin-bottom:10px;">End-to-end process flow: all three paths, decision nodes, data triggers, and flag registry</p>
+    <a class="viz-placeholder-link" href="https://diarra-white26.github.io/happy-mortgage-workflow/flowchart.html" target="_blank">View interactive flowchart →</a>
   </div>
 
 </section>
 
 <!-- ══ SECTION 4: TRIGGERS ══ -->
 <section id="comms">
-  <div class="section-eyebrow">Workflow Triggers</div>
-  <h2 class="section-h2 reveal visible" contenteditable="false" style="min-height: 1em;"><span style="font-family: var(--mono); font-size: 18px; color: var(--text); margin-right: 12px;">01</span>Every workflow trigger addresses a pain point.</h2>
-  <div style="margin-bottom:28px;" class="reveal visible">
+  <div class="section-eyebrow">04: Workflow Triggers</div>
+  <h2 class="section-h2 reveal"><span style="font-family:var(--mono);font-size:18px;color:var(--text);margin-right:12px;">01</span>The system keeps every stakeholder informed.<br><em>Every trigger traces to a pain point.</em></h2>
+  <div style="margin-bottom:28px;" class="reveal">
     <div style="display:flex;flex-direction:column;gap:10px;">
-      <div style="display:flex;align-items:flex-start;gap:12px;font-size:13px;color:var(--text);line-height:1.5;"><span style="color:var(--text);font-family:var(--mono);font-weight:700;flex-shrink:0;">→</span><span>Borrower hears nothing after submitting</span></div>
-      <div style="display:flex;align-items:flex-start;gap:12px;font-size:13px;color:var(--text);line-height:1.5;"><span style="color:var(--text);font-family:var(--mono);font-weight:700;flex-shrink:0;">→</span><span>Analyst discovers new requests manually</span></div>
-      <div style="display:flex;align-items:flex-start;gap:12px;font-size:13px;color:var(--text);line-height:1.5;"><span style="color:var(--text);font-family:var(--mono);font-weight:700;flex-shrink:0;">→</span><span>Flagged cases stall waiting for borrower documentation</span></div>
-      <div style="display:flex;align-items:flex-start;gap:12px;font-size:13px;color:var(--text);line-height:1.5;"><span style="color:var(--text);font-family:var(--mono);font-weight:700;flex-shrink:0;">→</span><span>Denials leave borrowers without a path forward</span></div>
-      <div style="display:flex;align-items:flex-start;gap:12px;font-size:13px;color:var(--text);line-height:1.5;"><span style="color:var(--text);font-family:var(--mono);font-weight:700;flex-shrink:0;">→</span><span>Delinquency discovered retroactively</span></div>
+      <div style="display:flex;align-items:flex-start;gap:12px;font-size:13px;color:var(--text);line-height:1.5;"><span style="color:var(--text);font-family:var(--mono);font-weight:700;flex-shrink:0;">→</span><span>Borrower hears nothing after submitting: no acknowledgment, no timeline, no sense of what happens next</span></div>
+      <div style="display:flex;align-items:flex-start;gap:12px;font-size:13px;color:var(--text);line-height:1.5;"><span style="color:var(--text);font-family:var(--mono);font-weight:700;flex-shrink:0;">→</span><span>Analyst discovers new requests manually: no systematic queue, no prioritization, no visibility</span></div>
+      <div style="display:flex;align-items:flex-start;gap:12px;font-size:13px;color:var(--text);line-height:1.5;"><span style="color:var(--text);font-family:var(--mono);font-weight:700;flex-shrink:0;">→</span><span>Flagged cases stall waiting for borrower documentation: no structured follow-up, no tracking of whether a response ever arrived</span></div>
+      <div style="display:flex;align-items:flex-start;gap:12px;font-size:13px;color:var(--text);line-height:1.5;"><span style="color:var(--text);font-family:var(--mono);font-weight:700;flex-shrink:0;">→</span><span>Denials leave borrowers without a path forward: no explanation, no guidance, no re-engagement opportunity</span></div>
+      <div style="display:flex;align-items:flex-start;gap:12px;font-size:13px;color:var(--text);line-height:1.5;"><span style="color:var(--text);font-family:var(--mono);font-weight:700;flex-shrink:0;">→</span><span>Delinquency discovered retroactively: the team does not receive this as an insight to inform future reviews or portfolio risk assessment</span></div>
     </div>
   </div>
 
-  <div style="background:rgba(200,150,10,0.06);border-left:3px solid var(--amber);border-radius:0 8px 8px 0;padding:14px 20px;margin-bottom:28px;max-width:680px;" class="reveal visible">
-    <p style="font-size: 14px; font-weight: 400; color: var(--text); line-height: 1.7; font-family: var(--display); font-style: italic; min-height: 1em;" contenteditable="false">The triggers are structured opportunities to build trust with borrowers and enable our analyst team.</p>
+  <div style="background:rgba(200,150,10,0.06);border-left:3px solid var(--amber);border-radius:0 8px 8px 0;padding:14px 20px;margin-bottom:28px;max-width:680px;" class="reveal">
+    <p style="font-size:14px;font-weight:400;color:var(--text);line-height:1.7;font-family:var(--display);font-style:italic;">These triggers are structured opportunities to build trust with borrowers and enable our analysts at every stage of the process, even denials.</p>
   </div>
 
-  <div class="reveal visible" style="margin-top:8px;">
+  <div class="reveal" style="margin-top:8px;">
     <div style="font-family:var(--mono);font-size:9px;letter-spacing:0.14em;text-transform:uppercase;color:var(--subtle);margin-bottom:12px;">Trigger examples — click to expand</div>
     <div style="display:flex;flex-direction:column;gap:8px;">
 
@@ -416,7 +432,7 @@ section{position:relative;z-index:1;min-height:100vh;padding:100px 80px 80px;
           </div>
           <span class="toggle-arrow" style="font-size:16px;color:var(--amber);">▸</span>
         </button>
-        <div style="display:none;padding:0 18px 18px;">
+        <div style="display:none;padding:16px 18px 24px;">
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:16px;">
             <div>
               <div style="font-family:var(--mono);font-size:8px;letter-spacing:0.08em;text-transform:uppercase;color:var(--subtle);margin-bottom:6px;">Condition</div>
@@ -424,7 +440,7 @@ section{position:relative;z-index:1;min-height:100vh;padding:100px 80px 80px;
             </div>
             <div>
               <div style="font-family:var(--mono);font-size:8px;letter-spacing:0.08em;text-transform:uppercase;color:var(--subtle);margin-bottom:6px;">What Fires</div>
-              <div style="font-size:12px;color:var(--text);line-height:1.6;">Email to borrower confirming receipt with programmed SLA and link to self-management resources. Data pulled at send time: borrower name, loan ID, submission date, programmed SLA. Simultaneously: Slack to assigned analyst with borrower name, loan ID, and queue alert.</div>
+              <div style="font-size:12px;color:var(--text);line-height:1.6;">Email to borrower confirming receipt with programmed SLA and link to self-management resources. Simultaneously: Slack to assigned analyst with borrower name, loan ID, and queue alert.</div>
             </div>
           </div>
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;">
@@ -495,7 +511,7 @@ section{position:relative;z-index:1;min-height:100vh;padding:100px 80px 80px;
           </div>
           <span class="toggle-arrow" style="font-size:16px;color:var(--amber);">▸</span>
         </button>
-        <div style="display:none;padding:0 18px 18px;">
+        <div style="display:none;padding:16px 18px 24px;">
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:16px;">
             <div>
               <div style="font-family:var(--mono);font-size:8px;letter-spacing:0.08em;text-transform:uppercase;color:var(--subtle);margin-bottom:6px;">Condition</div>
@@ -503,7 +519,7 @@ section{position:relative;z-index:1;min-height:100vh;padding:100px 80px 80px;
             </div>
             <div>
               <div style="font-family:var(--mono);font-size:8px;letter-spacing:0.08em;text-transform:uppercase;color:var(--subtle);margin-bottom:6px;">What Fires</div>
-              <div style="font-size:12px;color:var(--text);line-height:1.6;">Approval email using state-compliant template — notice language and timing pulled from STATE_RULES at send time using borrower's state. Data pulled: borrower name, loan ID, approval effective date, state (determines template), investor_type (determines GSE-specific disclosure). Simultaneously: Slack to assigned analyst with path taken (A1 or A2) and recommended action to call borrower.</div>
+              <div style="font-size:12px;color:var(--text);line-height:1.6;">Approval email using state-compliant template — notice language and timing pulled from STATE_RULES at send time. Simultaneously: Slack to assigned analyst with path taken (A1 or A2) and recommended action to call borrower.</div>
             </div>
           </div>
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;">
@@ -571,88 +587,95 @@ section{position:relative;z-index:1;min-height:100vh;padding:100px 80px 80px;
 
 <!-- ══ SECTION 5: SCORECARD ══ -->
 <section id="scorecard">
-  <div class="section-eyebrow">Financial Capacity Scorecard</div>
-  <h2 class="section-h2 reveal visible" contenteditable="false" style="min-height: 1em;"><span style="font-family:var(--mono);font-size:18px;color:var(--text);margin-right:12px;">02</span>Documented, defensible financial capacity measurement</h2>
-  <p class="section-sub reveal visible" contenteditable="false" style="min-height: 1em;">Both GSEs require financial capacity assessment but don't define how. We built a methodology that standardizes it.</p>
-  <div class="scorecard-intro reveal visible">
+  <div class="section-eyebrow">05: Financial Capacity Scorecard</div>
+  <h2 class="section-h2 reveal"><span style="font-family:var(--mono);font-size:18px;color:var(--text);margin-right:12px;">02</span>Both GSEs require financial capacity assessment.<br>Neither <em>defines how to do it.</em></h2>
+  <p class="section-sub reveal">We've built a documented, defensible methodology that reduces our compliance exposure, protects against fair lending risk, and produces a structured decision: not a gut call.</p>
+
+  <div class="scorecard-intro reveal">
     <div class="tier-card t1">
       <div class="tier-num">A1</div>
-      <div class="tier-title" contenteditable="false" style="min-height: 1em;">Standard Confirmation</div>
-      <div class="tier-body" contenteditable="false" style="min-height: 1em;">Uncontested, clean, unambiguous approval</div>
+      <div class="tier-title">Standard Confirmation</div>
+      <div class="tier-body">All capacity signals present, clean, and unambiguous. Direct recommendation: no scoring required.</div>
+      <div class="tc-item">Payment history clean across GSE-specific lookback window</div>
       <div class="tc-item">No prior waiver violation</div>
       <div class="tc-item">Escrow surplus history: CONSISTENT_SURPLUS</div>
       <div class="tc-item">No contested data inputs</div>
     </div>
     <div class="tier-card t2">
       <div class="tier-num">A2</div>
-      <div class="tier-title" contenteditable="false" style="min-height: 1em;">Compensating Factor Scorecard</div>
-      <div class="tier-body" contenteditable="false" style="min-height: 1em;">Signals present but not definitive — scorecard resolves the ambiguity</div>
+      <div class="tier-title">Compensating Factor Scorecard</div>
+      <div class="tier-body">One or more signals are thin, borderline, or missing. Scorecard runs on available data and produces a documented conclusion. Risk co-sign required on all A2 approvals.</div>
+      <div class="tc-item">Triggers when signals present but not definitive: not a second gate</div>
       <div class="tc-item">Weighted across five behavioral and financial factors</div>
       <div class="tc-item">Pass threshold: 60 / 100 points</div>
       <div class="tc-item">prior_waiver_violation = TRUE is a hard disqualifier regardless of score</div>
     </div>
   </div>
-  <div class="sc-wrap reveal visible">
-    <button onclick="(function(btn){var tbl=btn.parentElement.querySelector('table');var open=tbl.style.display!=='none';tbl.style.display=open?'none':'table';btn.querySelector('.sc-toggle').textContent=open?'▸ Show components':'▾ Hide components';})(this)" style="width:100%;display:flex;justify-content:space-between;align-items:center;padding:10px 14px;background:var(--bg);border:none;cursor:pointer;border-bottom:1px solid var(--border);font-family:var(--body);">
-      <span style="font-family:var(--mono);font-size:9px;letter-spacing:0.1em;text-transform:uppercase;color:var(--subtle);">A2 — Compensating Factor Scorecard Components</span>
-      <span class="sc-toggle" style="font-family:var(--mono);font-size:9px;color:var(--amber);">▾ Hide components</span>
+  <div style="border:1px solid var(--border);border-radius:10px;overflow:hidden;margin-bottom:14px;" class="reveal">
+    <button onclick="var c=this.nextElementSibling;c.style.display=c.style.display==='none'?'block':'none';this.querySelector('.sc-arr').textContent=c.style.display==='none'?'▸':'▾';" style="width:100%;display:flex;justify-content:space-between;align-items:center;padding:12px 18px;background:var(--card);border:none;cursor:pointer;text-align:left;font-family:var(--body);">
+      <div style="font-size:13px;font-weight:600;color:var(--text);">A2 — Compensating Factor Scorecard Components</div>
+      <span class="sc-arr" style="font-size:16px;color:var(--text);">▸</span>
     </button>
+    <div style="display:none;">
+    <div class="sc-wrap">
     <table class="sc-table">
-      <thead><tr><th contenteditable="false" style="min-height: 1em;">Factor</th><th contenteditable="false" style="min-height: 1em;">Max</th><th contenteditable="false" style="min-height: 1em;">Thresholds</th><th contenteditable="false" style="min-height: 1em;">Justification</th></tr></thead>
+      <thead><tr><th>Factor</th><th>Max</th><th>Thresholds</th><th>Justification</th></tr></thead>
       <tbody>
-        <tr><td contenteditable="false" style="min-height: 1em;"><strong>payment_shock_ratio</strong></td><td contenteditable="false" style="min-height: 1em;"><span class="sc-pts">35</span></td><td contenteditable="false" style="min-height: 1em;"><span class="sc-thresh">35 if ≤10% · 20 if 11–15% · 0 if &gt;15%</span></td><td contenteditable="false" style="min-height: 1em;"><span class="sc-just">Most direct answer to the GSE's question. CFPB research: obligations below 10% of income correlate with near-zero delinquency. <em style="font-size:10px;color:var(--muted);">(Source: 36% DTI — Fannie Mae Selling Guide B3-6-02; Urban Institute HFPC research on DTI and default risk)</em></span></td></tr>
-        <tr><td contenteditable="false" style="min-height: 1em;"><strong>escrow_surplus_history</strong></td><td contenteditable="false" style="min-height: 1em;"><span class="sc-pts">25</span></td><td contenteditable="false" style="min-height: 1em;"><span class="sc-thresh">25 CONSISTENT · 10 NEUTRAL · 0 DEFICIT</span></td><td contenteditable="false" style="min-height: 1em;"><span class="sc-just">Direct behavioral evidence from the loan itself. Observed behavior, not a proxy.</span></td></tr>
-        <tr><td contenteditable="false" style="min-height: 1em;"><strong>debt_to_income_ratio</strong></td><td contenteditable="false" style="min-height: 1em;"><span class="sc-pts">20</span></td><td contenteditable="false" style="min-height: 1em;"><span class="sc-thresh">20 if ≤36% · 10 if 37–43% · 0 if &gt;43%</span></td><td contenteditable="false" style="min-height: 1em;"><span class="sc-just">36% is the established underwriting ceiling for financial flexibility per Fannie Mae Selling Guide B3-6-02. Less biased than credit score.</span></td></tr>
-        <tr><td contenteditable="false" style="min-height: 1em;"><strong>income_volatility_12mo</strong></td><td contenteditable="false" style="min-height: 1em;"><span class="sc-pts">15</span></td><td contenteditable="false" style="min-height: 1em;"><span class="sc-thresh">15 CoV ≤0.2 · 8 CoV 0.21–0.35 · 0 &gt;0.35</span></td><td contenteditable="false" style="min-height: 1em;"><span class="sc-just">Measures predictability regardless of income source. Protects non-traditional earners from disparate impact.</span></td></tr>
-        <tr><td contenteditable="false" style="min-height: 1em;"><strong>income_trend</strong></td><td contenteditable="false" style="min-height: 1em;"><span class="sc-pts">5</span></td><td contenteditable="false" style="min-height: 1em;"><span class="sc-thresh">5 if GROWING or STABLE · 0 if DECLINING</span></td><td contenteditable="false" style="min-height: 1em;"><span class="sc-just">Directional tiebreaker only.</span></td></tr>
-        <tr><td colspan="2" contenteditable="false" style="min-height: 1em;"><strong>Maximum</strong></td><td contenteditable="false" style="min-height: 1em;"><span class="sc-pts">100</span></td><td contenteditable="false" style="min-height: 1em;"></td></tr>
+        <tr><td><strong>payment_shock_ratio</strong></td><td><span class="sc-pts">35</span></td><td><span class="sc-thresh">35 if ≤10% · 20 if 11–15% · 0 if &gt;15%</span></td><td><span class="sc-just">Most direct answer to the GSE's question. CFPB research: obligations below 10% of income correlate with near-zero delinquency.</span></td></tr>
+        <tr><td><strong>escrow_surplus_history</strong></td><td><span class="sc-pts">25</span></td><td><span class="sc-thresh">25 CONSISTENT · 10 NEUTRAL · 0 DEFICIT</span></td><td><span class="sc-just">Direct behavioral evidence from the loan itself. Observed behavior, not a proxy.</span></td></tr>
+        <tr><td><strong>debt_to_income_ratio</strong></td><td><span class="sc-pts">20</span></td><td><span class="sc-thresh">20 if ≤36% · 10 if 37–43% · 0 if &gt;43%</span></td><td><span class="sc-just">36% DTI is the established underwriting ceiling for financial flexibility. Less biased than credit score.</span></td></tr>
+        <tr><td><strong>income_volatility_12mo</strong></td><td><span class="sc-pts">15</span></td><td><span class="sc-thresh">15 CoV ≤0.2 · 8 CoV 0.21–0.35 · 0 &gt;0.35</span></td><td><span class="sc-just">Measures predictability regardless of income source. Protects non-traditional earners from disparate impact.</span></td></tr>
+        <tr><td><strong>income_trend</strong></td><td><span class="sc-pts">5</span></td><td><span class="sc-thresh">5 if GROWING or STABLE · 0 if DECLINING</span></td><td><span class="sc-just">Directional tiebreaker only.</span></td></tr>
+        <tr><td colspan="2"><strong>Maximum</strong></td><td><span class="sc-pts">100</span></td><td></td></tr>
       </tbody>
     </table>
   </div>
-  <div class="threshold-banner reveal visible">
+    </div>
+  </div>
+  <div class="threshold-banner reveal">
     <div class="thresh-num">60</div>
     <div>
       <div class="thresh-title">Pass Threshold: Equivalent Risk Substitution</div>
       <div class="thresh-desc">60 points represents the minimum compensating factor score at which default risk on tax and insurance obligations is comparable to an A1 borrower. Anchored to Urban Institute HFPC and FHFA research on alternative credit assessment.</div>
-      <div class="thresh-note">Weights to be validated against Happy Mortgage loan performance data over time.</div>
+      <div class="thresh-note">Citation available on request. Weights to be validated against Happy Mortgage loan performance data over time.</div>
     </div>
   </div>
+  <div class="fair-note reveal"><strong>Fair lending note:</strong> income_type is collected for disparate impact monitoring only: never used in scoring. The scorecard measures what borrowers do, not how they earn. Protects non-traditional earners including freelancers, creators, and contract workers.</div>
 
 </section>
 
 <!-- ══ SECTION 6: DATA MODEL ══ -->
 <section id="datamodel">
-  <div class="section-eyebrow">Data Model</div>
-  <h2 class="section-h2 reveal visible" contenteditable="false" style="min-height: 1em;"><span style="font-family:var(--mono);font-size:18px;color:var(--text);margin-right:12px;">03</span>Every field traces to a rule,<br>a requirement, or a <em>design decision.</em></h2>
+  <div class="section-eyebrow">06: Data Model</div>
+  <h2 class="section-h2 reveal"><span style="font-family:var(--mono);font-size:18px;color:var(--text);margin-right:12px;">03</span>Five tables. Every field traces to a rule,<br>a requirement, or a <em>design decision.</em></h2>
+  <p class="section-sub reveal"><span style="color:var(--red)">Red = hard stop</span> · <span style="color:var(--amber)">Amber = calculated</span> · <span style="color:var(--green)">Green = fair lending monitor only</span> · <span style="color:var(--orange)">Orange = flag trigger</span> · <span style="color:var(--purple)">Purple = net new</span></p>
 
-  <div class="reveal visible" style="margin-bottom:24px;">
+  <div class="reveal" style="margin-bottom:24px;">
     <table style="width:100%;border-collapse:collapse;background:var(--card);border:1px solid var(--border);border-radius:10px;overflow:hidden;">
       <thead>
         <tr>
-          <th style="font-family: var(--mono); font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--subtle); text-align: left; padding: 10px 16px; background: var(--bg); border-bottom: 1px solid var(--border); width: 30%; min-height: 1em;" contenteditable="false">Design Principle</th>
-          <th style="font-family: var(--mono); font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--subtle); text-align: left; padding: 10px 16px; background: var(--bg); border-bottom: 1px solid var(--border); min-height: 1em;" contenteditable="false">Description</th>
+          <th style="font-family:var(--mono);font-size:9px;letter-spacing:0.1em;text-transform:uppercase;color:var(--subtle);text-align:left;padding:10px 16px;background:var(--bg);border-bottom:1px solid var(--border);width:30%;">Design Principle</th>
+          <th style="font-family:var(--mono);font-size:9px;letter-spacing:0.1em;text-transform:uppercase;color:var(--subtle);text-align:left;padding:10px 16px;background:var(--bg);border-bottom:1px solid var(--border);">Description</th>
         </tr>
       </thead>
       <tbody>
         <tr>
-          <td style="padding: 12px 16px; border-bottom: 1px solid var(--border); font-size: 12px; font-weight: 700; color: var(--text); vertical-align: top; min-height: 1em;" contenteditable="false">Investor-aware branching at every step</td>
-          <td style="padding: 12px 16px; border-bottom: 1px solid var(--border); font-size: 12px; font-weight: 300; color: var(--subtle); line-height: 1.6; vertical-align: top; min-height: 1em;" contenteditable="false">Fannie and Freddie diverge on seasoning, payment lookback, and ineligible loan types. investor_type is evaluated first — correct GSE rules applied automatically at every downstream step.</td>
+          <td style="padding:12px 16px;border-bottom:1px solid var(--border);font-size:12px;font-weight:700;color:var(--text);vertical-align:top;">Investor-aware branching at every step</td>
+          <td style="padding:12px 16px;border-bottom:1px solid var(--border);font-size:12px;font-weight:300;color:var(--subtle);line-height:1.6;vertical-align:top;">Fannie and Freddie diverge on seasoning, payment lookback, and ineligible loan types. investor_type is evaluated first — correct GSE rules applied automatically at every downstream step.</td>
         </tr>
         <tr style="background:var(--bg);">
-          <td style="padding: 12px 16px; border-bottom: 1px solid var(--border); font-size: 12px; font-weight: 700; color: var(--text); vertical-align: top; min-height: 1em;" contenteditable="false">State rules as a configurable table</td>
-          <td style="padding: 12px 16px; border-bottom: 1px solid var(--border); font-size: 12px; font-weight: 300; color: var(--subtle); line-height: 1.6; vertical-align: top; min-height: 1em;" contenteditable="false">State-specific LTV thresholds, notice timing, and denial language pre-loaded in STATE_RULES. State law changes update the table, not the workflow. Servicer-specific overlays can be added without redesign.</td>
+          <td style="padding:12px 16px;border-bottom:1px solid var(--border);font-size:12px;font-weight:700;color:var(--text);vertical-align:top;">State rules as a configurable table</td>
+          <td style="padding:12px 16px;border-bottom:1px solid var(--border);font-size:12px;font-weight:300;color:var(--subtle);line-height:1.6;vertical-align:top;">State-specific LTV thresholds, notice timing, and denial language pre-loaded in STATE_RULES. State law changes update the table, not the workflow. Servicer-specific overlays can be added without redesign.</td>
         </tr>
         <tr>
-          <td style="padding: 12px 16px; font-size: 12px; font-weight: 700; color: var(--text); vertical-align: top; min-height: 1em;" contenteditable="false">income_type — collected but never scored</td>
-          <td style="padding: 12px 16px; font-size: 12px; font-weight: 300; color: var(--subtle); line-height: 1.6; vertical-align: top; min-height: 1em;" contenteditable="false">Captured for fair lending monitoring and disparate impact auditing only — never used as a decision input. Protects against bias toward traditional employment structures and non-traditional earners.</td>
+          <td style="padding:12px 16px;font-size:12px;font-weight:700;color:var(--text);vertical-align:top;">income_type: collected but never scored</td>
+          <td style="padding:12px 16px;font-size:12px;font-weight:300;color:var(--subtle);line-height:1.6;vertical-align:top;">Captured for fair lending monitoring and disparate impact auditing only — never used as a decision input. Protects against bias toward traditional employment structures and non-traditional earners.</td>
         </tr>
       </tbody>
     </table>
   </div>
 
-  <p class="section-sub reveal visible" style="margin-bottom:16px;" contenteditable="false"><span style="color:var(--red)">Red = hard stop</span> · <span style="color:var(--amber)">Amber = calculated</span> · <span style="color:var(--green)">Green = fair lending monitor only</span> · <span style="color:var(--orange)">Orange = flag trigger</span> · <span style="color:var(--purple)">Purple = net new</span></p>
-
-  <div class="tables-overview reveal visible">
+  <div class="tables-overview reveal">
     <div class="table-card">
       <div class="table-name">LOAN</div>
       <div class="tf key">loan_id</div>
@@ -720,60 +743,49 @@ section{position:relative;z-index:1;min-height:100vh;padding:100px 80px 80px;
     </div>
   </div>
 
-  <div class="dm-links reveal visible">
+  <div class="dm-links reveal">
     <a class="dm-link" href="https://docs.google.com/spreadsheets/d/1KF9dsYekPzN11qL9uCzassNWdmKk1aJZZeTa6iGHXUY/edit?usp=sharing" target="_blank">View full data model and field rationale →</a>
   </div>
 </section>
 
 <!-- ══ SECTION 7: NEXT STEPS ══ -->
 <section id="nextsteps">
-  <div class="section-eyebrow">Next Steps</div>
-  <h2 class="section-h2 reveal visible" contenteditable="false" style="min-height: 1em;">Built to deploy. <em>Designed to compound.</em></h2>
-  <p class="section-sub reveal visible" contenteditable="false" style="min-height: 1em;">Three phases take this from design to production to the platform vision.</p>
-  <div class="next-grid reveal visible">
+  <div class="section-eyebrow">07: Next Steps</div>
+  <h2 class="section-h2 reveal">Built to deploy. <em>Designed to compound.</em></h2>
+  <p class="section-sub reveal">Three phases take this from design to production to the platform vision.</p>
+  <div class="next-grid reveal">
     <div class="next-card">
       <div class="next-phase">Phase 1</div>
       <div class="next-num">01</div>
-      <div class="next-title" contenteditable="false" style="min-height: 1em;">Configure</div>
-      <div class="next-item" contenteditable="false" style="min-height: 1em;">Configure Valon workflow tool with hard stop triggers and eligibility query logic</div>
-      <div class="next-item" contenteditable="false" style="min-height: 1em;">Populate STATE_RULES table for our full portfolio</div>
-      <div class="next-item" contenteditable="false" style="min-height: 1em;">Configure borrower and analyst notification templates&nbsp;</div>
-      <div class="next-item" contenteditable="false" style="min-height: 1em;">Deploy post-waiver tax monitoring</div>
-      <div class="next-item" contenteditable="false" style="min-height: 1em;">Verify state-specific LTV overrides against current GSE guides</div>
+      <div class="next-title">Foundation: Levels 2 + 3</div>
+      <div class="next-item">Configure Valon workflow tool with hard stop triggers and eligibility query logic</div>
+      <div class="next-item">Populate STATE_RULES table for our full portfolio</div>
+      <div class="next-item">Configure borrower and analyst notification templates per state</div>
+      <div class="next-item">Deploy post-waiver tax monitoring: LERETA/CoreLogic integration</div>
+      <div class="next-item">Verify state-specific LTV overrides against current GSE guides</div>
     </div>
     <div class="next-card">
       <div class="next-phase">Phase 2</div>
       <div class="next-num">02</div>
-      <div class="next-title" contenteditable="false" style="min-height: 1em;">Test</div>
-      <div class="next-item" contenteditable="false" style="min-height: 1em;">Validate scorecard weights against our actual loan performance data</div>
-      <div class="next-item" contenteditable="false" style="min-height: 1em;">Run disparate impact analysis on first 90 days of decisions</div>
-      <div class="next-item" contenteditable="false" style="min-height: 1em;">Add Ginnie Mae flag logic as our portfolio expands</div>
-      <div class="next-item" contenteditable="false" style="min-height: 1em;">Extend flag registry with portfolio-specific conditions</div>
+      <div class="next-title">Refinement: Strengthen Level 3</div>
+      <div class="next-item">Validate scorecard weights against our actual loan performance data</div>
+      <div class="next-item">Run disparate impact analysis on first 90 days of decisions</div>
+      <div class="next-item">Add Ginnie Mae flag logic as our portfolio expands</div>
+      <div class="next-item">Extend flag registry with portfolio-specific conditions</div>
     </div>
     <div class="next-card">
       <div class="next-phase">Phase 3</div>
       <div class="next-num">03</div>
-      <div class="next-title" contenteditable="false" style="min-height: 1em;">Build</div>
-      <div class="next-item" contenteditable="false" style="min-height: 1em;">Build portfolio dashboard: waiver volume, denial reasons, post-waiver performance, re-evaluation capture rate</div>
-      <div class="next-item" contenteditable="false" style="min-height: 1em;">Establish the baseline benchmark that doesn't currently exist in our industry</div>
-      <div class="next-item" contenteditable="false" style="min-height: 1em;">Shift from processing requests to continuously evaluating the portfolio</div>
-      <div class="next-item" contenteditable="false" style="min-height: 1em;">Borrowers become potentially eligible before they ask: we proactively generate the conversation</div>
+      <div class="next-title">Platform Vision: Level 4</div>
+      <div class="next-item">Build portfolio dashboard: waiver volume, denial reasons, post-waiver performance, re-evaluation capture rate</div>
+      <div class="next-item">Establish the baseline benchmark that doesn't currently exist in our industry</div>
+      <div class="next-item">Shift from processing requests to continuously evaluating the portfolio</div>
+      <div class="next-item">Borrowers become potentially eligible before they ask: we proactively generate the conversation</div>
     </div>
   </div>
-  <div style="margin-top:40px;text-align:right;" class="reveal visible">
+  <div style="margin-top:40px;text-align:right;" class="reveal">
     <div class="closing-name">Diarra White</div>
     <div class="closing-title">BizOps Take-Home · Valon · June 2026</div>
-  </div>
-</section>
-
-<!-- ══ INTERACTIVE FLOWCHART ══ -->
-<section id="flowchart" style="min-height:auto;padding:80px;">
-  <div class="section-eyebrow">Interactive Workflow Visualization</div>
-  <div class="viz-placeholder reveal visible">
-    <div class="viz-placeholder-icon">⬡</div>
-    <div class="viz-placeholder-title">Interactive Workflow Visualization</div>
-    <p style="font-size: 12px; color: var(--muted); margin-bottom: 10px;">End-to-end process flow: all three paths, decision nodes, data triggers, and flag registry</p>
-    <a class="viz-placeholder-link" href="https://diarra-white26.github.io/happy-mortgage-workflow/flowchart.html" target="_blank">Interactive workflow visualization →</a>
   </div>
 </section>
 
@@ -788,12 +800,12 @@ section{position:relative;z-index:1;min-height:100vh;padding:100px 80px 80px;
     <div class="appendix-section-title">A: Current State Pain Points That Informed This Design</div>
     <div class="appendix-section-sub">Every design decision in the new workflow traces back to a specific failure in the current process.</div>
     <div class="pain-grid">
-      <div class="pain-card critical"><div class="pain-card-tag">Critical Gap</div><h4 contenteditable="false" style="min-height: 1em;">No structured intake</h4><p contenteditable="false" style="min-height: 1em;">Free-form requests result in incomplete data capture. Every downstream step is slower and more error-prone as a result.</p><div class="workflow-fix">→ Fixed by: structured intake form, required fields enforced at submission</div></div>
-      <div class="pain-card critical"><div class="pain-card-tag">Critical Gap</div><h4 contenteditable="false" style="min-height: 1em;">Manual eligibility = inconsistency at scale</h4><p contenteditable="false" style="min-height: 1em;">Error rate tied directly to individual analyst quality. A new hire and a 10-year veteran apply different standards.</p><div class="workflow-fix">→ Fixed by: automated hard stop and eligibility engine: same rules applied to every case</div></div>
-      <div class="pain-card critical"><div class="pain-card-tag">Critical Gap</div><h4 contenteditable="false" style="min-height: 1em;">GSE rules live in analysts' heads</h4><p contenteditable="false" style="min-height: 1em;">Fannie and Freddie diverge on seasoning, payment lookback, and ineligible loan types. Guide updates don't propagate instantly.</p><div class="workflow-fix">→ Fixed by: investor-aware branching in eligibility engine; STATE_RULES table for state-specific overrides</div></div>
-      <div class="pain-card compliance"><div class="pain-card-tag">Compliance Risk</div><h4 contenteditable="false" style="min-height: 1em;">No audit trail</h4><p contenteditable="false" style="min-height: 1em;">Decision reasoning rarely captured in a structured way. Improper approvals indefensible in an investor audit.</p><div class="workflow-fix">→ Fixed by: eligibility_check_log JSON on every case; dual sign-off on A2 and Path B</div></div>
-      <div class="pain-card compliance"><div class="pain-card-tag">Compliance Risk</div><h4 contenteditable="false" style="min-height: 1em;">State rules not systematically enforced</h4><p contenteditable="false" style="min-height: 1em;">Notice timing, denial language, and LTV thresholds vary by state. Compliance depends entirely on analyst awareness.</p><div class="workflow-fix">→ Fixed by: STATE_RULES table; state_notice_deadline calculated field; denial template auto-selected</div></div>
-      <div class="pain-card systemic"><div class="pain-card-tag">Systemic Gap</div><h4 contenteditable="false" style="min-height: 1em;">Zero post-waiver monitoring</h4><p contenteditable="false" style="min-height: 1em;">Tax delinquency and insurance lapse discovered reactively: after investor collateral is already exposed.</p><div class="workflow-fix">→ Fixed by: POST_WAIVER_MONITORING table; Triggers #10–#13; re-evaluation watch (#14)</div></div>
+      <div class="pain-card critical"><div class="pain-card-tag">Critical Gap</div><h4>No structured intake</h4><p>Free-form requests result in incomplete data capture. Every downstream step is slower and more error-prone as a result.</p><div class="workflow-fix">→ Fixed by: structured intake form, required fields enforced at submission</div></div>
+      <div class="pain-card critical"><div class="pain-card-tag">Critical Gap</div><h4>Manual eligibility = inconsistency at scale</h4><p>Error rate tied directly to individual analyst quality. A new hire and a 10-year veteran apply different standards.</p><div class="workflow-fix">→ Fixed by: automated hard stop and eligibility engine: same rules applied to every case</div></div>
+      <div class="pain-card critical"><div class="pain-card-tag">Critical Gap</div><h4>GSE rules live in analysts' heads</h4><p>Fannie and Freddie diverge on seasoning, payment lookback, and ineligible loan types. Guide updates don't propagate instantly.</p><div class="workflow-fix">→ Fixed by: investor-aware branching in eligibility engine; STATE_RULES table for state-specific overrides</div></div>
+      <div class="pain-card compliance"><div class="pain-card-tag">Compliance Risk</div><h4>No audit trail</h4><p>Decision reasoning rarely captured in a structured way. Improper approvals indefensible in an investor audit.</p><div class="workflow-fix">→ Fixed by: eligibility_check_log JSON on every case; dual sign-off on A2 and Path B</div></div>
+      <div class="pain-card compliance"><div class="pain-card-tag">Compliance Risk</div><h4>State rules not systematically enforced</h4><p>Notice timing, denial language, and LTV thresholds vary by state. Compliance depends entirely on analyst awareness.</p><div class="workflow-fix">→ Fixed by: STATE_RULES table; state_notice_deadline calculated field; denial template auto-selected</div></div>
+      <div class="pain-card systemic"><div class="pain-card-tag">Systemic Gap</div><h4>Zero post-waiver monitoring</h4><p>Tax delinquency and insurance lapse discovered reactively: after investor collateral is already exposed.</p><div class="workflow-fix">→ Fixed by: POST_WAIVER_MONITORING table; Triggers #10–#13; re-evaluation watch (#14)</div></div>
     </div>
   </div>
 
@@ -801,46 +813,48 @@ section{position:relative;z-index:1;min-height:100vh;padding:100px 80px 80px;
     <div class="appendix-section-title">B: Full Trigger Detail (All 16)</div>
     <div class="appendix-section-sub">Every trigger mapped to its source table, condition, channel, recipient, message content, and purpose.</div>
 
-    <div class="full-trigger"><div class="ft-header"><div class="ft-num">1</div><div class="ft-channel email">Email</div><div class="ft-label">Borrower Confirmation</div></div><div class="ft-grid"><div class="ft-field"><div class="ft-field-label">Target</div><div class="ft-field-val">Borrower</div></div><div class="ft-field"><div class="ft-field-label">Timing</div><div class="ft-field-val">Fires immediately on submission</div></div><div class="ft-field"><div class="ft-field-label">Purpose</div><div class="ft-field-val">Eliminates borrower dead zone: sets clear timeline expectation from day one</div></div><div class="ft-field"><div class="ft-field-label">Action Required</div><div class="ft-field-val">None: fully automated</div></div></div><div class="ft-condition">request_status = RECEIVED AND notification_sent_borrower = FALSE</div><div class="ft-message">"Your request has been received and is under review. You can expect a decision within [programmed SLA]. In the meantime, here are a few resources to help you think through what self-managing your property tax and insurance payments could look like. [Link]"<br><em style="font-size:10px;color:var(--muted);font-style:normal;">Data pulled: borrower_name (BORROWER), loan_id (LOAN), submission date (WAIVER_REQUEST), SLA (system config)</em></div></div>
+    <div class="full-trigger"><div class="ft-header"><div class="ft-num">1</div><div class="ft-channel email">Email</div><div class="ft-label">Borrower Confirmation</div></div><div class="ft-grid"><div class="ft-field"><div class="ft-field-label">Target</div><div class="ft-field-val">Borrower</div></div><div class="ft-field"><div class="ft-field-label">Timing</div><div class="ft-field-val">Fires immediately on submission</div></div><div class="ft-field"><div class="ft-field-label">Purpose</div><div class="ft-field-val">Eliminates borrower dead zone: sets clear timeline expectation from day one</div></div><div class="ft-field"><div class="ft-field-label">Action Required</div><div class="ft-field-val">None: fully automated</div></div></div><div class="ft-condition">request_status = RECEIVED AND notification_sent_borrower = FALSE</div><div class="ft-message">"Your request has been received and is under review. You can expect a decision within [programmed SLA]. In the meantime, here are a few resources to help you think through what self-managing your property tax and insurance payments could look like. [Link]"</div></div>
 
-    <div class="full-trigger"><div class="ft-header"><div class="ft-num">2</div><div class="ft-channel slack">Slack</div><div class="ft-label">Analyst Queue Alert: New Request</div></div><div class="ft-grid"><div class="ft-field"><div class="ft-field-label">Target</div><div class="ft-field-val">Assigned analyst (assigned_analyst_id)</div></div><div class="ft-field"><div class="ft-field-label">Timing</div><div class="ft-field-val">Fires simultaneously with Trigger #1</div></div><div class="ft-field"><div class="ft-field-label">Purpose</div><div class="ft-field-val">Request enters analyst queue immediately: no manual discovery</div></div><div class="ft-field"><div class="ft-field-label">Action Required</div><div class="ft-field-val">Analyst reviews file. No borrower contact at this stage.</div></div></div><div class="ft-condition">request_status = RECEIVED AND notification_sent_internal = FALSE</div><div class="ft-message">"New escrow waiver request: [Borrower Name] | Loan #[ID] | Submitted [date]. File is in your queue for review."<br><em style="font-size:10px;color:var(--muted);font-style:normal;">Data pulled: borrower_name (BORROWER), loan_id (LOAN), assigned_analyst_id (WAIVER_REQUEST), submission date (WAIVER_REQUEST)</em></div></div>
+    <div class="full-trigger"><div class="ft-header"><div class="ft-num">2</div><div class="ft-channel slack">Slack</div><div class="ft-label">Analyst Queue Alert: New Request</div></div><div class="ft-grid"><div class="ft-field"><div class="ft-field-label">Target</div><div class="ft-field-val">Assigned analyst (assigned_analyst_id)</div></div><div class="ft-field"><div class="ft-field-label">Timing</div><div class="ft-field-val">Fires simultaneously with Trigger #1</div></div><div class="ft-field"><div class="ft-field-label">Purpose</div><div class="ft-field-val">Request enters analyst queue immediately: no manual discovery</div></div><div class="ft-field"><div class="ft-field-label">Action Required</div><div class="ft-field-val">Analyst reviews file. No borrower contact at this stage.</div></div></div><div class="ft-condition">request_status = RECEIVED AND notification_sent_internal = FALSE</div><div class="ft-message">"New escrow waiver request: [Borrower Name] | Loan #[ID] | Submitted [date]. File is in your queue for review."</div></div>
 
-    <div class="full-trigger"><div class="ft-header"><div class="ft-num">3</div><div class="ft-channel email">Email</div><div class="ft-label">Status Update: SLA Breach</div></div><div class="ft-grid"><div class="ft-field"><div class="ft-field-label">Target</div><div class="ft-field-val">Borrower</div></div><div class="ft-field"><div class="ft-field-label">Timing</div><div class="ft-field-val">Fires only if programmed SLA window exceeded without a decision</div></div><div class="ft-field"><div class="ft-field-label">Purpose</div><div class="ft-field-val">Keeps borrower informed without exposing internal stages</div></div><div class="ft-field"><div class="ft-field-label">Action Required</div><div class="ft-field-val">None: automated</div></div></div><div class="ft-condition">days since request_date &gt; programmed SLA AND request_status NOT IN (APPROVED, DENIED)</div><div class="ft-message">"We're still reviewing your request and want to make sure you're not left waiting. We expect to have a decision for you by [revised date]. No action needed from you at this time."</div></div>
+    <div class="full-trigger"><div class="ft-header"><div class="ft-num" style="color:var(--blue);">2b</div><div class="ft-channel slack">Slack</div><div class="ft-label">Analyst Alert: Recommendation Ready for Review</div></div><div class="ft-grid"><div class="ft-field"><div class="ft-field-label">Target</div><div class="ft-field-val">Assigned analyst (assigned_analyst_id)</div></div><div class="ft-field"><div class="ft-field-label">Timing</div><div class="ft-field-val">Fires when eligibility engine seals eligibility_check_log and writes recommendation to request record. Signals that system evaluation is complete and decision packet is ready for human review.</div></div><div class="ft-field"><div class="ft-field-label">Purpose</div><div class="ft-field-val">Analyst knows the moment the packet is ready without polling the queue. Includes path taken and key data model fields so analyst arrives at review already oriented.</div></div><div class="ft-field"><div class="ft-field-label">Action Required</div><div class="ft-field-val">A1: analyst reviews and confirms alone. A2: analyst + Risk review scorecard and co-sign. Path B: analyst + Risk review structured question packet and deliberate.</div></div></div><div class="ft-condition">eligibility_check_log IS NOT NULL AND notification_sent_internal = FALSE AND (request_status = UNDER_REVIEW AND financial_capacity_tier IN ('A1_STANDARD', 'A2_SCORECARD') OR request_status = 'PENDING_EXTENDED_REVIEW')</div><div class="ft-message">"Decision packet ready: [Borrower Name] | Loan #[ID] | Path: [A1 / A2 / B] | LTV: [current_ltv] | Payment history (12mo lates): [payment_history_30d_12mo] | Capacity tier: [financial_capacity_tier] | Scorecard: [tier2_total_score] pts (A2 only) | Review packet in queue and confirm or escalate."</div></div>
 
-    <div class="full-trigger"><div class="ft-header"><div class="ft-num">4</div><div class="ft-channel email">Email</div><div class="ft-label">Borrower Input Request (Path B only)</div></div><div class="ft-grid"><div class="ft-field"><div class="ft-field-label">Target</div><div class="ft-field-val">Borrower</div></div><div class="ft-field"><div class="ft-field-label">Timing</div><div class="ft-field-val">Path B only: when analyst confirms borrower input needed. Two scenarios: VALUATION_DISPUTE or VIOLATION_CONTEST.</div></div><div class="ft-field"><div class="ft-field-label">Purpose</div><div class="ft-field-val">Targeted ask: borrower knows exactly what's needed and why</div></div><div class="ft-field"><div class="ft-field-label">Action Required</div><div class="ft-field-val">Analyst sets input_requested_date. Monitors borrower_input_received.</div></div></div><div class="ft-condition">borrower_input_required = TRUE AND notification_sent_borrower = FALSE</div><div class="ft-message">"To continue reviewing your request, we need the following from you: [VALUATION_DISPUTE: reconsideration of value or new appraisal / VIOLATION_CONTEST: documentation supporting your dispute]. Please respond within [X] business days."<br><em style="font-size:10px;color:var(--muted);font-style:normal;">Data pulled: borrower_name (BORROWER), loan_id (LOAN), borrower_input_required_reason (WAIVER_REQUEST)</em></div></div>
+    <div class="full-trigger"><div class="ft-header"><div class="ft-num">3</div><div class="ft-channel email">Email</div><div class="ft-label">Status Update: SLA Breach</div></div><div class="ft-grid"><div class="ft-field"><div class="ft-field-label">Target</div><div class="ft-field-val">Borrower</div></div><div class="ft-field"><div class="ft-field-label">Timing</div><div class="ft-field-val">Fires only if programmed SLA window exceeded without a decision</div></div><div class="ft-field"><div class="ft-field-label">Purpose</div><div class="ft-field-val">Keeps borrower informed without exposing internal stages</div></div><div class="ft-field"><div class="ft-field-label">Action Required</div><div class="ft-field-val">None: automated</div></div></div><div class="ft-condition">days since request_date > programmed SLA AND request_status NOT IN (APPROVED, DENIED)</div><div class="ft-message">"We're still reviewing your request and want to make sure you're not left waiting. We expect to have a decision for you by [revised date]. No action needed from you at this time."</div></div>
 
-    <div class="full-trigger"><div class="ft-header"><div class="ft-num" style="color:var(--orange);">4b</div><div class="ft-channel slack">Slack</div><div class="ft-label">Analyst Alert: Borrower Input Received</div></div><div class="ft-grid"><div class="ft-field"><div class="ft-field-label">Target</div><div class="ft-field-val">Assigned analyst</div></div><div class="ft-field"><div class="ft-field-label">Timing</div><div class="ft-field-val">Net new: fires the moment borrower_input_received flips to TRUE</div></div><div class="ft-field"><div class="ft-field-label">Purpose</div><div class="ft-field-val">Case moves forward immediately: no manual checking</div></div><div class="ft-field"><div class="ft-field-label">Action Required</div><div class="ft-field-val">Analyst reviews submitted documentation and continues deliberation</div></div></div><div class="ft-condition">borrower_input_received = TRUE AND analyst_notified_of_input = FALSE</div><div class="ft-message">"Borrower response received: [Borrower Name] | Loan #[ID] | Documentation submitted [date]. Review and continue deliberation."<br><em style="font-size:10px;color:var(--muted);font-style:normal;">Data pulled: borrower_name (BORROWER), loan_id (LOAN), assigned_analyst_id (WAIVER_REQUEST), borrower_input_received date (WAIVER_REQUEST)</em></div></div>
+    <div class="full-trigger"><div class="ft-header"><div class="ft-num">4</div><div class="ft-channel email">Email</div><div class="ft-label">Borrower Input Request (Path B only)</div></div><div class="ft-grid"><div class="ft-field"><div class="ft-field-label">Target</div><div class="ft-field-val">Borrower</div></div><div class="ft-field"><div class="ft-field-label">Timing</div><div class="ft-field-val">Path B only: when analyst confirms borrower input needed. Two scenarios: VALUATION_DISPUTE or VIOLATION_CONTEST.</div></div><div class="ft-field"><div class="ft-field-label">Purpose</div><div class="ft-field-val">Targeted ask: borrower knows exactly what's needed and why</div></div><div class="ft-field"><div class="ft-field-label">Action Required</div><div class="ft-field-val">Analyst sets input_requested_date. Monitors borrower_input_received.</div></div></div><div class="ft-condition">borrower_input_required = TRUE AND notification_sent_borrower = FALSE</div><div class="ft-message">"To continue reviewing your request, we need the following from you: [VALUATION_DISPUTE: reconsideration of value or new appraisal / VIOLATION_CONTEST: documentation supporting your dispute]. Please respond within [X] business days."</div></div>
 
-    <div class="full-trigger"><div class="ft-header"><div class="ft-num">5</div><div class="ft-channel slack">Slack</div><div class="ft-label">Analyst Follow-Up: No Borrower Response</div></div><div class="ft-grid"><div class="ft-field"><div class="ft-field-label">Target</div><div class="ft-field-val">Assigned analyst</div></div><div class="ft-field"><div class="ft-field-label">Timing</div><div class="ft-field-val">X days after Trigger #4 if borrower_input_received remains FALSE</div></div><div class="ft-field"><div class="ft-field-label">Purpose</div><div class="ft-field-val">Closes the follow-up loop without manual tracking</div></div><div class="ft-field"><div class="ft-field-label">Action Required</div><div class="ft-field-val">Recommended action: Call [Borrower Name] to follow up on outstanding documentation.</div></div></div><div class="ft-condition">borrower_input_required = TRUE AND borrower_input_received = FALSE AND days since input_requested_date &gt; X</div><div class="ft-message">"No response: [Borrower] | Loan #[ID] | Input requested [X] days ago. Recommended action: Call [Borrower Name]: [specific document] still outstanding."<br><em style="font-size:10px;color:var(--muted);font-style:normal;">Data pulled: borrower_name (BORROWER), loan_id (LOAN), assigned_analyst_id (WAIVER_REQUEST), input_requested_date, borrower_input_required_reason (WAIVER_REQUEST)</em></div></div>
+    <div class="full-trigger"><div class="ft-header"><div class="ft-num" style="color:var(--orange);">4b</div><div class="ft-channel slack">Slack</div><div class="ft-label">Analyst Alert: Borrower Input Received</div></div><div class="ft-grid"><div class="ft-field"><div class="ft-field-label">Target</div><div class="ft-field-val">Assigned analyst</div></div><div class="ft-field"><div class="ft-field-label">Timing</div><div class="ft-field-val">Net new: fires the moment borrower_input_received flips to TRUE</div></div><div class="ft-field"><div class="ft-field-label">Purpose</div><div class="ft-field-val">Case moves forward immediately: no manual checking</div></div><div class="ft-field"><div class="ft-field-label">Action Required</div><div class="ft-field-val">Analyst reviews submitted documentation and continues deliberation</div></div></div><div class="ft-condition">borrower_input_received = TRUE AND analyst_notified_of_input = FALSE</div><div class="ft-message">"Borrower response received: [Borrower Name] | Loan #[ID] | Documentation submitted [date]. Review and continue deliberation."</div></div>
 
-    <div class="full-trigger"><div class="ft-header"><div class="ft-num">6</div><div class="ft-channel email">Email</div><div class="ft-label">Approval Notification</div></div><div class="ft-grid"><div class="ft-field"><div class="ft-field-label">Target</div><div class="ft-field-val">Borrower</div></div><div class="ft-field"><div class="ft-field-label">Timing</div><div class="ft-field-val">Immediately after analyst sign-off</div></div><div class="ft-field"><div class="ft-field-label">Purpose</div><div class="ft-field-val">Supportive communication with a resource link sets the borrower up for success.</div></div><div class="ft-field"><div class="ft-field-label">Action Required</div><div class="ft-field-val">Trigger #7 fires simultaneously. Post-waiver monitoring activates.</div></div></div><div class="ft-condition">request_status = APPROVED AND notification_sent_borrower = FALSE</div><div class="ft-message">"Your escrow waiver has been approved effective [date]. We've put together everything you need to feel confident managing your property taxes and insurance going forward. [Link: Your guide to self-managing escrow] Your specialist will be in touch to walk you through next steps."<br><em style="font-size:10px;color:var(--muted);font-style:normal;">Data pulled: borrower_name (BORROWER), loan_id (LOAN), approval effective date (WAIVER_REQUEST), state → denial_notice_template_id (STATE_RULES), investor_type (LOAN) → GSE-specific disclosure language</em></div></div>
+    <div class="full-trigger"><div class="ft-header"><div class="ft-num">5</div><div class="ft-channel slack">Slack</div><div class="ft-label">Analyst Follow-Up: No Borrower Response</div></div><div class="ft-grid"><div class="ft-field"><div class="ft-field-label">Target</div><div class="ft-field-val">Assigned analyst</div></div><div class="ft-field"><div class="ft-field-label">Timing</div><div class="ft-field-val">X days after Trigger #4 if borrower_input_received remains FALSE</div></div><div class="ft-field"><div class="ft-field-label">Purpose</div><div class="ft-field-val">Closes the follow-up loop without manual tracking</div></div><div class="ft-field"><div class="ft-field-label">Action Required</div><div class="ft-field-val">Recommended action: Call [Borrower Name] to follow up on outstanding documentation.</div></div></div><div class="ft-condition">borrower_input_required = TRUE AND borrower_input_received = FALSE AND days since input_requested_date > X</div><div class="ft-message">"No response: [Borrower] | Loan #[ID] | Input requested [X] days ago. Recommended action: Call [Borrower Name]: [specific document] still outstanding."</div></div>
 
-    <div class="full-trigger"><div class="ft-header"><div class="ft-num">7</div><div class="ft-channel slack">Slack</div><div class="ft-label">Analyst Alert: Approval</div></div><div class="ft-grid"><div class="ft-field"><div class="ft-field-label">Target</div><div class="ft-field-val">Assigned analyst</div></div><div class="ft-field"><div class="ft-field-label">Timing</div><div class="ft-field-val">Simultaneously with Trigger #6</div></div><div class="ft-field"><div class="ft-field-label">Purpose</div><div class="ft-field-val">Prompts proactive call before borrower feels uncertain about what changed</div></div><div class="ft-field"><div class="ft-field-label">Action Required</div><div class="ft-field-val">Recommended action: Call [Borrower Name]: walk through what changes and confirm they feel prepared.</div></div></div><div class="ft-condition">request_status = APPROVED AND notification_sent_internal = FALSE</div><div class="ft-message">"Waiver approved: [Borrower] | Loan #[ID] | Path [A/B]. Recommended action: Call [Borrower Name]: walk through what changes and confirm they feel prepared."<br><em style="font-size:10px;color:var(--muted);font-style:normal;">Data pulled: borrower_name (BORROWER), loan_id (LOAN), assigned_analyst_id (WAIVER_REQUEST), eligibility_check_log → path taken (WAIVER_REQUEST)</em></div></div>
+    <div class="full-trigger"><div class="ft-header"><div class="ft-num">6</div><div class="ft-channel email">Email</div><div class="ft-label">Approval Notification</div></div><div class="ft-grid"><div class="ft-field"><div class="ft-field-label">Target</div><div class="ft-field-val">Borrower</div></div><div class="ft-field"><div class="ft-field-label">Timing</div><div class="ft-field-val">Immediately after analyst sign-off</div></div><div class="ft-field"><div class="ft-field-label">Purpose</div><div class="ft-field-val">Supportive communication with a resource link sets the borrower up for success.</div></div><div class="ft-field"><div class="ft-field-label">Action Required</div><div class="ft-field-val">Trigger #7 fires simultaneously. Post-waiver monitoring activates.</div></div></div><div class="ft-condition">request_status = APPROVED AND notification_sent_borrower = FALSE</div><div class="ft-message">"Your escrow waiver has been approved effective [date]. We've put together everything you need to feel confident managing your property taxes and insurance going forward. [Link: Your guide to self-managing escrow] Your specialist will be in touch to walk you through next steps."</div></div>
 
-    <div class="full-trigger"><div class="ft-header"><div class="ft-num">8</div><div class="ft-channel email">Email</div><div class="ft-label">Denial Notification</div></div><div class="ft-grid"><div class="ft-field"><div class="ft-field-label">Target</div><div class="ft-field-val">Borrower</div></div><div class="ft-field"><div class="ft-field-label">Timing</div><div class="ft-field-val">Immediately after analyst confirms denial. State-compliant template auto-selected from STATE_RULES.denial_notice_template_id.</div></div><div class="ft-field"><div class="ft-field-label">Purpose</div><div class="ft-field-val">Clear denial reason, specific re-eligibility path, and interim escrow resources.</div></div><div class="ft-field"><div class="ft-field-label">Action Required</div><div class="ft-field-val">Trigger #9 fires simultaneously. Re-evaluation watch activates for hard condition denials.</div></div></div><div class="ft-condition">request_status = DENIED AND notification_sent_borrower = FALSE</div><div class="ft-message">"After careful review, we're unable to approve an escrow waiver at this time. Reason: [plain-language reason]. [Specific path to re-eligibility.] In the meantime: [link to escrow optimization resources]."<br><em style="font-size:10px;color:var(--muted);font-style:normal;">Data pulled: borrower_name (BORROWER), state → denial_notice_template_id (STATE_RULES), denial reason code (WAIVER_REQUEST), re-eligibility path derived from disqualifier type (LOAN/BORROWER)</em></div></div>
+    <div class="full-trigger"><div class="ft-header"><div class="ft-num">7</div><div class="ft-channel slack">Slack</div><div class="ft-label">Analyst Alert: Approval</div></div><div class="ft-grid"><div class="ft-field"><div class="ft-field-label">Target</div><div class="ft-field-val">Assigned analyst</div></div><div class="ft-field"><div class="ft-field-label">Timing</div><div class="ft-field-val">Simultaneously with Trigger #6</div></div><div class="ft-field"><div class="ft-field-label">Purpose</div><div class="ft-field-val">Prompts proactive call before borrower feels uncertain about what changed</div></div><div class="ft-field"><div class="ft-field-label">Action Required</div><div class="ft-field-val">Recommended action: Call [Borrower Name]: walk through what changes and confirm they feel prepared.</div></div></div><div class="ft-condition">request_status = APPROVED AND notification_sent_internal = FALSE</div><div class="ft-message">"Waiver approved: [Borrower] | Loan #[ID] | Path [A/B]. Recommended action: Call [Borrower Name]: walk through what changes and confirm they feel prepared."</div></div>
 
-    <div class="full-trigger"><div class="ft-header"><div class="ft-num">9</div><div class="ft-channel slack">Slack</div><div class="ft-label">Analyst Alert: Denial</div></div><div class="ft-grid"><div class="ft-field"><div class="ft-field-label">Target</div><div class="ft-field-val">Assigned analyst</div></div><div class="ft-field"><div class="ft-field-label">Timing</div><div class="ft-field-val">Simultaneously with Trigger #8</div></div><div class="ft-field"><div class="ft-field-label">Purpose</div><div class="ft-field-val">Denial is a relationship moment: analyst surfaces unmet needs</div></div><div class="ft-field"><div class="ft-field-label">Action Required</div><div class="ft-field-val">Recommended action: Call [Borrower Name]: understand underlying need and discuss options.</div></div></div><div class="ft-condition">request_status = DENIED AND notification_sent_internal = FALSE</div><div class="ft-message">"Waiver denied: [Borrower] | Loan #[ID] | Reason: [code]. Recommended action: Call [Borrower Name]: understand why they needed the waiver and discuss available options."<br><em style="font-size:10px;color:var(--muted);font-style:normal;">Data pulled: borrower_name (BORROWER), loan_id (LOAN), assigned_analyst_id (WAIVER_REQUEST), denial reason code (WAIVER_REQUEST)</em></div></div>
+    <div class="full-trigger"><div class="ft-header"><div class="ft-num">8</div><div class="ft-channel email">Email</div><div class="ft-label">Denial Notification</div></div><div class="ft-grid"><div class="ft-field"><div class="ft-field-label">Target</div><div class="ft-field-val">Borrower</div></div><div class="ft-field"><div class="ft-field-label">Timing</div><div class="ft-field-val">Immediately after analyst confirms denial. State-compliant template auto-selected from STATE_RULES.denial_notice_template_id.</div></div><div class="ft-field"><div class="ft-field-label">Purpose</div><div class="ft-field-val">Clear denial reason, specific re-eligibility path, and interim escrow resources.</div></div><div class="ft-field"><div class="ft-field-label">Action Required</div><div class="ft-field-val">Trigger #9 fires simultaneously. Re-evaluation watch activates for hard condition denials.</div></div></div><div class="ft-condition">request_status = DENIED AND notification_sent_borrower = FALSE</div><div class="ft-message">"After careful review, we're unable to approve an escrow waiver at this time. Reason: [plain-language reason]. [Specific path to re-eligibility.] In the meantime: [link to escrow optimization resources]."</div></div>
 
-    <div class="full-trigger"><div class="ft-header"><div class="ft-num">10</div><div class="ft-channel email">Email</div><div class="ft-label">Borrower Reminder: Tax Due</div></div><div class="ft-grid"><div class="ft-field"><div class="ft-field-label">Target</div><div class="ft-field-val">Borrower</div></div><div class="ft-field"><div class="ft-field-label">Timing</div><div class="ft-field-val">Proactive: fires X days BEFORE tax due date. Guaranteed for first 3 payment cycles. Tax status via LERETA/CoreLogic integration.</div></div><div class="ft-field"><div class="ft-field-label">Purpose</div><div class="ft-field-val">Prevents delinquency before it happens. 3-cycle guarantee covers highest-risk transition period.</div></div><div class="ft-field"><div class="ft-field-label">Action Required</div><div class="ft-field-val">System monitors tax_payment_confirmed via vendor integration. No analyst action unless Trigger #11 fires.</div></div></div><div class="ft-condition">tax_payment_due_date - TODAY() ≤ X days AND tax_payment_confirmed = FALSE AND opt_out_reminders = FALSE</div><div class="ft-message">"Friendly reminder: property tax payment due [date]. [County payment link.] If you've already taken care of this, you're all set."<br><em style="font-size:10px;color:var(--muted);font-style:normal;">Data pulled: borrower_name (BORROWER), tax_payment_due_date (POST_WAIVER_MONITORING), county payment link (STATE_RULES), opt_out_reminders flag (POST_WAIVER_MONITORING)</em></div></div>
+    <div class="full-trigger"><div class="ft-header"><div class="ft-num">9</div><div class="ft-channel slack">Slack</div><div class="ft-label">Analyst Alert: Denial</div></div><div class="ft-grid"><div class="ft-field"><div class="ft-field-label">Target</div><div class="ft-field-val">Assigned analyst</div></div><div class="ft-field"><div class="ft-field-label">Timing</div><div class="ft-field-val">Simultaneously with Trigger #8</div></div><div class="ft-field"><div class="ft-field-label">Purpose</div><div class="ft-field-val">Denial is a relationship moment: analyst surfaces unmet needs</div></div><div class="ft-field"><div class="ft-field-label">Action Required</div><div class="ft-field-val">Recommended action: Call [Borrower Name]: understand underlying need and discuss options.</div></div></div><div class="ft-condition">request_status = DENIED AND notification_sent_internal = FALSE</div><div class="ft-message">"Waiver denied: [Borrower] | Loan #[ID] | Reason: [code]. Recommended action: Call [Borrower Name]: understand why they needed the waiver and discuss available options."</div></div>
 
-    <div class="full-trigger"><div class="ft-header"><div class="ft-num">11</div><div class="ft-channel slack">Slack</div><div class="ft-label">Analyst Alert: Tax Unconfirmed</div></div><div class="ft-grid"><div class="ft-field"><div class="ft-field-label">Target</div><div class="ft-field-val">Assigned analyst</div></div><div class="ft-field"><div class="ft-field-label">Timing</div><div class="ft-field-val">Reactive: fires AFTER due date if tax_payment_confirmed remains FALSE</div></div><div class="ft-field"><div class="ft-field-label">Purpose</div><div class="ft-field-val">Tax delinquency on a waived loan is direct investor collateral risk. Early intervention prevents escalation.</div></div><div class="ft-field"><div class="ft-field-label">Action Required</div><div class="ft-field-val">Recommended action: Call [Borrower Name] immediately. If delinquent, assess escrow reinstatement.</div></div></div><div class="ft-condition">tax_payment_due_date &lt; TODAY() AND tax_payment_confirmed = FALSE</div><div class="ft-message">"Tax payment unconfirmed: [Borrower] | Loan #[ID] | Due [date]. Recommended action: Call [Borrower Name] before this becomes a delinquency. Investor collateral at risk if unresolved."<br><em style="font-size:10px;color:var(--muted);font-style:normal;">Data pulled: borrower_name (BORROWER), loan_id (LOAN), assigned_analyst_id (WAIVER_REQUEST), tax_payment_due_date, tax_payment_confirmed (POST_WAIVER_MONITORING)</em></div></div>
+    <div class="full-trigger"><div class="ft-header"><div class="ft-num">10</div><div class="ft-channel email">Email</div><div class="ft-label">Borrower Reminder: Tax Due</div></div><div class="ft-grid"><div class="ft-field"><div class="ft-field-label">Target</div><div class="ft-field-val">Borrower</div></div><div class="ft-field"><div class="ft-field-label">Timing</div><div class="ft-field-val">Proactive: fires X days BEFORE tax due date. Guaranteed for first 3 payment cycles. Tax status via LERETA/CoreLogic integration.</div></div><div class="ft-field"><div class="ft-field-label">Purpose</div><div class="ft-field-val">Prevents delinquency before it happens. 3-cycle guarantee covers highest-risk transition period.</div></div><div class="ft-field"><div class="ft-field-label">Action Required</div><div class="ft-field-val">System monitors tax_payment_confirmed via vendor integration. No analyst action unless Trigger #11 fires.</div></div></div><div class="ft-condition">tax_payment_due_date - TODAY() ≤ X days AND tax_payment_confirmed = FALSE AND opt_out_reminders = FALSE</div><div class="ft-message">"Friendly reminder: property tax payment due [date]. [County payment link.] If you've already taken care of this, you're all set."</div></div>
+
+    <div class="full-trigger"><div class="ft-header"><div class="ft-num">11</div><div class="ft-channel slack">Slack</div><div class="ft-label">Analyst Alert: Tax Unconfirmed</div></div><div class="ft-grid"><div class="ft-field"><div class="ft-field-label">Target</div><div class="ft-field-val">Assigned analyst</div></div><div class="ft-field"><div class="ft-field-label">Timing</div><div class="ft-field-val">Reactive: fires AFTER due date if tax_payment_confirmed remains FALSE</div></div><div class="ft-field"><div class="ft-field-label">Purpose</div><div class="ft-field-val">Tax delinquency on a waived loan is direct investor collateral risk. Early intervention prevents escalation.</div></div><div class="ft-field"><div class="ft-field-label">Action Required</div><div class="ft-field-val">Recommended action: Call [Borrower Name] immediately. If delinquent, assess escrow reinstatement.</div></div></div><div class="ft-condition">tax_payment_due_date &lt; TODAY() AND tax_payment_confirmed = FALSE</div><div class="ft-message">"Tax payment unconfirmed: [Borrower] | Loan #[ID] | Due [date]. Recommended action: Call [Borrower Name] before this becomes a delinquency. Investor collateral at risk if unresolved."</div></div>
 
     <div class="full-trigger"><div class="ft-header"><div class="ft-num">12–13</div><div class="ft-channel email">Email</div><div class="ft-channel slack" style="margin-left:0">Slack</div><div class="ft-label">Insurance Monitoring: Phase 2</div></div><div class="ft-grid"><div class="ft-field"><div class="ft-field-label">Target</div><div class="ft-field-val">Borrower (#12) / Assigned analyst (#13)</div></div><div class="ft-field"><div class="ft-field-label">Timing</div><div class="ft-field-val">Phase 2: requires insurance tracking vendor integration. Strong risk justification: insurance lapse triggers force-placed insurance liability.</div></div><div class="ft-field"><div class="ft-field-label">Purpose</div><div class="ft-field-val">Insurance lapse on a waived loan directly impacts investor collateral. Identical design pattern to Triggers #10–#11.</div></div><div class="ft-field"><div class="ft-field-label">Action Required</div><div class="ft-field-val">Confirm vendor availability before committing to Phase 1 scope.</div></div></div><div class="ft-condition">insurance_renewal_date approaching / insurance_confirmed_current = FALSE after renewal</div></div>
 
-    <div class="full-trigger"><div class="ft-header"><div class="ft-num">14</div><div class="ft-channel email">Email</div><div class="ft-label">Re-Evaluation Watch: Borrower Notification</div></div><div class="ft-grid"><div class="ft-field"><div class="ft-field-label">Target</div><div class="ft-field-val">Borrower</div></div><div class="ft-field"><div class="ft-field-label">Timing</div><div class="ft-field-val">Fires when hard disqualifying condition clears within 180 days of denial. 6-month window: original assessment has a reasonable shelf life. Hard condition clearances only: not capacity-related denials.</div></div><div class="ft-field"><div class="ft-field-label">Purpose</div><div class="ft-field-val">Turns denied borrowers into future pipeline without solicitation pressure. Informational framing only: protects against GSE audit exposure.</div></div><div class="ft-field"><div class="ft-field-label">Action Required</div><div class="ft-field-val">No analyst call required. Borrower self-selects whether to re-apply. Full workflow re-runs from Step 1.</div></div></div><div class="ft-condition">request_status = DENIED AND denial_date &gt; TODAY() - 180 days AND hard disqualifying condition clears (e.g. has_active_mi → FALSE at LTV 78%)</div><div class="ft-message">"Good news: you may now be eligible to re-apply. When we reviewed your request, we were unable to approve because [original reason]. That has since changed: [specific condition that cleared]. If you're still interested, you're welcome to re-apply. [Link] No pressure: just wanted to make sure you had the information."<br><em style="font-size:10px;color:var(--muted);font-style:normal;">Data pulled: borrower_name (BORROWER), original denial reason (WAIVER_REQUEST), cleared condition (LOAN — e.g. has_active_mi → current_ltv now ≤78%), denial_date (WAIVER_REQUEST)</em></div></div>
+    <div class="full-trigger"><div class="ft-header"><div class="ft-num">14</div><div class="ft-channel email">Email</div><div class="ft-label">Re-Evaluation Watch: Borrower Notification</div></div><div class="ft-grid"><div class="ft-field"><div class="ft-field-label">Target</div><div class="ft-field-val">Borrower</div></div><div class="ft-field"><div class="ft-field-label">Timing</div><div class="ft-field-val">Fires when hard disqualifying condition clears within 180 days of denial. 6-month window: original assessment has a reasonable shelf life. Hard condition clearances only: not capacity-related denials.</div></div><div class="ft-field"><div class="ft-field-label">Purpose</div><div class="ft-field-val">Turns denied borrowers into future pipeline without solicitation pressure. Informational framing only: protects against GSE audit exposure.</div></div><div class="ft-field"><div class="ft-field-label">Action Required</div><div class="ft-field-val">No analyst call required. Borrower self-selects whether to re-apply. Full workflow re-runs from Step 1.</div></div></div><div class="ft-condition">request_status = DENIED AND denial_date > TODAY() - 180 days AND hard disqualifying condition clears (e.g. has_active_mi → FALSE at LTV 78%)</div><div class="ft-message">"Good news: you may now be eligible to re-apply. When we reviewed your request, we were unable to approve because [original reason]. That has since changed: [specific condition that cleared]. If you're still interested, you're welcome to re-apply. [Link] No pressure: just wanted to make sure you had the information."</div></div>
 
-    <div class="full-trigger"><div class="ft-header"><div class="ft-num" style="color:var(--blue);">15a</div><div class="ft-channel slack">Slack</div><div class="ft-label">Notice Deadline Warning — 5 Days Out</div></div><div class="ft-grid"><div class="ft-field"><div class="ft-field-label">Target</div><div class="ft-field-val">Assigned analyst (assigned_analyst_id)</div></div><div class="ft-field"><div class="ft-field-label">Timing</div><div class="ft-field-val">Proactive — fires 5 days before state_notice_deadline if request is still open. Advance warning to give analyst time to act before the compliance window closes. State deadline calculated from STATE_RULES.required_response_days at intake.</div></div><div class="ft-field"><div class="ft-field-label">Purpose</div><div class="ft-field-val">Prevents state notice timing violations before they happen. Gives the analyst runway to make a decision or escalate without being caught at the deadline.</div></div><div class="ft-field"><div class="ft-field-label">Action Required</div><div class="ft-field-val">Analyst reviews case status and prioritizes for decision. Escalates to Risk if case is unresolved and deadline is at risk.</div></div></div><div class="ft-condition">state_notice_deadline - TODAY() = 5 AND request_status NOT IN (APPROVED, DENIED)</div><div class="ft-message">"Notice deadline approaching: [Borrower Name] | Loan #[ID] | Decision required by [state_notice_deadline] per [state] state regulations. 5 days remaining. Review and prioritize."<br><em style="font-size:10px;color:var(--muted);font-style:normal;">Data pulled: borrower_name (BORROWER), loan_id (LOAN), assigned_analyst_id (WAIVER_REQUEST), state (LOAN), state_notice_deadline calculated from required_response_days (STATE_RULES)</em></div></div>
+    <div class="full-trigger"><div class="ft-header"><div class="ft-num" style="color:var(--blue);">15a</div><div class="ft-channel slack">Slack</div><div class="ft-label">Notice Deadline Warning — 5 Days Out</div></div><div class="ft-grid"><div class="ft-field"><div class="ft-field-label">Target</div><div class="ft-field-val">Assigned analyst (assigned_analyst_id)</div></div><div class="ft-field"><div class="ft-field-label">Timing</div><div class="ft-field-val">Proactive — fires 5 days before state_notice_deadline if request is still open. Advance warning to give analyst time to act before the compliance window closes. State deadline calculated from STATE_RULES.required_response_days at intake.</div></div><div class="ft-field"><div class="ft-field-label">Purpose</div><div class="ft-field-val">Prevents state notice timing violations before they happen. Gives the analyst runway to make a decision or escalate without being caught at the deadline.</div></div><div class="ft-field"><div class="ft-field-label">Action Required</div><div class="ft-field-val">Analyst reviews case status and prioritizes for decision. Escalates to Risk if case is unresolved and deadline is at risk.</div></div></div><div class="ft-condition">state_notice_deadline - TODAY() = 5 AND request_status NOT IN (APPROVED, DENIED)</div><div class="ft-message">"Notice deadline approaching: [Borrower Name] | Loan #[ID] | Decision required by [state_notice_deadline] per [state] state regulations. 5 days remaining. Review and prioritize."</div></div>
 
-    <div class="full-trigger"><div class="ft-header"><div class="ft-num" style="color:var(--red);">15b</div><div class="ft-channel slack">Slack</div><div class="ft-label">Notice Deadline Alert — 2 Days Out</div></div><div class="ft-grid"><div class="ft-field"><div class="ft-field-label">Target</div><div class="ft-field-val">Assigned analyst (assigned_analyst_id)</div></div><div class="ft-field"><div class="ft-field-label">Timing</div><div class="ft-field-val">Hard alert — fires 2 days before state_notice_deadline if request is still open. Paired with Trigger #15a as a two-stage warning system: advance notice at 5 days, urgent alert at 2 days.</div></div><div class="ft-field"><div class="ft-field-label">Purpose</div><div class="ft-field-val">Last-resort compliance protection. A missed state notice deadline creates regulatory exposure regardless of the underlying decision. This trigger ensures it never happens silently.</div></div><div class="ft-field"><div class="ft-field-label">Action Required</div><div class="ft-field-val">Analyst must make a decision or escalate immediately. If case cannot be resolved in time, compliance team should be notified.</div></div></div><div class="ft-condition">state_notice_deadline - TODAY() = 2 AND request_status NOT IN (APPROVED, DENIED)</div><div class="ft-message">"URGENT: Notice deadline in 2 days: [Borrower Name] | Loan #[ID] | Decision required by [state_notice_deadline] per [state] state regulations. Decision or escalation required today."<br><em style="font-size:10px;color:var(--muted);font-style:normal;">Data pulled: borrower_name (BORROWER), loan_id (LOAN), assigned_analyst_id (WAIVER_REQUEST), state (LOAN), state_notice_deadline (STATE_RULES)</em></div></div>
+    <div class="full-trigger"><div class="ft-header"><div class="ft-num" style="color:var(--red);">15b</div><div class="ft-channel slack">Slack</div><div class="ft-label">Notice Deadline Alert — 2 Days Out</div></div><div class="ft-grid"><div class="ft-field"><div class="ft-field-label">Target</div><div class="ft-field-val">Assigned analyst (assigned_analyst_id)</div></div><div class="ft-field"><div class="ft-field-label">Timing</div><div class="ft-field-val">Hard alert — fires 2 days before state_notice_deadline if request is still open. Paired with Trigger #15a as a two-stage warning system: advance notice at 5 days, urgent alert at 2 days.</div></div><div class="ft-field"><div class="ft-field-label">Purpose</div><div class="ft-field-val">Last-resort compliance protection. A missed state notice deadline creates regulatory exposure regardless of the underlying decision. This trigger ensures it never happens silently.</div></div><div class="ft-field"><div class="ft-field-label">Action Required</div><div class="ft-field-val">Analyst must make a decision or escalate immediately. If case cannot be resolved in time, compliance team should be notified.</div></div></div><div class="ft-condition">state_notice_deadline - TODAY() = 2 AND request_status NOT IN (APPROVED, DENIED)</div><div class="ft-message">"URGENT: Notice deadline in 2 days: [Borrower Name] | Loan #[ID] | Decision required by [state_notice_deadline] per [state] state regulations. Decision or escalation required today."</div></div>
   </div>
 
   <div class="appendix-section">
     <div class="appendix-section-title">C: Full Data Model</div>
     <div class="appendix-section-sub">Complete field-by-field definitions, types, and rationale for all five tables.</div>
     <div class="dm-appendix-placeholder">
-      <p contenteditable="false" style="min-height: 1em;">Full data model: field definitions, types, and rationale</p>
+      <p>Full data model: field definitions, types, and rationale</p>
       <a href="https://docs.google.com/spreadsheets/d/1KF9dsYekPzN11qL9uCzassNWdmKk1aJZZeTa6iGHXUY/edit?usp=sharing" target="_blank">View data model →</a>
-      <p style="margin-top: 8px; font-size: 11px; color: var(--muted); min-height: 1em;" contenteditable="false">Excel version with complete schema will be linked here once finalized.</p>
+      <p style="margin-top:8px;font-size:11px;color:var(--muted);">Excel version with complete schema will be linked here once finalized.</p>
     </div>
   </div>
 
@@ -871,4 +885,5 @@ sections.forEach(s => scrollObs.observe(s));
 </script>
 
 
-</body></html>
+</body>
+</html>
